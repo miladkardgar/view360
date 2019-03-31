@@ -1,3 +1,4 @@
+
 <div class="sidebar sidebar-dark sidebar-main sidebar-expand-md">
 
     <!-- Sidebar mobile toggler -->
@@ -55,23 +56,22 @@
                         <span>داشبورد</span>
                     </a>
                 </li>
-                <li class="nav-item nav-item-submenu">
+                <li class="nav-item nav-item-submenu nav-item-expanded {{ Route::is('/admin/estate/*') ? 'nav-item-open' : '' }}">
                     <a href="#" class="nav-link"><i class="icon-copy"></i> <span>مدیریت املاک</span></a>
-
-                    <ul class="nav nav-group-sub" data-submenu-title="Layouts">
-                        <li class="nav-item"><a href="/admin/estate/add" class="nav-link active">افزودن ملک</a></li>
-                        <li class="nav-item"><a href="/admin/estate/list" class="nav-link">لیست املاک</a></li>
-                        <li class="nav-item"><a href="/admin/estate/setting" class="nav-link">تنظیمات</a></li>
+                    <ul class="nav nav-group-sub" data-submenu-title="Layouts" {{ Route::is('/admin/estate/*') ? '' : 'display="none"' }}>
+                        <li class="nav-item"><a href="/admin/estate/add" class="nav-link {{ Route::is('/admin/estate/add') ? 'active' : '' }}">افزودن ملک</a></li>
+                        <li class="nav-item"><a href="/admin/estate/list" class="nav-link {{ Route::is('/admin/estate/list') ? 'active' : '' }}">لیست املاک</a></li>
+                        <li class="nav-item"><a href="/admin/estate/setting" class="nav-link {{ Route::is('/admin/estate/setting') ? 'active' : '' }}">تنظیمات</a></li>
                     </ul>
                 </li>
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link"><i class="icon-color-sampler"></i> <span>کاربران</span></a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="Themes">
-                        <li class="nav-item"><a href="/admin/users" class="nav-link active">افزودن کاربر</a></li>
-                        <li class="nav-item"><a href="/admin/users/list" class="nav-link">لیست کاربران</a></li>
-                        <li class="nav-item"><a href="/admin/users/permissions" class="nav-link">دسترسی ها</a></li>
-                        <li class="nav-item"><a href="/admin/users/setting" class="nav-link">تنظیمات</a></li>
+                        <li class="nav-item"><a href="/admin/users/add" class="nav-link {{ Request::is('/admin/users/add') ? 'active' : '' }}">افزودن کاربر</a></li>
+                        <li class="nav-item"><a href="/admin/users/list" class="nav-link {{ Request::is('/admin/users/list') ? 'active' : '' }}">لیست کاربران</a></li>
+                        <li class="nav-item"><a href="/admin/users/permissions" class="nav-link {{ Request::is('/admin/users/permissions') ? 'active' : '' }}">دسترسی ها</a></li>
+                        <li class="nav-item"><a href="/admin/users/setting" class="nav-link {{ Request::is('/admin/users/setting') ? 'active' : '' }}">تنظیمات</a></li>
                     </ul>
                 </li>
 
@@ -79,8 +79,8 @@
                     <a href="#" class="nav-link"><i class="icon-color-sampler"></i> <span>تنظیمات سایت</span></a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="Themes">
-                        <li class="nav-item"><a href="/admin/setting/about" class="nav-link active">درباره ما</a></li>
-                        <li class="nav-item"><a href="/admin/setting/contact" class="nav-link">تماس با ما</a></li>
+                        <li class="nav-item"><a href="/admin/setting/about" class="nav-link {{ Request::is('/admin/setting/about') ? 'active' : '' }}">درباره ما</a></li>
+                        <li class="nav-item"><a href="/admin/setting/contact" class="nav-link {{ Request::is('/admin/setting/contact') ? 'active' : '' }}">تماس با ما</a></li>
                     </ul>
                 </li>
                 <!-- /page kits -->
