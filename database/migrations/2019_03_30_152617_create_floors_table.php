@@ -18,6 +18,7 @@ class CreateFloorsTable extends Migration
             $table->integer('file_id')->default(0);
             $table->longText('description')->nullable();
             $table->string('status')->default("active");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

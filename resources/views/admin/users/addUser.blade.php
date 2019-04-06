@@ -7,6 +7,8 @@
 @stop
 @section('content')
     <section class="text-black-50">
+        <div class="card">
+            <div class="card-body">
         <form action="" method="post" id="frm_addUser">
             <div class="row">
                 <div class="col-3">
@@ -51,5 +53,7 @@
                 </div>
             </div>
         </form>
+        </div>
+        </div>
     </section>
 @endsection

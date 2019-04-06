@@ -28,10 +28,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin/estate/add', 'EstatesController@add');
     Route::get('/admin/estate/list', 'EstatesController@list');
     Route::get('/admin/estate/setting', 'EstatesController@setting');
+    Route::get('/admin/estate/edit/{id}', 'EstatesController@edit');
 
     Route::post('/admin/estates/ajax/getInfo', 'EstatesController@getInfo');
     Route::post('/admin/estates/ajax/getCityList', 'EstatesController@getCityList');
     Route::post('/admin/estates/ajax/getArea', 'EstatesController@getArea');
+    Route::post('/admin/estates/ajax/upload', 'UploadController@uploadFile');
+    Route::post('/admin/estates/ajax/uploadDeleted', 'UploadController@uploadDeleted');
+    Route::post('/admin/estates/ajax/add', 'EstatesController@addFile');
 
     Route::get('/admin/setting/about', 'OptionController@about');
     Route::post('/admin/setting/about/store', 'OptionController@aboutStore');

@@ -19,6 +19,7 @@ class CreateFilesAtributiesTable extends Migration
             $table->integer('file_id');
             $table->string('type');
             $table->string('status')->default("active");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -13,13 +13,13 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string("title")->nullable();
-            $table->integer("parent")->default(0);
-            $table->integer("sort")->default(0);
-            $table->timestamps();
-        });
+//        Schema::create('roles', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->string("title")->nullable();
+//            $table->integer("parent")->default(0);
+//            $table->integer("sort")->default(0);
+//            $table->timestamps();
+//        });
     }
 
     /**
@@ -29,6 +29,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+//        Schema::dropIfExists('roles');
     }
 }

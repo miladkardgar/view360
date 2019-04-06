@@ -19,6 +19,7 @@ class CreateFilesMediasTable extends Migration
             $table->integer('floor_id');
             $table->integer('media_id');
             $table->string('status')->default("active");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

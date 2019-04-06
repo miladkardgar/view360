@@ -2,30 +2,12 @@
 <div class="row">
     <div class="col-12 col-md-3">
         <div class="form-group">
-            <label for="transaction_type">نوع معامله</label>
+            <label for="cityType">نوع اطلاعات شهری</label>
             <div class="col-12">
-                <select name="transaction_type" id="transaction_type" required class="form-control">
+                <select name="cityType" id="cityType" class="form-control" required="required">
                     <option value="">انتخاب نمایید.</option>
-                    @foreach($transActionTypes as $transAction)
-                        <option value="{{$transAction->id}}"
-                                {{$transAction->id === Request::old('transaction_type') ? 'selected':''}} >
-                            {{$transAction->title}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="province">استان</label>
-            <div class="col-12">
-                <select name="province" id="province" class="form-control">
-                    @foreach($provinceLists as $provinceList)
-                        <option value="{{$provinceList->id}}"
-                            {{ $provinceList->id === 107 ? 'selected':'' }}
-                            {{$provinceList->id === Request::old('province') ? 'selected':''}} >
-                            {{$provinceList->name}}</option>
+                    @foreach($cityType as $type)
+                        <option value="{{$type->id}}">{{$type->title}}</option>
                     @endforeach
                 </select>
             </div>
@@ -33,68 +15,17 @@
     </div>
     <div class="col-12 col-md-3">
         <div class="form-group">
-            <label for="city_id">شهر</label>
+            <label for="name">نام</label>
             <div class="col-12">
-                <select name="city_id" id="city_id" class="form-control">
-                        <option value="">انتخاب نمایید</option>
-                </select>
+                <input type="text" name="name" id="name" class="form-control" required="required">
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="region_id">منطقه</label>
-            <div class="col-12">
-                <select name="region_id" id="region_id" class="form-control">
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="ownership_document_status">نوع سند</label>
-            <div class="col-12">
-                <select name="ownership_document_status" id="ownership_document_status" class="form-control">
-                    <option value="">انتخاب نمایید.</option>
-                    @foreach($ownerShipDocumentTypes as $ownerShipDocumentType)
-                        <option value="{{$ownerShipDocumentType->id}}"
-                            {{$ownerShipDocumentType->id === Request::old('ownership_document_status') ? 'selected':''}} >
-                            {{$ownerShipDocumentType->title}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="usage_id">کاربری</label>
-            <div class="col-12">
-                <select name="usage_id" id="usage_id" class="form-control">
-                    <option value="">انتخاب نمایید.</option>
-                    @foreach($usageTypes as $usageType)
-                        <option value="{{$usageType->id}}"
-                            {{$usageType->id === Request::old('usage_id') ? 'selected':''}} >
-                            {{$usageType->title}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="area">متراژ</label>
-            <div class="col-12">
-                <input type="number" class="form-control" min="1" max="10000000" name="area" id="area" value="{{Request::old('area')}}">
-            </div>
-        </div>
-    </div>
-
     <div class="col-12 col-md-3">
         <div class="form-group">
             <label for="ownerName">نام مالک یا واسط</label>
             <div class="col-12">
-                <input type="text" name="ownerName" id="ownerName" class="form-control" required="required" value="{{Request::old('ownerName')}}">
+                <input type="text" name="ownerName" id="ownerName" class="form-control" required="required">
             </div>
         </div>
     </div>
@@ -102,7 +33,7 @@
         <div class="form-group">
             <label for="ownerPhone">شماره تلفن</label>
             <div class="col-12">
-                <input type="number" name="ownerPhone" id="ownerPhone" class="form-control" value="{{Request::old('ownerPhone')}}">
+                <input type="number" name="ownerPhone" id="ownerPhone" class="form-control">
             </div>
         </div>
     </div>
@@ -110,7 +41,7 @@
         <div class="form-group">
             <label for="address">آدرس ملک</label>
             <div class="col-12">
-                <input type="text" name="address" id="address" class="form-control" value="{{Request::old('address')}}">
+                <input type="text" name="address" id="address" class="form-control">
             </div>
         </div>
     </div>
@@ -122,9 +53,7 @@
                     <select name="parent_id" id="parent_id" class="form-control">
                         <option value="">انتخاب نمایید.</option>
                         @foreach($parents as $parent)
-                            <option value="{{$parent->id}}"
-                                {{$parent->id === Request::old('parent_id') ? 'selected':''}} >
-                                {{$parent->title}}</option>
+                            <option value="{{$parent->id}}">{{$parent->title}}</option>
                         @endforeach
                     </select>
                     <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام مجتمع را از لیست بالا انتخاب نمایید.</small>
@@ -134,28 +63,27 @@
             </div>
         </div>
     </div>
-
     <div class="col-12 col-md-12">
         <div class="form-group">
             <label for="description">توضیحات</label>
             <div class="col-12">
-                        <textarea name="description" id="description" cols="30" rows="5"
-                                  class="form-control">{{Request::old('description')}}</textarea>
+                <textarea name="description" id="description" cols="30" rows="5" class="form-control" required></textarea>
             </div>
         </div>
     </div>
     <div class="col-12 col-12">
         <div class="form-group">
             <label for="file">بارگزاری تصاویر</label>
-            <input type="file" class="file-input-ajax" multiple="multiple" name="file[]" data-fouc id="file">
+            <input type="file" class="file-input-ajax" multiple="multiple" name="file" data-fouc id="file">
             <span class="form-text text-muted">حداکثر ده عکس قابل بارگزاری میباشد.</span>
+            <input type="hidden" name="files" id="files">
         </div>
     </div>
     <div class="col-12 col-12">
         <div class="form-group">
-            <label for="mapid">موقعیت جغرافیایی</label>
+            <label for="file">موقعیت جغرافیایی</label>
             <div id="mapid"></div>
-            <input type="hidden" name="lat" id="lat"  value="{{Request::old('lat')}}">
+            <input type="hidden" name="lat" id="lat" value="">
         </div>
     </div>
 </div>
@@ -167,7 +95,6 @@
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg',
     }).addTo(mymap);
-
 
     mymap.on('click', function (e) {
         $(".leaflet-marker-pane").html("");
@@ -183,16 +110,16 @@
         }
     });
 
-    $("#city_id").on("change", function () {
+    $("#city").on("change", function () {
         var cID = $(this).val();
         $.ajax({
             url: "{{url('/admin/estates/ajax/getArea')}}",
             data: {id: cID},
             method: "POST",
             success: function (result) {
-                $("#region_id").html("");
+                $("#area").html("");
                 $.each(result, function (i, item) {
-                    $("#region_id").append("<option value='" + item.id + "'>" + item.name + "</option>")
+                    $("#area").append("<option value='" + item.id + "'>" + item.name + "</option>")
                 })
             },
             error() {
@@ -200,26 +127,6 @@
             }
         })
     })
-
-    $("#province").on("change", function () {
-        var pID = $(this).val();
-        $.ajax({
-            url: "{{url('/admin/estates/ajax/getArea')}}",
-            data: {id: pID},
-            method: "POST",
-            success: function (result) {
-                $("#city_id").html("");
-                $("#region_id").html("");
-                $.each(result, function (i, item) {
-                    $("#city_id").append("<option value='" + item.id + "'>" + item.name + "</option>")
-                });
-                $("#city_id").change();
-            },
-            error() {
-                console.log("error get area list");
-            }
-        })
-    });
 
     var FileUpload = function () {
         var _componentFileUpload = function () {
@@ -330,6 +237,7 @@
         return {
             init: function () {
                 _componentFileUpload();
+
             }
         }
     }();
@@ -338,7 +246,6 @@
         var id = data.response["id"];
         $("#"+previewId).append("<input type='hidden' name='uploadFile_"+id+"' value='"+id+"'>");
     });
-    FileUpload.init();
 
-    $("#province").change();
+    FileUpload.init();
 </script>

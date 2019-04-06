@@ -2,138 +2,17 @@
 <div class="row">
     <div class="col-12 col-md-3">
         <div class="form-group">
-            <label for="transaction_type">نوع معامله</label>
+            <label for="name">نام مجتمع</label>
             <div class="col-12">
-                <select name="transaction_type" id="transaction_type" required class="form-control">
-                    <option value="">انتخاب نمایید.</option>
-                    @foreach($transActionTypesVila as $transAction)
-                        <option value="{{$transAction->id}}">{{$transAction->title}}</option>
-                    @endforeach
-                </select>
+                <input type="text" name="name" id="name" class="form-control" required="required">
             </div>
         </div>
     </div>
-
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="province">استان</label>
-            <div class="col-12">
-                <select name="province" id="province" class="form-control">
-                    @foreach($provinceLists as $provinceList)
-                        <option value="{{$provinceList->id}}"
-                            {{ $provinceList->id === 107 ? 'selected':'' }} >
-                            {{$provinceList->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="city_id">شهر</label>
-            <div class="col-12">
-                <select name="city_id" id="city_id" class="form-control">
-                    <option value="">انتخاب نمایید</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="region_id">منطقه</label>
-            <div class="col-12">
-                <select name="region_id" id="region_id" class="form-control">
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="area">متراژ آپارتمان</label>
-            <div class="col-12">
-                <input type="number" class="form-control" min="1" max="10000000" name="area" id="area">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="bedroom">تعداد خواب</label>
-            <div class="col-12">
-                <input type="number" class="form-control" min="1" max="30" name="bedroom" id="bedroom">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-12">
-        <label >امکانات</label>
-        <div class="row">
-            @foreach($possibilities as $possibilities2)
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="possibilities_{{$possibilities2->id}}"
-                                   value="{{$possibilities2->id}}" name="possibilities_{{$possibilities2->id}}">
-                            <label class="custom-control-label"
-                                   for="possibilities_{{$possibilities2->id}}">{{$possibilities2->title}}</label>
-                        </div>
-                    </div>
-
-                </div>
-            @endforeach
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="ownerName">نام مالک یا واسط</label>
-            <div class="col-12">
-                <input type="text" name="ownerName" id="ownerName" class="form-control" required="required">
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="ownerPhone">شماره تلفن</label>
-            <div class="col-12">
-                <input type="number" name="ownerPhone" id="ownerPhone" class="form-control">
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="form-group">
-            <label for="address">آدرس ملک</label>
-            <div class="col-12">
-                <input type="text" name="address" id="address" class="form-control">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <div class="form-group">
-            <label for="parent_id">نام مجتمع</label>
-            <div class="col-12">
-                @if(isset($parents) && $parents!="")
-                    <select name="parent_id" id="parent_id" class="form-control">
-                        <option value="">انتخاب نمایید.</option>
-                        @foreach($parents as $parent)
-                            <option value="{{$parent->id}}">{{$parent->title}}</option>
-                        @endforeach
-                    </select>
-                    <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام مجتمع را از لیست بالا انتخاب نمایید.</small>
-                @else
-                    <small>هیچ مجمتع ای در سیستم یافت نشد.</small>
-                @endif
-            </div>
-        </div>
-    </div>
-
     <div class="col-12 col-md-12">
         <div class="form-group">
             <label for="description">توضیحات</label>
             <div class="col-12">
-                        <textarea name="description" id="description" cols="30" rows="5"
-                                  class="form-control"></textarea>
+                <textarea name="description" id="description" cols="30" rows="5" class="form-control" required></textarea>
             </div>
         </div>
     </div>
@@ -142,11 +21,12 @@
             <label for="file">بارگزاری تصاویر</label>
             <input type="file" class="file-input-ajax" multiple="multiple" name="file" data-fouc id="file">
             <span class="form-text text-muted">حداکثر ده عکس قابل بارگزاری میباشد.</span>
+            <input type="hidden" name="files" id="files">
         </div>
     </div>
     <div class="col-12 col-12">
         <div class="form-group">
-            <label for="mapid">موقعیت جغرافیایی</label>
+            <label for="file">موقعیت جغرافیایی</label>
             <div id="mapid"></div>
             <input type="hidden" name="lat" id="lat" value="">
         </div>
@@ -161,7 +41,6 @@
         accessToken: 'pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg',
     }).addTo(mymap);
 
-
     mymap.on('click', function (e) {
         $(".leaflet-marker-pane").html("");
         $(".leaflet-shadow-pane").html("");
@@ -175,45 +54,6 @@
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
-
-    $("#city_id").on("change", function () {
-        var cID = $(this).val();
-        $.ajax({
-            url: "{{url('/admin/estates/ajax/getArea')}}",
-            data: {id: cID},
-            method: "POST",
-            success: function (result) {
-                $("#region_id").html("");
-                $.each(result, function (i, item) {
-                    $("#region_id").append("<option value='" + item.id + "'>" + item.name + "</option>")
-                })
-            },
-            error() {
-                console.log("error get area list");
-            }
-        })
-    })
-
-    $("#province").on("change", function () {
-        var pID = $(this).val();
-        $.ajax({
-            url: "{{url('/admin/estates/ajax/getArea')}}",
-            data: {id: pID},
-            method: "POST",
-            success: function (result) {
-                $("#city_id").html("");
-                $("#region_id").html("");
-                $.each(result, function (i, item) {
-                    $("#city_id").append("<option value='" + item.id + "'>" + item.name + "</option>")
-                });
-                $("#city_id").change();
-            },
-            error() {
-                console.log("error get area list");
-            }
-        })
-    });
-
     var FileUpload = function () {
         var _componentFileUpload = function () {
             if (!$().fileinput) {
@@ -323,15 +163,15 @@
         return {
             init: function () {
                 _componentFileUpload();
+
             }
         }
     }();
 
     $('#file').on('fileuploaded', function (event, data, previewId) {
         var id = data.response["id"];
-        $("#" + previewId).append("<input type='hidden' name='uploadFile_" + id + "' value='" + id + "'>");
+        $("#"+previewId).append("<input type='hidden' name='uploadFile_"+id+"' value='"+id+"'>");
     });
-    FileUpload.init();
 
-    $("#province").change();
+    FileUpload.init();
 </script>

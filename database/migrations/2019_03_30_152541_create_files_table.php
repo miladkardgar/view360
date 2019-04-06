@@ -59,6 +59,7 @@ class CreateFilesTable extends Migration
 
             $table->integer('user_id')->default(0);
             $table->string('status')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

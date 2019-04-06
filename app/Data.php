@@ -7,4 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Data extends Model
 {
     //
+    public function file(){
+        return $this->hasMany(File::class);
+    }
 }
