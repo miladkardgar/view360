@@ -13,14 +13,14 @@ class CreateFloorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('floors', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('file_id')->default(0);
-            $table->longText('description')->nullable();
-            $table->string('status')->default("active");
-            $table->softDeletes();
-            $table->timestamps();
-        });
+//        Schema::create('floors', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->integer('file_id')->default(0);
+//            $table->longText('description')->nullable();
+//            $table->string('status')->default("active");
+//            $table->softDeletes();
+//            $table->timestamps();
+//        });
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateFloorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('floors');
+//        Schema::dropIfExists('floors');
     }
 }

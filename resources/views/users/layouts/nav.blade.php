@@ -17,19 +17,16 @@
         </div>
         <!--end container-->
     </nav>
-
-    <!--PRIMARY NAVIGATION
-    =============================================================================================================-->
     <nav id="ts-primary-navigation" class="navbar navbar-expand-md navbar-left rtl">
         <div class="container rtl">
 
             <!--Brand Logo-->
-            <a class="navbar-brand" href="index-map-leaflet-fullscreen.html">
+            <a class="navbar-brand" href="/">
                 <img src="{{url('/public/assets/img/logo.png')}}" alt="">
             </a>
-
             <!--Responsive Collapse Button-->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarPrimary" aria-controls="navbarPrimary" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarPrimary"
+                    aria-controls="navbarPrimary" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -50,29 +47,48 @@
                         <a class="nav-link mr-2" href="contact">تماس با ما</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login">ورود</a>
-                    </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="register">ثبت نام</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">
-                            <i class="fa fa-plus small mr-2"></i>
-                            افزودن فایل
-                        </a>
-                    </li>
+                @if (Auth::id())
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="profile">پروفایل</a>
+                        </li>
 
-                </ul>
-                <!--end Right navigation-->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="logout">خروج</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">
+                                <i class="fa fa-plus small mr-2"></i>
+                                افزودن فایل
+                            </a>
+                        </li>
+
+                    </ul>
+                @else
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="login">ورود</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="register">ثبت نام</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">
+                                <i class="fa fa-plus small mr-2"></i>
+                                افزودن فایل
+                            </a>
+                        </li>
+
+                    </ul>
+            @endif
+
+            <!--end Right navigation-->
 
             </div>
             <!--end navbar-collapse-->
         </div>
         <!--end container-->
     </nav>
-    <!--end #ts-primary-navigation.navbar-->
-
 </header>

@@ -7,7 +7,9 @@ use App\Estate_types;
 use App\Files_atributies;
 use App\Files_medias;
 use App\upload;
+use Chumper\Zipper\Facades\Zipper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use \App\Data;
@@ -19,10 +21,11 @@ class estatesController extends Controller
 {
     //
 
-    function add(Request $request)
+    public function __construct()
     {
-        $datas = \App\Data::all()->where('type', '=', 'fileType');
-        return view('admin.estates.add', compact('datas'));
+        App::singleton('estates', function () {
+            return Data::where('type', '=', 'fileType')->get();
+        });
     }
 
     function list(Request $request)
@@ -32,10 +35,10 @@ class estatesController extends Controller
         return view('admin.estates.list', compact('filesList'));
     }
 
-
     public function edit(Request $request)
     {
         $req = File::findOrFail($request->id);
+        $fileType = Data::findOrFail($req->data_id)->file;
         $transActionTypes = Data::where('type', '=', 'transactionType')->get();
         $ownerShipDocumentTypes = Data::where('type', '=', 'ownerShipDocumentType')->get();
         $usageTypes = Data::where('type', '=', 'usageType')->get();
@@ -49,18 +52,21 @@ class estatesController extends Controller
         $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
         $parents = File::where('data_id', '=', '4')->get();
         $pictures = Files_medias::where('file_id', '=', $request->id)->get();
-
-        return view('admin.estates.edit.land', compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'pictures'));
+        $attr = Files_atributies::where('file_id', '=', $request->id)->get();
+        return view('admin.estates.edit.' . $fileType, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'pictures', 'attr'));
     }
 
     function setting(Request $request)
     {
-        return view('admin.estates.setting');
+        $Attrs[] = Data::where('type', '=', 'possibilitiesVila')->get();
+        $Attrs[] = Data::where('type', '=', 'possibilities')->get();
+        $path = url('/public/assets/webfonts/fontawsome/metadata/icons.json');
+        $json = json_decode(file_get_contents($path), true);
+        return view('admin.estates.setting', compact('json','Attrs'));
     }
 
-    function getInfo(Request $request)
+    function add(Request $request)
     {
-
         $datas = Data::findOrFail($request->id);
         $transActionTypes = Data::where('type', '=', 'transactionType')->get();
         $ownerShipDocumentTypes = Data::where('type', '=', 'ownerShipDocumentType')->get();
@@ -74,8 +80,7 @@ class estatesController extends Controller
         $commercialTypes = Data::where('type', '=', 'commercialType')->get();
         $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
         $parents = File::where('data_id', '=', '4')->get();
-        $returnHTML = view('admin.estates.ajax.' . $datas->file, compact('datas', 'provinceLists', 'ownerShipDocumentTypes', 'usageTypes', 'cityType', 'transActionTypes', 'transActionTypesVila', 'possibilitiesVila', 'floorsCount', 'possibilities', 'commercialTypes', 'transactionTypesCommercial', 'parents'))->render();
-        return $returnHTML;
+        return view('admin.estates.files.' . $datas->file, compact('datas', 'provinceLists', 'ownerShipDocumentTypes', 'usageTypes', 'cityType', 'transActionTypes', 'transActionTypesVila', 'possibilitiesVila', 'floorsCount', 'possibilities', 'commercialTypes', 'transactionTypesCommercial', 'parents'));
     }
 
     function getCityList()
@@ -96,107 +101,41 @@ class estatesController extends Controller
         return $datas;
     }
 
-    function addFile(Request $request)
+    function store(Request $request)
     {
-        $file = new File();
-        if (isset($request->lat) && $request->lat != "") {
-            $locationInfo = explode("_", $request->lat);
-            if (isset($locationInfo[0])) {
-                $file->lat = $locationInfo[0];
-            }
-            if (isset($locationInfo[1])) {
-                $file->lon = $locationInfo[1];
-            }
-        }
-        if (isset($request->name) && $request->name != "") {
-            $file->title = $request->name;
-        }
-        if (isset($request->data_id) && $request->data_id != "") {
-            $file->data_id = $request->data_id;
-        }
-        if (isset($request->transaction_type) && $request->transaction_type != "") {
-            $file->transaction_type = $request->transaction_type;
-        }
-        if (isset($request->province) && $request->province != "") {
-            $file->province_id = $request->province;
-        }
-        if (isset($request->city_id) && $request->city_id != "") {
-            $file->city_id = $request->city_id;
-        }
-        if (isset($request->region_id) && $request->region_id != "") {
-            $file->region_id = $request->region_id;
-        }
-        if (isset($request->ownership_document_status) && $request->ownership_document_status != "") {
-            $file->ownership_document_status = $request->ownership_document_status;
-        }
-        if (isset($request->usage_id) && $request->usage_id != "") {
-            $file->usage_id = $request->usage_id;
-        }
-        if (isset($request->area) && $request->area != "") {
-            $file->area = $request->area;
-        }
-        if (isset($request->oldArea) && $request->oldArea != "") {
-            $file->oldArea = $request->oldArea;
-        }
-        if (isset($request->bedroom) && $request->bedroom != "") {
-            $file->bedroom = $request->bedroom;
-        }
-        if (isset($request->countFloor) && $request->countFloor != "") {
-            $file->countFloor = $request->countFloor;
-        }
-        if (isset($request->commercialType) && $request->commercialType != "") {
-            $file->commercialType = $request->commercialType;
-        }
-        if (isset($request->parent_id) && $request->parent_id != "") {
-            $file->parent_id = $request->parent_id;
-        }
-        if (isset($request->ownerName) && $request->ownerName != "") {
-            $file->ownerName = $request->ownerName;
-        }
-        if (isset($request->ownerPhone) && $request->ownerPhone != "") {
-            $file->ownerPhone = $request->ownerPhone;
-        }
-        if (isset($request->address) && $request->address != "") {
-            $file->address = $request->address;
-        }
-        if (isset($request->description) && $request->description != "") {
-            $file->description = $request->description;
-        }
-        if (isset($request->cityType) && $request->cityType != "") {
-            $file->city_type_id = $request->cityType;
-        }
-        $file->save();
+        dd($request->file('file'));
+        die;
+        $file = File::create($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
+            'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
+            'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
+            'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
+            'title', 'city_type_id', 'parent_id', 'province_id']));
         if ($file->id != "") {
-            if (!Storage::exists('/public/files/' . $file->id)) {
-                Storage::makeDirectory('/public/files/' . $file->id, 0775, true, true);
-            }
+            $upload = '';
             if ($request->hasfile('file')) {
-                foreach ($request->file('file') as $fileUp) {
-                    $uploadedFile = $fileUp;
-                    $filename = $uploadedFile->getClientOriginalName();
-                    $filename = str_replace(" ", "_", $filename);
-                    $filenameTime = time() . "_" . $filename;
-                    $mime = $uploadedFile->getClientMimeType();
-                    $size = $uploadedFile->getSize();
-
-                    $uploadedFile->storeAs(
-                        "files/" . $file->id,  $filenameTime,'public'
-                    );
-                    $upload = new upload();
-                    $upload->file = "/public/storage/files/" . $file->id ."/". $filenameTime;
-                    $upload->folder = "/public/storage/files/" . $file->id;
-                    $upload->name = $filename;
-                    $upload->mime = $mime;
-                    $upload->size = $size;
-                    $upload->users()->associate(auth()->user());
-                    $upload->save();
-
-                    $filesMedia = new Files_medias();
-                    $filesMedia->file_id = $file->id;
-                    $filesMedia->media_id = $upload->id;
-                    $filesMedia->save();
+                $uploadFilesId = $this->uploadFile(request(), $file->id,$type='album');
+                $uploadFilesId = $uploadFilesId->getData();
+                foreach ($uploadFilesId->id as $item => $val) {
+                    Files_medias::create(['file_id' => $file->id, 'media_id' => $val,'type'=>"album"]);
                 }
             }
+
+            if ($request->hasfile('fileMain')) {
+                $uploadFilesId = $this->uploadFile(request(), $file->id,$type='main');
+                $uploadFilesId = $uploadFilesId->getData();
+                foreach ($uploadFilesId->id as $item => $val) {
+                    Files_medias::create(['file_id' => $file->id, 'media_id' => $val,"type"=>"main"]);
+                }
+            }
+
+            if ($request->hasfile('file3d')) {
+                $uploadFilesId = $this->uploadFile(request(), $file->id,$type='3d');
+                $uploadFilesId = $uploadFilesId->getData();
+                foreach ($uploadFilesId->id as $item => $val) {
+                    Files_medias::create(['file_id' => $file->id, 'media_id' => $val,"type"=>"3d"]);
+                }
+            }
+
             $req = $request->all();
             foreach ($req as $item => $val) {
                 if (strpos($item, "possibilities_") !== false) {
@@ -208,7 +147,7 @@ class estatesController extends Controller
                 }
             }
         }
-        return back();
+        return redirect()->intended('/admin/estate/list');
     }
 
     private function validateRequest()
@@ -226,9 +165,142 @@ class estatesController extends Controller
 
     }
 
-    private function storeImage($file)
+    public function estateList(Request $request)
     {
+        $estates = File::all();
+        $info = [];
+        foreach ($estates as $estate) {
+            $img = Files_medias::where('File_id',$estate->id)->where('type','main')->get();
+            $imageInfo = upload::find($img)->first();
+            $url= $imageInfo['file'];
+            $getTitle = Data::where('id', '=', $estate->data_id)->first();
+            $info[] = array(
+                "id" => $estate->id,
+                "title" => $getTitle->title,
+                "price" => "50000",
+                "category" => $estate->data_id,
+                "marker_image" => url($url),
+                "url" => $estate->data_id . "/" . $estate->id,
+                "address" => $estate->address,
+                "latitude" => $estate->lat,
+                "longitude" => $estate->lon,
+                "ribbon" => "<i class='fa fa-thumbs-up'></i>",
+                "area" => $estate->area,
+                "bedrooms" => $estate->beadroom,
+                "rooms" => 1,
+                "f__air_condition" => 1,
+                "f__microwave" => 1
+            );
+        };
+        return $info;
     }
 
+    private function uploadFile(Request $request, $fileID,$type)
+    {
+        if (!Storage::exists('/public/files/' . date("Y"))) {
+            Storage::makeDirectory('/public/files/' . date("Y"), 0775, true, true);
+        }
+        if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m"))) {
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m"), 0775, true, true);
+        }
+        if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d"))) {
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d"), 0775, true, true);
+        }
+        if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID)) {
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID, 0775, true, true);
+        }
+        $uploadID = [];
+        if($type=='album') {
+            if ($request->hasfile('file')) {
+                foreach (request()->file as $uploadFile) {
+                    $file = $uploadFile;
+                    $fileName = $file->getClientOriginalName();
+                    $filename = str_replace(" ", "_", $fileName);
+                    $filenameTime = time() . "_" . $filename;
+                    $mime = $file->getClientMimeType();
+                    $size = $file->getSize();
 
+                    $file->storeAs(
+                        "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
+                    );
+                    $upload = new upload();
+                    $upload->file = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->name = $filename;
+                    $upload->mime = $mime;
+                    $upload->size = $size;
+                    $upload->users()->associate(auth()->user());
+                    $upload->save();
+                    $uploadID[] = $upload->id;
+                }
+            }
+        }
+        if($type=='main') {
+            if ($request->hasfile('fileMain')) {
+                foreach (request()->fileMain as $uploadFile) {
+                    $file = $uploadFile;
+                    $fileName = $file->getClientOriginalName();
+                    $filename = str_replace(" ", "_", $fileName);
+                    $filenameTime = time() . "_" . $filename;
+                    $mime = $file->getClientMimeType();
+                    $size = $file->getSize();
+
+                    $file->storeAs(
+                        "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
+                    );
+                    $upload = new upload();
+                    $upload->file = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->name = $filename;
+                    $upload->mime = $mime;
+                    $upload->size = $size;
+                    $upload->users()->associate(auth()->user());
+                    $upload->save();
+                    $uploadID[] = $upload->id;
+                }
+            }
+        }
+        if($type=='3d') {
+            if ($request->hasfile('file3d')) {
+                foreach (request()->file3d as $uploadFile) {
+                    $file = $uploadFile;
+                    $fileName = $file->getClientOriginalName();
+                    $filename = str_replace(" ", "_", $fileName);
+                    $filenameTime = time() . "_" . $filename;
+                    $mime = $file->getClientMimeType();
+                    $size = $file->getSize();
+
+                    $file->storeAs(
+                        "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
+                    );
+
+                    if($mime=="zip") {
+                        $Path = public_path("files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime);
+                        Zipper::make($Path)->extractTo('Appdividend');
+                    }
+                    $upload = new upload();
+                    $upload->file = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->name = $filename;
+                    $upload->mime = $mime;
+                    $upload->size = $size;
+                    $upload->users()->associate(auth()->user());
+                    $upload->save();
+                    $uploadID[] = $upload->id;
+                }
+            }
+        }
+        return response()->json(['id' => $uploadID]);
+    }
+
+    public function storeAttr(Request $request)
+    {
+        Data::create($request->all());
+        return back();
+    }
+    public function deleteAttr(Request $request)
+    {
+        Data::find($request->id)->delete();
+        return back();
+    }
 }

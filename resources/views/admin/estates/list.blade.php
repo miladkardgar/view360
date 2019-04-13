@@ -20,7 +20,7 @@
                 var id = $(this).data("id");
                 var val = $(this).data("value");
                 $.ajax({
-                    url: "{{url('/admin/estates/ajax/list')}}",
+                    url: "{{url('/admin/estates/list')}}",
                     method: "post",
                     data: {id: id, val: val},
                     success: function (result) {

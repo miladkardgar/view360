@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Data;
 use App\Option;
 use App\About;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class OptionController extends Controller
 {
+
+    public function __construct()
+    {
+        App::singleton('estates', function(){
+            return Data::where('type','=','fileType')->get();
+        });
+    }
     /**
      * Display a listing of the resource.
      *

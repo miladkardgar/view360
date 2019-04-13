@@ -3,11 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Data extends Model
 {
-    //
+    use SoftDeletes;
+    protected $guarded=[];
+    protected $dates = ['deleted_at'];
+
     public function file(){
-        return $this->hasMany(File::class);
+        return $this->hasMany(File::class,'transaction_type');
+    }
+    public function dataAttr()
+    {
+        return $this->hasMany(Files_atributies::class);
     }
 }
