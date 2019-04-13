@@ -23,16 +23,12 @@
             crossorigin="" src="{{url('public/assets/admin/js/leaflet.js')}}"></script>
     <script>
 
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            }
-        });
-
         $(document).ready(function () {
-
-            var mymap = L.map('mapid').setView([36.5122, 51.8585], 10);
+            var lat = "{{$req->lat}}";
+            var lon = "{{$req->lon}}";
+            var mymap = L.map('mapid').setView([lat, lon], 13);
+            var marker = L.marker([lat, lon]).addTo(mymap);
+            marker.bindPopup("<span>موقعیت فایل: </span>" + lat + " | " + lon + "<br>").openPopup();
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                 maxZoom: 18,
@@ -45,24 +41,31 @@
                 $(".leaflet-shadow-pane").html("");
                 var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
                 marker.bindPopup("<span>موقعیت فایل: </span>" + e.latlng.lat + " | " + e.latlng.lng + "<br>").openPopup();
-                $("#lat").val(e.latlng.lat + "_" + e.latlng.lng);
+                $("#lat").val(e.latlng.lat);
+                $("#lon").val(e.latlng.lng);
             });
 
-            $(document).on("change", '#city_id',function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+
+            $(document).on("change", '#city_id', function () {
                 var cID = $(this).val();
                 var sID = {{$req->region_id}}
                 $.ajax({
-                    url: "{{url('/admin/estates/ajax/getArea')}}",
+                    url: "{{url('/admin/estate/getArea')}}",
                     data: {id: cID},
                     method: "POST",
                     success: function (result) {
                         $("#region_id").html("");
                         var sel = '';
                         $.each(result, function (i, item) {
-                            if(item.id===sID){
+                            if (item.id === sID) {
                                 sel = 'selected'
-                            }else{
-                                sel='';
+                            } else {
+                                sel = '';
                             }
                             $("#region_id").append("<option value='" + item.id + "' " + sel + ">" + item.name + "</option>")
                         })
@@ -72,34 +75,33 @@
                     }
                 })
             })
-            $(document).on("change","#province", function () {
-            var pID = $(this).val();
-            var cID = {{$req->city_id}}
-            $.ajax({
-                url: "{{url('/admin/estates/ajax/getArea')}}",
-                data: {id: pID},
-                method: "POST",
-                success: function (result) {
-                    $("#city_id").html("");
-                    $("#region_id").html("");
-                    var sel = '';
-                    $.each(result, function (i, item) {
-                        if(item.id===cID){
-                            sel = 'selected'
-                        }else{
-                            sel='';
-                        }
-                        $("#city_id").append("<option value='" + item.id + "' "+sel+">" + item.name + "</option>")
-                    });
-                    $("#city_id").change();
-                },
-                error() {
-                    console.log("error get area list");
-                }
-            })
-        });
-            $("#province").change();
-
+            $(document).on("change", "#province_id", function () {
+                var pID = $(this).val();
+                var cID = {{$req->city_id}}
+                $.ajax({
+                    url: "{{url('/admin/estate/getArea')}}",
+                    data: {id: pID},
+                    method: "POST",
+                    success: function (result) {
+                        $("#city_id").html("");
+                        $("#region_id").html("");
+                        var sel = '';
+                        $.each(result, function (i, item) {
+                            if (item.id === cID) {
+                                sel = 'selected'
+                            } else {
+                                sel = '';
+                            }
+                            $("#city_id").append("<option value='" + item.id + "' " + sel + ">" + item.name + "</option>")
+                        });
+                        $("#city_id").change();
+                    },
+                    error() {
+                        console.log("error get area list");
+                    }
+                })
+            });
+            $("#province_id").change();
 
             var FileUpload = function () {
                 var _componentFileUpload = function () {
@@ -158,23 +160,17 @@
 
                     $('.file-input-ajax').fileinput({
                         browseLabel: 'انتخاب فایل',
-                        uploadUrl: "{{url('/admin/estates/ajax/upload')}}",
-                        uploadAsync: true,
+                        uploadUrl: "{{url('/admin/estates/upload')}}",
+                        uploadAsync: false,
                         maxFileCount: 10,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
                         browseIcon: '<i class="icon-file-plus mr-2"></i>',
-                        uploadIcon: '<i class="icon-file-upload2 mr-2"></i>',
                         removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
                         browseOnZoneClick: true,
-                        uploadExtraData: function () {
-                            return {
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                                }
-                            };
-                        },
                         fileActionSettings: {
                             removeIcon: '<i class="icon-bin"></i>',
-                            uploadIcon: '<i class="icon-upload"></i>',
                             uploadClass: '',
                             zoomIcon: '<i class="icon-zoomin3"></i>',
                             zoomClass: '',
@@ -187,17 +183,27 @@
                             icon: '<i class="icon-file-check"></i>',
                             modal: modalTemplate
                         },
-                        initialCaption: 'فایلی انتخاب نشده است',
+                        layoutTemplates: {
+                            icon: '<i class="icon-file-check"></i>',
+                            modal: modalTemplate
+                        },
                         initialPreview: [
                             @foreach($pictures as $picture)
-                            "<img class='file-preview-image kv-preview-data' src='{{url($picture->fileInfo->file)}}'>",
+                                "<img class='file-preview-image kv-preview-data' src='{{url($picture->fileInfo->file)}}'>",
                             @endforeach
                         ],
                         initialPreviewConfig: [
-                            {caption: "Food-1.jpg", size: 329892, url: "/site/file-delete", key: 1},
-                            {caption: "Food-2.jpg", size: 872378, url: "/site/file-delete", key: 2},
-                            {caption: "Food-3.jpg", size: 632762, url: "/site/file-delete", key: 3},
+                                @foreach($pictures as $picture)
+                            {
+                                caption: "{{$picture->fileInfo->name}}",
+                                size: "{{$picture->fileInfo->size}}",
+                                url: "{{$picture->fileInfo->folder}}",
+                                key: "{{$picture->fileInfo->id}}"
+                            },
+                            @endforeach
+
                         ],
+                        initialCaption: 'فایلی انتخاب نشده است',
                         previewZoomButtonClasses: previewZoomButtonClasses,
                         previewZoomButtonIcons: previewZoomButtonIcons
                     });
@@ -222,182 +228,195 @@
                     }
                 }
             }();
-
-            $('#file').on('fileuploaded', function (event, data, previewId) {
-                var id = data.response["id"];
-                $("#" + previewId).append("<input type='hidden' name='uploadFile_" + id + "' value='" + id + "'>");
-            });
             FileUpload.init();
         });
-
-
-
     </script>
-@stop
+
+@endsection
 @section('content')
-    <div class="card text-black-50">
-        <div class="card-body">
-            <input type="hidden" name="data_id" value="{{$req->id}}">
-            <div class="row">
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="transaction_type">نوع معامله</label>
-                        <div class="col-12">
-                            <select name="transaction_type" id="transaction_type" required class="form-control">
-                                <option value="">انتخاب نمایید.</option>
-                                @foreach($transActionTypes as $transAction)
-                                    <option
-                                        value="{{$transAction->id}}" {{$req->transaction_type === $transAction->id ? 'selected' : ''}} >{{$transAction->title}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="province">استان</label>
-                        <div class="col-12">
-                            <select name="province" id="province" class="form-control">
-                                @foreach($provinceLists as $provinceList)
-                                    <option value="{{$provinceList->id}}"
-                                        {{$req->province_id === $provinceList->id ? 'selected' : ''}}  >
-                                        {{$provinceList->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="city_id">شهر</label>
-                        <div class="col-12">
-                            <select name="city_id" id="city_id" class="form-control">
-                                <option value="">انتخاب نمایید</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="region_id">منطقه</label>
-                        <div class="col-12">
-                            <select name="region_id" id="region_id" class="form-control">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="ownership_document_status">نوع سند</label>
-                        <div class="col-12">
-                            <select name="ownership_document_status" id="ownership_document_status"
-                                    class="form-control">
-                                <option value="">انتخاب نمایید.</option>
-                                @foreach($ownerShipDocumentTypes as $ownerShipDocumentType)
-                                    <option
-                                        value="{{$ownerShipDocumentType->id}}"
-                                        {{$req->ownership_document_status === $ownerShipDocumentType->id ? 'selected' : ''}}  >{{$ownerShipDocumentType->title}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="usage_id">کاربری</label>
-                        <div class="col-12">
-                            <select name="usage_id" id="usage_id" class="form-control">
-                                <option value="">انتخاب نمایید.</option>
-                                @foreach($usageTypes as $usageType)
-                                    <option value="{{$usageType->id}}"
-                                        {{$req->usage_id === $usageType->id ? 'selected' : ''}}  >{{$usageType->title}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="area">متراژ</label>
-                        <div class="col-12">
-                            <input type="number" class="form-control" min="1" max="10000000" name="area" id="area" value="{{$req->area}}">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="ownerName">نام مالک یا واسط</label>
-                        <div class="col-12">
-                            <input type="text" name="ownerName" id="ownerName" class="form-control" required="required" value="{{$req->ownerName}}">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="ownerPhone">شماره تلفن</label>
-                        <div class="col-12">
-                            <input type="number" name="ownerPhone" id="ownerPhone" class="form-control" value="{{$req->ownerPhone}}">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                        <label for="address">آدرس ملک</label>
-                        <div class="col-12">
-                            <input type="text" name="address" id="address" class="form-control" value="{{$req->address}}">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="parent_id">نام مجتمع</label>
-                        <div class="col-12">
-                            @if(isset($parents) && $parents!="")
-                                <select name="parent_id" id="parent_id" class="form-control">
+    <div class="card">
+        <div class="card-header bg-indigo">
+            <input type="hidden" name="data_id" value="{{$req->data_id}}">
+            <h4 class="text-center ">{{$req->title}}</h4>
+        </div>
+        <div class="card-body text-black-50">
+            <form action="/admin/estate/update" method="post" enctype="multipart/form-data">
+                {{method_field('patch')}}
+                {{csrf_field()}}
+                <div class="row mt-2">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="transaction_type">نوع معامله</label>
+                            <div class="col-12">
+                                <select name="transaction_type" id="transaction_type" required class="form-control">
                                     <option value="">انتخاب نمایید.</option>
-                                    @foreach($parents as $parent)
-                                        <option value="{{$parent->id}}"
-                                            {{$req->parent_id === $parent->id ? 'selected' : ''}}>{{$parent->title}}</option>
+                                    @foreach($transActionTypes as $transAction)
+                                        <option value="{{$transAction->id}}"
+                                            {{$req->transaction_type === $transAction->id?'selected':''}}>
+                                            {{$transAction->title}}</option>
                                     @endforeach
                                 </select>
-                                <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام مجتمع را
-                                    از لیست
-                                    بالا انتخاب نمایید.
-                                </small>
-                            @else
-                                <small>هیچ مجمتع ای در سیستم یافت نشد.</small>
-                            @endif
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-12 col-md-12">
-                    <div class="form-group">
-                        <label for="description">توضیحات</label>
-                        <div class="col-12">
-            <textarea name="description" id="description" cols="30" rows="5"
-                      class="form-control">{{$req->description}}</textarea>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="province_id">استان</label>
+                            <div class="col-12">
+                                <select name="province_id" id="province_id" class="form-control">
+                                    @foreach($provinceLists as $provinceList)
+                                        <option value="{{$provinceList->id}}"
+                                            {{ $provinceList->id === 107 ? 'selected':'' }}
+                                            {{$provinceList->id === Request::old('province_id') ? 'selected':''}}
+                                            {{$provinceList->id === $req->province_id ? 'selected':''}}>
+                                            {{$provinceList->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-12">
-                    <div class="form-group">
-                        <label for="file">بارگزاری تصاویر</label>
-                        <input type="file" class="file-input-ajax" multiple="multiple" name="file" data-fouc id="file">
-                        <span class="form-text text-muted">حداکثر ده عکس قابل بارگزاری میباشد.</span>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="city_id">شهر</label>
+                            <div class="col-12">
+                                <select name="city_id" id="city_id" class="form-control">
+                                    <option value="">انتخاب نمایید</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="region_id">منطقه</label>
+                            <div class="col-12">
+                                <select name="region_id" id="region_id" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="ownership_document_status">نوع سند</label>
+                            <div class="col-12">
+                                <select name="ownership_document_status" id="ownership_document_status"
+                                        class="form-control">
+                                    <option value="">انتخاب نمایید.</option>
+                                    @foreach($ownerShipDocumentTypes as $ownerShipDocumentType)
+                                        <option value="{{$ownerShipDocumentType->id}}"
+                                            {{$ownerShipDocumentType->id === $req->ownership_document_status ? 'selected':''}}>
+                                            {{$ownerShipDocumentType->title}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="usage_id">کاربری</label>
+                            <div class="col-12">
+                                <select name="usage_id" id="usage_id" class="form-control">
+                                    <option value="">انتخاب نمایید.</option>
+                                    @foreach($usageTypes as $usageType)
+                                        <option value="{{$usageType->id}}"
+                                            {{$usageType->id === $req->usage_id? 'selected':''}}>
+                                            {{$usageType->title}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="area">متراژ</label>
+                            <div class="col-12">
+                                <input type="number" class="form-control" min="1" max="10000000" name="area" id="area"
+                                       value="{{$req->area}}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="ownerName">نام مالک یا واسط</label>
+                            <div class="col-12">
+                                <input type="text" name="ownerName" id="ownerName" class="form-control"
+                                       required="required" value="{{$req->ownerName}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="ownerPhone">شماره تلفن</label>
+                            <div class="col-12">
+                                <input type="number" name="ownerPhone" id="ownerPhone" class="form-control"
+                                       value="{{$req->ownerPhone}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="address">آدرس ملک</label>
+                            <div class="col-12">
+                                <input type="text" name="address" id="address" class="form-control"
+                                       value="{{$req->address}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="parent_id">نام مجتمع</label>
+                            <div class="col-12">
+                                @if(isset($parents) && $parents!="")
+                                    <select name="parent_id" id="parent_id" class="form-control">
+                                        <option value="">انتخاب نمایید.</option>
+                                        @foreach($parents as $parent)
+                                            <option value="{{$parent->id}}"
+                                                {{$parent->id === $req->parent_id ? 'selected':''}} >
+                                                {{$parent->title}}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام مجتمع
+                                        را از لیست بالا انتخاب نمایید.
+                                    </small>
+                                @else
+                                    <small>هیچ مجمتع ای در سیستم یافت نشد.</small>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-12">
+                        <div class="form-group">
+                            <label for="description">توضیحات</label>
+                            <div class="col-12">
+                        <textarea name="description" id="description" cols="30" rows="5"
+                                  class="form-control">{{$req->description}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="file">بارگزاری تصاویر</label>
+                            <input type="file" class="file-input-ajax" multiple="multiple" name="file[]" data-fouc
+                                   id="file">
+                            <span class="form-text text-muted">حداکثر ده عکس قابل بارگزاری میباشد.</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mapid">موقعیت جغرافیایی</label>
+                            <div id="mapid"></div>
+                            <input type="hidden" name="lat" id="lat" value="{{$req->lat}}">
+                            <input type="hidden" name="lon" id="lon" value="{{$req->lon}}">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <button type="submit" class="btn btn-success float-right">ذخیره اطلاعات</button>
                     </div>
                 </div>
-                <div class="col-12 col-12">
-                    <div class="form-group">
-                        <label for="mapid">موقعیت جغرافیایی</label>
-                        <div id="mapid"></div>
-                        <input type="hidden" name="lat" id="lat" value="">
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 @endsection

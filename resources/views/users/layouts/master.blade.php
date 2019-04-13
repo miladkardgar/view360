@@ -35,6 +35,7 @@
 <script type="text/javascript" src="{{url('/public/assets/js/leaflet.markercluster.js')}}"></script>
 <script type="text/javascript" src="{{url('/public/assets/js/custom.js')}}"></script>
 <script type="text/javascript" src="{{url('/public/assets/js/map-leaflet.js')}}"></script>
+<script type="text/javascript" src="{{url('/public/assets/js/sweet.min.js')}}"></script>
 @yield('script')
 
 </body>

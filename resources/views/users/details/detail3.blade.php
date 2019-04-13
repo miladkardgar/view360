@@ -1,6 +1,12 @@
 @extends('users.layouts.master')
 @section('script')
+    <script src="{{url('/public/assets/js/krpano/krpano.js')}}"></script>
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
+
+<script>
+    embedpano({swf:"{{url('/public/assets/js/krpano/krpano.swf')}}", xml:"{{url('/public/assets/js/krpano/test.xml')}}", target:"krpanoDIV", html5:"only" , value:'159'});
+</script>
+
 @endsection
 @section('body')
 
@@ -11,11 +17,11 @@
         <section id="breadcrumb">
             <div class="container">
                 <nav aria-label="breadcrumb">
-{{--                    <ol class="breadcrumb">--}}
-{{--                        <li class="breadcrumb-item"><a href="#">Home</a></li>--}}
-{{--                        <li class="breadcrumb-item"><a href="#">Library</a></li>--}}
-{{--                        <li class="breadcrumb-item active" aria-current="page">Data</li>--}}
-{{--                    </ol>--}}
+                    {{--                    <ol class="breadcrumb">--}}
+                    {{--                        <li class="breadcrumb-item"><a href="#">Home</a></li>--}}
+                    {{--                        <li class="breadcrumb-item"><a href="#">Library</a></li>--}}
+                    {{--                        <li class="breadcrumb-item active" aria-current="page">Data</li>--}}
+                    {{--                    </ol>--}}
                 </nav>
             </div>
         </section>
@@ -29,10 +35,10 @@
 
                     <!--Title-->
                     <div class="ts-title mb-0">
-                        <h1>Big Luxury Apartment</h1>
+                        <h1>{{$data->title}}</h1>
                         <h5 class="ts-opacity__90">
                             <i class="fa fa-map-marker text-primary"></i>
-                            1350 Arbutus Drive
+                            {{$fileInfos->address}}
                         </h5>
                     </div>
 
@@ -50,11 +56,15 @@
             =========================================================================================================-->
         <section id="content">
             <div class="container">
+                <section>
+                    <div id="krpanoDIV" style="width:100%;height:500px;"></div>
+                </section>
                 <div class="row flex-wrap-reverse">
 
                     <!--LEFT SIDE
                         =============================================================================================-->
                     <div class="col-md-5 col-lg-4">
+
 
                         <!--DETAILS
                             =========================================================================================-->
@@ -134,19 +144,23 @@
 
                             <div class="d-flex justify-content-between">
 
-                                <a href="#" class="btn btn-light mr-2 w-100" data-toggle="tooltip" data-placement="top" title="Add to favorites">
+                                <a href="#" class="btn btn-light mr-2 w-100" data-toggle="tooltip" data-placement="top"
+                                   title="Add to favorites">
                                     <i class="far fa-star"></i>
                                 </a>
 
-                                <a href="#" class="btn btn-light mr-2 w-100" data-toggle="tooltip" data-placement="top" title="Print">
+                                <a href="#" class="btn btn-light mr-2 w-100" data-toggle="tooltip" data-placement="top"
+                                   title="Print">
                                     <i class="fa fa-print"></i>
                                 </a>
 
-                                <a href="#" class="btn btn-light mr-2 w-100" data-toggle="tooltip" data-placement="top" title="Add to compare">
+                                <a href="#" class="btn btn-light mr-2 w-100" data-toggle="tooltip" data-placement="top"
+                                   title="Add to compare">
                                     <i class="fa fa-exchange-alt"></i>
                                 </a>
 
-                                <a href="#" class="btn btn-light w-100" data-toggle="tooltip" data-placement="top" title="Share property">
+                                <a href="#" class="btn btn-light w-100" data-toggle="tooltip" data-placement="top"
+                                   title="Share property">
                                     <i class="fa fa-share-alt"></i>
                                 </a>
 
@@ -167,40 +181,51 @@
 
                             <h3>عکس ها</h3>
 
-                            <div class="owl-carousel ts-gallery-carousel" data-owl-auto-height="1" data-owl-dots="1" data-owl-loop="1">
+                            <div class="owl-carousel ts-gallery-carousel" data-owl-auto-height="1" data-owl-dots="1"
+                                 data-owl-loop="1">
 
                                 <!--Slide-->
                                 <div class="slide">
-                                    <div class="ts-image" data-bg-image="{{url('/public/assets/img/img-detail-01.jpg')}}">
-                                        <a href="{{url('/public/assets/img/img-detail-01.jpg')}}" class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <div class="ts-image"
+                                         data-bg-image="{{url('/public/assets/img/img-detail-01.jpg')}}">
+                                        <a href="{{url('/public/assets/img/img-detail-01.jpg')}}"
+                                           class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
                                     </div>
                                 </div>
 
                                 <!--Slide-->
                                 <div class="slide">
-                                    <div class="ts-image" data-bg-image="{{url('/public/assets/img/img-detail-02.jpg')}}">
-                                        <a href="{{url('/public/assets/img/img-detail-02.jpg')}}" class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <div class="ts-image"
+                                         data-bg-image="{{url('/public/assets/img/img-detail-02.jpg')}}">
+                                        <a href="{{url('/public/assets/img/img-detail-02.jpg')}}"
+                                           class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
                                     </div>
                                 </div>
 
                                 <!--Slide-->
                                 <div class="slide">
-                                    <div class="ts-image" data-bg-image="{{url('/public/assets/img/img-detail-05.jpg')}}">
-                                        <a href="{{url('/public/assets/img/img-detail-03.jpg')}}" class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <div class="ts-image"
+                                         data-bg-image="{{url('/public/assets/img/img-detail-05.jpg')}}">
+                                        <a href="{{url('/public/assets/img/img-detail-03.jpg')}}"
+                                           class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
                                     </div>
                                 </div>
 
                                 <!--Slide-->
                                 <div class="slide">
-                                    <div class="ts-image" data-bg-image="{{url('/public/assets/img/img-detail-04.jpg')}}">
-                                        <a href="{{url('/public/assets/img/img-detail-04.jpg')}}" class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <div class="ts-image"
+                                         data-bg-image="{{url('/public/assets/img/img-detail-04.jpg')}}">
+                                        <a href="{{url('/public/assets/img/img-detail-04.jpg')}}"
+                                           class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
                                     </div>
                                 </div>
 
                                 <!--Slide-->
                                 <div class="slide">
-                                    <div class="ts-image" data-bg-image="{{url('/public/assets/img/img-detail-03.jpg')}}">
-                                        <a href="{{url('/public/assets/img/img-detail-05.jpg')}}" class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <div class="ts-image"
+                                         data-bg-image="{{url('/public/assets/img/img-detail-03.jpg')}}">
+                                        <a href="{{url('/public/assets/img/img-detail-05.jpg')}}"
+                                           class="ts-zoom popup-image"><i class="fa fa-search-plus"></i>بزرگنمایی</a>
                                     </div>
                                 </div>
 
@@ -221,7 +246,8 @@
 
                                     <!--Bathrooms-->
                                     <div class="col-sm-3">
-                                        <div class="ts-quick-info__item" data-bg-image="{{url('/public/assets/img/icon-quick-info-shower.png')}}">
+                                        <div class="ts-quick-info__item"
+                                             data-bg-image="{{url('/public/assets/img/icon-quick-info-shower.png')}}">
                                             <h6>حمام</h6>
                                             <figure>2</figure>
                                         </div>
@@ -229,7 +255,8 @@
 
                                     <!--Bedrooms-->
                                     <div class="col-sm-3">
-                                        <div class="ts-quick-info__item" data-bg-image="{{url('/public/assets/img/icon-quick-info-bed.png')}}">
+                                        <div class="ts-quick-info__item"
+                                             data-bg-image="{{url('/public/assets/img/icon-quick-info-bed.png')}}">
                                             <h6>خواب</h6>
                                             <figure>3</figure>
                                         </div>
@@ -237,7 +264,8 @@
 
                                     <!--Area-->
                                     <div class="col-sm-3">
-                                        <div class="ts-quick-info__item" data-bg-image="{{url('/public/assets/img/icon-quick-info-area.png')}}">
+                                        <div class="ts-quick-info__item"
+                                             data-bg-image="{{url('/public/assets/img/icon-quick-info-area.png')}}">
                                             <h6>مساحت</h6>
                                             <figure>248m<sup>2</sup></figure>
                                         </div>
@@ -245,7 +273,8 @@
 
                                     <!--Garages-->
                                     <div class="col-sm-3">
-                                        <div class="ts-quick-info__item" data-bg-image="{{url('/public/assets/img/icon-quick-info-garages.png')}}">
+                                        <div class="ts-quick-info__item"
+                                             data-bg-image="{{url('/public/assets/img/icon-quick-info-garages.png')}}">
                                             <h6>پارکینگ</h6>
                                             <figure>1</figure>
                                         </div>
@@ -327,7 +356,8 @@
                             <h3>نقشه طبقات</h3>
 
                             <!--1st Floor-->
-                            <a href="#collapse-floor-1" class="ts-box d-block mb-2 py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-floor-1">
+                            <a href="#collapse-floor-1" class="ts-box d-block mb-2 py-3" data-toggle="collapse"
+                               role="button" aria-expanded="false" aria-controls="collapse-floor-1">
                                 طبفه اول
                                 <div class="collapse" id="collapse-floor-1">
                                     <img src="{{url('/public/assets/img/img-floor-plan-01.jpg')}}" alt="" class="w-100">
@@ -335,7 +365,8 @@
                             </a>
 
                             <!--2nd Floor-->
-                            <a href="#collapse-floor-2" class="ts-box d-block py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-floor-2">
+                            <a href="#collapse-floor-2" class="ts-box d-block py-3" data-toggle="collapse" role="button"
+                               aria-expanded="false" aria-controls="collapse-floor-2">
                                 طبقه دوم
                                 <div class="collapse" id="collapse-floor-2">
                                     <img src="{{url('/public/assets/img/img-floor-plan-02.jpg')}}" alt="" class="w-100">
@@ -352,7 +383,10 @@
                             <h3>ویدئو</h3>
 
                             <div class="embed-responsive embed-responsive-16by9 rounded ts-shadow__md">
-                                <iframe src="https://player.vimeo.com/video/9799783?color=ffffff&title=0&byline=0&portrait=0" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                <iframe
+                                    src="https://player.vimeo.com/video/9799783?color=ffffff&title=0&byline=0&portrait=0"
+                                    width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen
+                                    allowfullscreen></iframe>
                             </div>
 
                         </section>
@@ -388,7 +422,8 @@
                                         <div class="ts-center__vertical mb-4">
 
                                             <!--Image-->
-                                            <a href="agent-detail-01.html" class="ts-circle p-5 mr-4 ts-shadow__sm" data-bg-image="{{url('/public/assets/img/img-person-05.jpg')}}"></a>
+                                            <a href="agent-detail-01.html" class="ts-circle p-5 mr-4 ts-shadow__sm"
+                                               data-bg-image="{{url('/public/assets/img/img-person-05.jpg')}}"></a>
 
                                             <!--Phone contact-->
                                             <figure class="mb-0">
@@ -417,22 +452,27 @@
 
                                             <!--Name-->
                                             <div class="form-group">
-                                                <input type="text" class="form-control" id="name" name="name" placeholder="نام شما">
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                       placeholder="نام شما">
                                             </div>
 
                                             <!--Email-->
                                             <div class="form-group">
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="ایمیل شما">
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                       placeholder="ایمیل شما">
                                             </div>
 
                                             <!--Message-->
                                             <div class="form-group">
-                                                <textarea class="form-control" id="form-contact-message" rows="3" name="message" placeholder="سلام من نیاز به اطلاعات بیشتر در مورد فایل {{$id}} دارم."></textarea>
+                                                <textarea class="form-control" id="form-contact-message" rows="3"
+                                                          name="message"
+                                                          placeholder="سلام من نیاز به اطلاعات بیشتر در مورد فایل {{$fileInfos->id}} دارم."></textarea>
                                             </div>
 
                                             <!--Submit button-->
                                             <div class="form-group clearfix mb-0">
-                                                <button type="submit" class="btn btn-primary float-right" id="form-contact-submit">ارسال پیام
+                                                <button type="submit" class="btn btn-primary float-right"
+                                                        id="form-contact-submit">ارسال پیام
                                                 </button>
                                             </div>
 
@@ -475,7 +515,8 @@
                             </div>
 
                             <!--Card Image-->
-                            <a href="detail-01.html" class="card-img" data-bg-image="{{url('/public/assets/img/img-item-thumb-01.jpg')}}"></a>
+                            <a href="detail-01.html" class="card-img"
+                               data-bg-image="{{url('/public/assets/img/img-item-thumb-01.jpg')}}"></a>
 
                             <!--Card Body-->
                             <div class="card-body">
@@ -524,7 +565,8 @@
                             </div>
 
                             <!--Card Image-->
-                            <a href="detail-01.html" class="card-img ts-item__image" data-bg-image="{{url('/public/assets/img/img-item-thumb-02.jpg')}}"></a>
+                            <a href="detail-01.html" class="card-img ts-item__image"
+                               data-bg-image="{{url('/public/assets/img/img-item-thumb-02.jpg')}}"></a>
 
                             <!--Card Body-->
                             <div class="card-body ts-item__body">
@@ -566,7 +608,8 @@
                         <div class="card ts-item ts-item__list ts-card">
 
                             <!--Card Image-->
-                            <a href="detail-01.html" class="card-img ts-item__image" data-bg-image="{{url('/public/assets/img/img-item-thumb-03.jpg')}}"></a>
+                            <a href="detail-01.html" class="card-img ts-item__image"
+                               data-bg-image="{{url('/public/assets/img/img-item-thumb-03.jpg')}}"></a>
 
                             <!--Card Body-->
                             <div class="card-body ts-item__body">

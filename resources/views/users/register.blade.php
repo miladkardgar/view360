@@ -1,4 +1,16 @@
 @extends('users.layouts.master')
+@section('script')
+    @if($errors->any())
+        <script>
+            Swal.fire({
+                type: 'error',
+                title: 'خطا!',
+                text: '{{$errors->first()}}',
+                footer: '<a href>کلمه عبور را فراموش کرده اید؟</a>'
+            })
+        </script>
+    @endif
+@endsection
 @section('body')
     <main id="ts-main" class="rtl">
 
@@ -38,13 +50,6 @@
                             =========================================================================================-->
                         <ul class="nav nav-tabs" id="login-register-tabs" role="tablist">
 
-                            <!--Login tab-->
-                            <li class="nav-item">
-                                <a class="nav-link" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">
-                                    <h3>ورود</h3>
-                                </a>
-                            </li>
-
                             <!--Register tab-->
                             <li class="nav-item">
                                 <a class="nav-link active" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">
@@ -58,80 +63,35 @@
                             =========================================================================================-->
                         <div class="tab-content">
 
-                            <!--LOGIN TAB
-                                =====================================================================================-->
-                            <div class="tab-pane" id="login" role="tabpanel" aria-labelledby="login-tab">
-
-                                <!--Login form-->
-                                <form class="ts-form" id="form-login">
-
-                                    <!--Email-->
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" id="login-email" placeholder="ایمیل" required>
-                                    </div>
-
-                                    <!--Password-->
-                                    <div class="input-group ts-has-password-toggle">
-                                        <input type="password" class="form-control border-right-0" placeholder="کلمه عبور" value="Sercet_123" required>
-                                        <div class="input-group-append">
-                                            <a href="#" class="input-group-text bg-white border-left-0 ts-password-toggle">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!--Checkbox and Submit button-->
-                                    <div class="ts-center__vertical justify-content-between">
-
-                                        <!--Remember checkbox-->
-                                        <div class="custom-control custom-checkbox mb-0">
-                                            <input type="checkbox" class="custom-control-input" id="login-check">
-                                            <label class="custom-control-label" for="login-check">به یاد داشته باش</label>
-                                        </div>
-
-                                        <!--Submit button-->
-                                        <button type="submit" class="btn btn-primary">ورود</button>
-
-                                    </div>
-
-                                    <hr>
-
-                                    <!--Forgot password link-->
-                                    <a href="#" class="ts-text-small">
-                                        <i class="fa fa-sync-alt ts-text-color-primary mr-2"></i>
-                                        <span class="ts-text-color-light">کلمه عبور را فراموش کرده اید؟</span>
-                                    </a>
-
-                                </form>
-
-                            </div>
-                            <!--end #login.tab-pane-->
-
-                            <!--REGISTER TAB
-                                =====================================================================================-->
                             <div class="tab-pane active" id="register" role="tabpanel" aria-labelledby="register-tab">
-
-                                <!--Register tab-->
-                                <form class="ts-form" id="form-register">
-
-                                    <!--Name-->
+                                <form class="ts-form" id="form-register" method="post" action="register">
+                                    {{csrf_field()}}
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="register-name" placeholder="نام کاربری" required>
+                                        <input type="text" class="form-control" id="register-name" name="name"
+                                               placeholder="نام" required>
                                     </div>
 
-                                    <!--Email-->
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="register-email" placeholder="ایمیل" required>
+                                        <input type="text" class="form-control" id="register-family" name="family"
+                                               placeholder="نام خانوادگی" required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="number" class="form-control" id="register-email" placeholder="موبایل" required>
+                                        <input type="email" class="form-control" id="register-email" placeholder="ایمیل"
+                                               required name="email">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" id="register-email"
+                                               placeholder="موبایل"
+                                               required name="mobile">
                                     </div>
 
                                     <!--Password-->
                                     <div class="input-group ts-has-password-toggle">
-                                        <input type="password" class="form-control border-right-0" placeholder="کلمه عبور" required>
+                                        <input type="password" class="form-control border-right-0"
+                                               placeholder="کلمه عبور" required name="password">
                                         <div class="input-group-append">
-                                            <a href="#" class="input-group-text bg-white border-left-0 ts-password-toggle">
+                                            <a href="#"
+                                               class="input-group-text bg-white border-left-0 ts-password-toggle">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </div>
@@ -139,9 +99,11 @@
 
                                     <!--Repeat Password-->
                                     <div class="input-group ts-has-password-toggle">
-                                        <input type="password" class="form-control border-right-0" placeholder="تکرار کلمه عبور" required>
+                                        <input type="password" class="form-control border-right-0"
+                                               placeholder="تکرار کلمه عبور" required>
                                         <div class="input-group-append">
-                                            <a href="#" class="input-group-text bg-white border-left-0 ts-password-toggle">
+                                            <a href="#"
+                                               class="input-group-text bg-white border-left-0 ts-password-toggle">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </div>
@@ -149,17 +111,20 @@
 
                                     <!--Checkbox-->
                                     <div class="custom-control custom-checkbox mb-4">
-                                        <input type="checkbox" class="custom-control-input" id="register-check" required>
-                                        <label class="custom-control-label" for="register-check">پذیرش <a href="#" class="btn-link">قوانین و مقررات</a></label>
+                                        <input type="checkbox" class="custom-control-input" id="register-check"
+                                               required>
+                                        <label class="custom-control-label" for="register-check">پذیرش <a
+                                                href="#" class="btn-link">قوانین و مقررات سایت</a></label>
                                     </div>
 
-                                    <!--Submit button-->
-                                    <button type="submit" class="btn btn-primary">ثبت نام</button>
+                                @include('users.errors')
+
+                                <!--Submit button-->
+                                    <button type="submit" class="btn btn-primary float-left">ثبت نام</button>
+
 
                                 </form>
-
                             </div>
-                            <!--end #register.tab-pane-->
                         </div>
                         <!--end tab-content-->
 

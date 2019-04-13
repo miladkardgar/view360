@@ -1,4 +1,16 @@
 @extends('users.layouts.master')
+@section('script')
+    @if($errors->any())
+        <script>
+            Swal.fire({
+                type: 'error',
+                title: 'خطا!',
+                text: '{{$errors->first()}}',
+                footer: '<a href>کلمه عبور را فراموش کرده اید؟</a>'
+            })
+        </script>
+    @endif
+@endsection
 @section('body')
     <main id="ts-main" class="rtl">
 
@@ -8,9 +20,9 @@
             <div class="container">
                 <nav aria-label="breadcrumb">
                     {{--<ol class="breadcrumb">--}}
-                        {{--<li class="breadcrumb-item"><a href="#">صفحه اصلی</a></li>--}}
-                        {{--<li class="breadcrumb-item"><a href="#">کتابخانه</a></li>--}}
-                        {{--<li class="breadcrumb-item active" aria-current="page">اطلاعات</li>--}}
+                    {{--<li class="breadcrumb-item"><a href="#">صفحه اصلی</a></li>--}}
+                    {{--<li class="breadcrumb-item"><a href="#">کتابخانه</a></li>--}}
+                    {{--<li class="breadcrumb-item active" aria-current="page">اطلاعات</li>--}}
                     {{--</ol>--}}
                 </nav>
             </div>
@@ -33,24 +45,16 @@
                 <div class="row">
 
                     <div class="offset-md-2 col-md-8 offset-lg-3 col-lg-6">
-
-                        <!--LOGIN / REGISTER TABS
+                    <!--LOGIN / REGISTER TABS
                             =========================================================================================-->
                         <ul class="nav nav-tabs" id="login-register-tabs" role="tablist">
 
                             <!--Login tab-->
                             <li class="nav-item">
-                                <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab"
+                                <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login"
+                                   role="tab"
                                    aria-controls="login" aria-selected="true">
                                     <h3>ورود</h3>
-                                </a>
-                            </li>
-
-                            <!--Register tab-->
-                            <li class="nav-item">
-                                <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
-                                   aria-controls="register" aria-selected="false">
-                                    <h3>ثبت نام</h3>
                                 </a>
                             </li>
 
@@ -65,18 +69,18 @@
                             <div class="tab-pane active" id="login" role="tabpanel" aria-labelledby="login-tab">
 
                                 <!--Login form-->
-                                <form class="ts-form" id="form-login">
-
-                                    <!--Email-->
+                                <form class="ts-form" id="form-login" action="login" method="post">
+                                {{csrf_field()}}
+                                <!--Email-->
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="login-email" placeholder="نام کاربری"
+                                        <input type="email" class="form-control" id="login-email" name="username"
+                                               placeholder="نام کاربری"
                                                required>
                                     </div>
-
                                     <!--Password-->
                                     <div class="input-group ts-has-password-toggle">
                                         <input type="password" class="form-control border-right-0"
-                                               placeholder="کلمه عبور" value="Sercet_123" required>
+                                               placeholder="کلمه عبور" value="" name="password" required>
                                         <div class="input-group-append">
                                             <a href="#"
                                                class="input-group-text bg-white border-left-0 ts-password-toggle">
@@ -91,13 +95,16 @@
                                         <!--Remember checkbox-->
                                         <div class="custom-control custom-checkbox mb-0">
                                             <input type="checkbox" class="custom-control-input" id="login-check">
-                                            <label class="custom-control-label" for="login-check">به یاد داشته باش</label>
+                                            <label class="custom-control-label" for="login-check">به یاد داشته
+                                                باش</label>
                                         </div>
 
                                         <!--Submit button-->
                                         <button type="submit" class="btn btn-primary">ورود</button>
 
                                     </div>
+
+                                    @include('users.errors')
 
                                     <hr>
 
@@ -112,68 +119,6 @@
                             </div>
                             <!--end #login.tab-pane-->
 
-                            <!--REGISTER TAB
-                                =====================================================================================-->
-                            <div class="tab-pane" id="register" role="tabpanel" aria-labelledby="register-tab">
-
-                                <!--Register tab-->
-                                <form class="ts-form" id="form-register">
-
-                                    <!--Name-->
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="register-name"
-                                               placeholder="نام کاربری" required>
-                                    </div>
-
-                                    <!--Email-->
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" id="register-email" placeholder="ایمیل"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="register-email" placeholder="موبایل"
-                                               required>
-                                    </div>
-
-                                    <!--Password-->
-                                    <div class="input-group ts-has-password-toggle">
-                                        <input type="password" class="form-control border-right-0"
-                                               placeholder="کلمه عبور" required>
-                                        <div class="input-group-append">
-                                            <a href="#"
-                                               class="input-group-text bg-white border-left-0 ts-password-toggle">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!--Repeat Password-->
-                                    <div class="input-group ts-has-password-toggle">
-                                        <input type="password" class="form-control border-right-0"
-                                               placeholder="تکرار کلمه عبور" required>
-                                        <div class="input-group-append">
-                                            <a href="#"
-                                               class="input-group-text bg-white border-left-0 ts-password-toggle">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!--Checkbox-->
-                                    <div class="custom-control custom-checkbox mb-4">
-                                        <input type="checkbox" class="custom-control-input" id="register-check"
-                                               required>
-                                        <label class="custom-control-label" for="register-check">پذیرش <a
-                                                    href="#" class="btn-link">قوانین و مقررات سایت</a></label>
-                                    </div>
-
-                                    <!--Submit button-->
-                                    <button type="submit" class="btn btn-primary">ثبت نام</button>
-
-                                </form>
-
-                            </div>
-                            <!--end #register.tab-pane-->
                         </div>
                         <!--end tab-content-->
 

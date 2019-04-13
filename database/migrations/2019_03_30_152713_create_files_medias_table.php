@@ -13,15 +13,15 @@ class CreateFilesMediasTable extends Migration
      */
     public function up()
     {
-        Schema::create('files_medias', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('file_id');
-            $table->integer('floor_id');
-            $table->integer('media_id');
-            $table->string('status')->default("active");
-            $table->softDeletes();
-            $table->timestamps();
-        });
+//        Schema::create('files_medias', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->integer('file_id');
+//            $table->integer('floor_id');
+//            $table->integer('media_id');
+//            $table->string('status')->default("active");
+//            $table->softDeletes();
+//            $table->timestamps();
+//        });
     }
 
     /**
@@ -31,6 +31,6 @@ class CreateFilesMediasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files_medias');
+//        Schema::dropIfExists('files_medias');
     }
 }
