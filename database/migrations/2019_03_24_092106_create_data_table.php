@@ -13,16 +13,16 @@ class CreateDataTable extends Migration
      */
     public function up()
     {
-
-//        Schema::create('data', function (Blueprint $table) {
-//            $table->bigIncrements('id')->autoIncrement();
-//            $table->string('title');
-//            $table->integer('parent');
-//            $table->integer('sort');
-//            $table->string('file')->nullable();
-//            $table->string('status');
-//            $table->timestamps();
-//        });
+        Schema::create('data', function (Blueprint $table) {
+            $table->bigIncrements('id')->autoIncrement();
+            $table->string('title');
+            $table->integer('parent');
+            $table->integer('sort');
+            $table->string('file')->nullable();
+            $table->string('status');
+            $table->string('type')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -32,6 +32,6 @@ class CreateDataTable extends Migration
      */
     public function down()
     {
-//        Schema::dropIfExists('data');
+        Schema::dropIfExists('data');
     }
 }
