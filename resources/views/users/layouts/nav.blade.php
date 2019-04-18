@@ -21,13 +21,13 @@
         <div class="container rtl">
 
             <!--Brand Logo-->
-            <a class="navbar-brand" href="/">
-                <img src="{{url('/public/assets/img/logo.png')}}" alt="">
+            <a class="navbar-brand " href="/">
+                <img src="{{url('/public/assets/img/logo.png')}}" width="60" alt="">
             </a>
             <!--Responsive Collapse Button-->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarPrimary"
                     aria-controls="navbarPrimary" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon bg-secondary"></span>
             </button>
 
             <!--Collapsing Navigation-->
@@ -57,12 +57,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="logout">خروج</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">
-                                <i class="fa fa-plus small mr-2"></i>
-                                افزودن فایل
-                            </a>
-                        </li>
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">--}}
+{{--                                <i class="fa fa-plus small mr-2"></i>--}}
+{{--                                افزودن فایل--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
                     </ul>
                 @else
@@ -74,12 +74,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="register">ثبت نام</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">
-                                <i class="fa fa-plus small mr-2"></i>
-                                افزودن فایل
-                            </a>
-                        </li>
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="btn btn-outline-primary btn-sm m-1 px-3" href="submit">--}}
+{{--                                <i class="fa fa-plus small mr-2"></i>--}}
+{{--                                افزودن فایل--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
                     </ul>
             @endif

@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <a href="#" class="brand">
-                        <img src="{{url('/public/assets/img/logo.png')}}" alt="">
+                        <img src="{{url('/public/assets/img.png')}}" width="80" alt="">
                     </a>
                     <p class="mb-4">
                        {{$site_settings->site_description}}

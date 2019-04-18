@@ -1,4 +1,6 @@
-<?php
+pagination.php
+reminders.php
+validation.php<?php
 
 return [
 

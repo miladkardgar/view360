@@ -169,6 +169,65 @@
                         previewZoomButtonClasses: previewZoomButtonClasses,
                         previewZoomButtonIcons: previewZoomButtonIcons
                     });
+                    $('.file-input-ajax3d').fileinput({
+                        browseLabel: 'انتخاب فایل',
+                        uploadUrl: "{{url('/admin/estates/upload')}}",
+                        uploadAsync: false,
+                        maxFileCount: 1,
+                        maxFileSize: 1000000,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
+                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                        browseOnZoneClick: true,
+                        fileActionSettings: {
+                            removeIcon: '<i class="icon-bin"></i>',
+                            uploadClass: '',
+                            zoomIcon: '<i class="icon-zoomin3"></i>',
+                            zoomClass: '',
+                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
+                        },
+                        layoutTemplates: {
+                            icon: '<i class="icon-file-check"></i>',
+                            modal: modalTemplate
+                        },
+                        initialCaption: 'فایلی انتخاب نشده است',
+                        previewZoomButtonClasses: previewZoomButtonClasses,
+                        previewZoomButtonIcons: previewZoomButtonIcons
+                    });
+                    $('.file-input-ajaxMain').fileinput({
+                        browseLabel: 'انتخاب فایل',
+                        uploadUrl: "{{url('/admin/estates/upload')}}",
+                        uploadAsync: false,
+                        maxFileCount: 1,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
+                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                        browseOnZoneClick: true,
+                        fileActionSettings: {
+                            removeIcon: '<i class="icon-bin"></i>',
+                            uploadClass: '',
+                            zoomIcon: '<i class="icon-zoomin3"></i>',
+                            zoomClass: '',
+                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
+                        },
+                        layoutTemplates: {
+                            icon: '<i class="icon-file-check"></i>',
+                            modal: modalTemplate
+                        },
+                        initialCaption: 'فایلی انتخاب نشده است',
+                        previewZoomButtonClasses: previewZoomButtonClasses,
+                        previewZoomButtonIcons: previewZoomButtonIcons
+                    });
 
                     $('#btn-modify').on('click', function () {
                         $btn = $(this);
@@ -204,182 +263,221 @@
             </div>
             <form action="/admin/estate/add" method="post" enctype="multipart/form-data">
                 {{csrf_field()}}
-                <input type="hidden" name="data_id" value="{{$datas->id}}">
-                <input type="hidden" name="user_id" value="{{Auth::id()}}">
-                <div class="row">
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="transaction_type">نوع معامله</label>
-                            <div class="col-12">
-                                <select name="transaction_type" id="transaction_type" required class="form-control">
-                                    <option value="">انتخاب نمایید.</option>
-                                    @foreach($transActionTypes as $transAction)
-                                        <option value="{{$transAction->id}}"
-                                            {{$transAction->id === Request::old('transaction_type')?'selected':''}}>{{$transAction->title}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="province_id">استان</label>
-                            <div class="col-12">
-                                <select name="province_id" id="province_id" class="form-control">
-                                    @foreach($provinceLists as $provinceList)
-                                        <option value="{{$provinceList->id}}"
-                                            {{ $provinceList->id === 107 ? 'selected':'' }}
-                                            {{$provinceList->id === Request::old('province_id')?'selected':''}}>
-                                            {{$provinceList->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="city_id">شهر</label>
-                            <div class="col-12">
-                                <select name="city_id" id="city_id" class="form-control">
-                                    <option value="">انتخاب نمایید</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="region_id">منطقه</label>
-                            <div class="col-12">
-                                <select name="region_id" id="region_id" class="form-control">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="ownership_document_status">نوع سند</label>
-                            <div class="col-12">
-                                <select name="ownership_document_status" id="ownership_document_status"
-                                        class="form-control">
-                                    <option value="">انتخاب نمایید.</option>
-                                    @foreach($ownerShipDocumentTypes as $ownerShipDocumentType)
-                                        <option
-                                            value="{{$ownerShipDocumentType->id}}"
-                                            {{$ownerShipDocumentType->id === Request::old('ownership_document_status')?'selected':''}}>{{$ownerShipDocumentType->title}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="usage_id">کاربری</label>
-                            <div class="col-12">
-                                <select name="usage_id" id="usage_id" class="form-control">
-                                    <option value="">انتخاب نمایید.</option>
-                                    @foreach($usageTypes as $usageType)
-                                        <option value="{{$usageType->id}}"
-                                            {{$usageType->id === Request::old('usage_id')?'selected':''}}>{{$usageType->title}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="area">متراژ</label>
-                            <div class="col-12">
-                                <input type="number" class="form-control" min="1" max="10000000" name="area" id="area"
-                                value="{{Request::old('area')}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="oldArea">متراژ بنای کلنگی</label>
-                            <div class="col-12">
-                                <input type="number" class="form-control" min="1" max="10000000" name="oldArea"
-                                       id="oldArea" value="{{Request::old('oldArea')}}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="ownerName">نام مالک یا واسط</label>
-                            <div class="col-12">
-                                <input type="text" name="ownerName" id="ownerName" class="form-control"
-                                       required="required" value="{{Request::old('ownerName')}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="ownerPhone">شماره تلفن</label>
-                            <div class="col-12">
-                                <input type="number" name="ownerPhone" id="ownerPhone" class="form-control" value="{{Request::old('ownerPhone')}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label for="address">آدرس ملک</label>
-                            <div class="col-12">
-                                <input type="text" name="address" id="address" class="form-control" value="{{Request::old('address')}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="parent_id">نام مجتمع</label>
-                            <div class="col-12">
-                                @if(isset($parents) && $parents!="")
-                                    <select name="parent_id" id="parent_id" class="form-control">
+                @include('admin.errors')
+                <section id="information-section">
+                    <input type="hidden" name="data_id" value="{{$datas->id}}">
+                    <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="transaction_type">نوع معامله</label>
+                                <div class="col-12">
+                                    <select name="transaction_type" id="transaction_type" required class="form-control">
                                         <option value="">انتخاب نمایید.</option>
-                                        @foreach($parents as $parent)
-                                            <option value="{{$parent->id}}"
-                                            {{$parent->id === Request::old('parent_id')?'selected':''}}>{{$parent->title}}</option>
+                                        @foreach($transActionTypes as $transAction)
+                                            <option value="{{$transAction->id}}"
+                                                {{$transAction->id === Request::old('transaction_type')?'selected':''}}>{{$transAction->title}}</option>
                                         @endforeach
                                     </select>
-                                    <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام مجتمع
-                                        را از لیست بالا انتخاب نمایید.
-                                    </small>
-                                @else
-                                    <small>هیچ مجمتع ای در سیستم یافت نشد.</small>
-                                @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-12">
-                        <div class="form-group">
-                            <label for="description">توضیحات</label>
-                            <div class="col-12">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="ownership_document_status">نوع سند</label>
+                                <div class="col-12">
+                                    <select name="ownership_document_status" id="ownership_document_status"
+                                            class="form-control">
+                                        <option value="">انتخاب نمایید.</option>
+                                        @foreach($ownerShipDocumentTypes as $ownerShipDocumentType)
+                                            <option
+                                                value="{{$ownerShipDocumentType->id}}"
+                                                {{$ownerShipDocumentType->id === Request::old('ownership_document_status')?'selected':''}}>{{$ownerShipDocumentType->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="usage_id">کاربری</label>
+                                <div class="col-12">
+                                    <select name="usage_id" id="usage_id" class="form-control">
+                                        <option value="">انتخاب نمایید.</option>
+                                        @foreach($usageTypes as $usageType)
+                                            <option value="{{$usageType->id}}"
+                                                {{$usageType->id === Request::old('usage_id')?'selected':''}}>{{$usageType->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="area">متراژ</label>
+                                <div class="col-12">
+                                    <input type="number" class="form-control" min="1" max="10000000" name="area"
+                                           id="area"
+                                           value="{{Request::old('area')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="oldArea">متراژ بنای کلنگی</label>
+                                <div class="col-12">
+                                    <input type="number" class="form-control" min="1" max="10000000" name="oldArea"
+                                           id="oldArea" value="{{Request::old('oldArea')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="parent_id">نام مجتمع</label>
+                                <div class="col-12">
+                                    @if(isset($parents) && $parents!="")
+                                        <select name="parent_id" id="parent_id" class="form-control">
+                                            <option value="">انتخاب نمایید.</option>
+                                            @foreach($parents as $parent)
+                                                <option value="{{$parent->id}}"
+                                                    {{$parent->id === Request::old('parent_id')?'selected':''}}>{{$parent->title}}</option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام
+                                            مجتمع
+                                            را از لیست بالا انتخاب نمایید.
+                                        </small>
+                                    @else
+                                        <small>هیچ مجمتع ای در سیستم یافت نشد.</small>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label for="description">توضیحات</label>
+                                <div class="col-12">
                         <textarea name="description" id="description" cols="30" rows="5"
                                   class="form-control">{{Request::old('description')}}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label for="file">بارگزاری تصاویر</label>
-                            <input type="file" class="file-input-ajax" multiple="multiple" name="file[]" data-fouc
-                                   id="file">
-                            <span class="form-text text-muted">حداکثر ده عکس قابل بارگزاری میباشد.</span>
+                </section>
+                <section id="region-section">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="province_id">استان</label>
+                                <div class="col-12">
+                                    <select name="province_id" id="province_id" class="form-control">
+                                        @foreach($provinceLists as $provinceList)
+                                            <option value="{{$provinceList->id}}"
+                                                {{ $provinceList->id === 107 ? 'selected':'' }}
+                                                {{$provinceList->id === Request::old('province_id')?'selected':''}}>
+                                                {{$provinceList->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="city_id">شهر</label>
+                                <div class="col-12">
+                                    <select name="city_id" id="city_id" class="form-control">
+                                        <option value="">انتخاب نمایید</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="region_id">منطقه</label>
+                                <div class="col-12">
+                                    <select name="region_id" id="region_id" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label for="mapid">موقعیت جغرافیایی</label>
-                            <div id="mapid"></div>
-                            <input type="hidden" name="lat" id="lat" value="">
-                            <input type="hidden" name="lon" id="lon" value="">
-
+                </section>
+                <section id="ownerInfo-section">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="ownerName">نام مالک یا واسط</label>
+                                <div class="col-12">
+                                    <input type="text" name="ownerName" id="ownerName" class="form-control"
+                                           required="required" value="{{Request::old('ownerName')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="ownerPhone">شماره تلفن</label>
+                                <div class="col-12">
+                                    <input type="number" name="ownerPhone" id="ownerPhone" class="form-control"
+                                           value="{{Request::old('ownerPhone')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="address">آدرس ملک</label>
+                                <div class="col-12">
+                                    <input type="text" name="address" id="address" class="form-control"
+                                           value="{{Request::old('address')}}">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-12">
-                        <button type="submit" class="btn btn-success float-right">ذخیره اطلاعات</button>
+                </section>
+                <section id="upload_section">
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="file">تصاویر اصلی</label>
+                                <input type="file" class="file-input-ajaxMain" multiple="multiple" name="fileMain[]"
+                                       data-fouc accept=".jpg,.gif,.png"
+                                       id="fileMain">
+                                <span class="form-text text-muted">حداکثر یک تصویر قابل بارگذاری مباشد.</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="file">فایل 3D</label>
+                                <input type="file" class="file-input-ajax3d" multiple="multiple" name="file3d[]"
+                                       data-fouc accept=".zip"
+                                       id="file3D">
+                                <span class="form-text text-muted">حداکثر یک فایل قابل بارگذاری میباشد.</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="file">بارگزاری تصاویر</label>
+                                <input type="file" class="file-input-ajax" multiple="multiple" name="file[]" data-fouc
+                                       accept=".jpg,.gif,.png"
+                                       id="file">
+                                <span class="form-text text-muted">حداکثر ده عکس قابل بارگذاری میباشد.</span>
+                            </div>
+                        </div>
                     </div>
+                </section>
+                <section id="location-section">
+                    <div class="row">
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label for="mapid">موقعیت جغرافیایی</label>
+                                <div id="mapid"></div>
+                                <input type="hidden" name="lat" id="lat" value="">
+                                <input type="hidden" name="lon" id="lon" value="">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-12 col-md-12">
+                    <button type="submit" class="btn btn-success float-right">ذخیره اطلاعات</button>
                 </div>
             </form>
         </div>

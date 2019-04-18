@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/admin/estate/setting/storeAttr', 'EstatesController@storeAttr');
     Route::get('/admin/estate/setting/removeAttr/{id}', 'EstatesController@deleteAttr');
+    Route::get('/admin/estate/setting/getCityListSetting', 'EstatesController@getCityListSetting');
 
     Route::post('/admin/estate/getInfo', 'EstatesController@getInfo');
     Route::post('/admin/estate/getCityList', 'EstatesController@getCityList');

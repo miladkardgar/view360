@@ -144,7 +144,7 @@
                         browseLabel: 'انتخاب فایل',
                         uploadUrl: "{{url('/admin/estates/upload')}}",
                         uploadAsync: false,
-                        maxFileCount: 1,
+                        maxFileCount: 10,
                         showUpload: false,
                         removeLabel: "حذف همه",
                         initialPreview: [],
@@ -174,7 +174,7 @@
                         uploadUrl: "{{url('/admin/estates/upload')}}",
                         uploadAsync: false,
                         maxFileCount: 1,
-                        maxFileSize:1000000,
+                        maxFileSize: 1000000,
                         showUpload: false,
                         removeLabel: "حذف همه",
                         initialPreview: [],
@@ -203,7 +203,7 @@
                         browseLabel: 'انتخاب فایل',
                         uploadUrl: "{{url('/admin/estates/upload')}}",
                         uploadAsync: false,
-                        maxFileCount: 10,
+                        maxFileCount: 1,
                         showUpload: false,
                         removeLabel: "حذف همه",
                         initialPreview: [],
@@ -263,6 +263,7 @@
         <div class="card-body text-black-50">
             <form action="/admin/estate/add" method="post" enctype="multipart/form-data">
                 {{csrf_field()}}
+                @include('admin.errors')
                 <section id="information-section">
                     <input type="hidden" name="data_id" value="{{$datas->id}}">
                     <input type="hidden" name="user_id" value="{{Auth::id()}}">
@@ -367,7 +368,7 @@
                                     <select name="province_id" id="province_id" class="form-control">
                                         @foreach($provinceLists as $provinceList)
                                             <option value="{{$provinceList->id}}"
-                                                {{ $provinceList->id === 107 ? 'selected':'' }}
+                                                {{$provinceList->id === 107 ? 'selected':'' }}
                                                 {{$provinceList->id === Request::old('province_id')?'selected':''}}>
                                                 {{$provinceList->name}}</option>
                                         @endforeach
@@ -433,7 +434,7 @@
                             <div class="form-group">
                                 <label for="file">تصاویر اصلی</label>
                                 <input type="file" class="file-input-ajaxMain" multiple="multiple" name="fileMain[]"
-                                       data-fouc
+                                       data-fouc  accept=".jpg,.gif,.png"
                                        id="fileMain">
                                 <span class="form-text text-muted">حداکثر یک تصویر قابل بارگذاری مباشد.</span>
                             </div>
@@ -441,7 +442,8 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="file">فایل 3D</label>
-                                <input type="file" class="file-input-ajax3d" multiple="multiple" name="file3d[]" data-fouc
+                                <input type="file" class="file-input-ajax3d" multiple="multiple" name="file3d[]"
+                                       data-fouc accept=".zip"
                                        id="file3D">
                                 <span class="form-text text-muted">حداکثر یک فایل قابل بارگذاری میباشد.</span>
                             </div>
@@ -450,6 +452,7 @@
                             <div class="form-group">
                                 <label for="file">بارگزاری تصاویر</label>
                                 <input type="file" class="file-input-ajax" multiple="multiple" name="file[]" data-fouc
+                                       accept=".jpg,.gif,.png"
                                        id="file">
                                 <span class="form-text text-muted">حداکثر ده عکس قابل بارگذاری میباشد.</span>
                             </div>

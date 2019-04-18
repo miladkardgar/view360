@@ -18,6 +18,13 @@
             $("#icon").val(name);
             icon.addClass(name + " fa-3x");
         }
+
+
+        $('.tree-default').fancytree({
+            init: function(event, data) {
+                $('.has-tooltip .fancytree-title').tooltip();
+            }
+        });
     </script>
 @stop
 @section('content')
@@ -26,11 +33,44 @@
             <div class="card-body text-black-50">
                 <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
                     <li class="nav-item">
-                        <a href="#highlighted-justified-tab1" class="nav-link active" data-toggle="tab">ویژگی ها</a>
+                        <a href="#cityPanel" class="nav-link active" data-toggle="tab">استانها و شهرها</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#attrsList" class="nav-link" data-toggle="tab">ویژگی ها</a>
                     </li>
                 </ul>
                 <div class="tab-content text-black-50">
-                    <div class="tab-pane fade show active" id="highlighted-justified-tab1">
+                    <div class="tab-pane fade show active" id="cityPanel">
+                        <div class="tree-default">
+                            <ul class="mb-0">
+                                <li class="folder expanded">Expanded folder with children
+                                    <ul>
+                                        <li class="expanded">Expanded sub-item
+                                            <ul>
+                                                <li class="active focused">Active sub-item (active and focus on init)</li>
+                                                <li>Basic <i>menu item</i> with <strong class="font-weight-semibold">HTML support</strong></li>
+                                            </ul>
+                                        </li>
+                                        <li>Collapsed sub-item
+                                            <ul>
+                                                <li>Sub-item 2.2.1</li>
+                                                <li>Sub-item 2.2.2</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="has-tooltip" title="Look, a tool tip!">Menu item with key and tooltip</li>
+                                <li class="folder">Collapsed folder
+                                    <ul>
+                                        <li>Sub-item 1.1</li>
+                                        <li>Sub-item 1.2</li>
+                                    </ul>
+                                </li>
+                                <li class="selected">This is a selected item</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="attrsList">
                         <form action="/admin/estate/setting/storeAttr" method="post">
                             {{csrf_field()}}
                             <div class="row">
@@ -96,8 +136,6 @@
                             </div>
 
                         </form>
-
-
                         <div id="modal_full" class="modal fade" tabindex="-1">
                             <div class="modal-dialog modal-full">
                                 <div class="modal-content">

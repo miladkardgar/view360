@@ -4,8 +4,90 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80b9b9880b64c8a06811008a06879a37",
+    "content-hash": "d9b88899ad482541cba85ea90165654d",
     "packages": [
+        {
+            "name": "anetwork/validation",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anetwork/validation.git",
+                "reference": "cea8cb3b1f3419ae3e97fc9481f7b7a48964358c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anetwork/validation/zipball/cea8cb3b1f3419ae3e97fc9481f7b7a48964358c",
+                "reference": "cea8cb3b1f3419ae3e97fc9481f7b7a48964358c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Anetwork\\Validation\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shahrokh Niakan",
+                    "email": "shahrokhniakan@gmail.com"
+                }
+            ],
+            "description": "Laravel persian validation",
+            "time": "2017-06-10T17:23:57+00:00"
+        },
+        {
+            "name": "caouecs/laravel-lang",
+            "version": "dev-laravel58",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/caouecs/Laravel-lang.git",
+                "reference": "c5e3d884c46d616db0a1cc9401feb8cb998eaeb4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/c5e3d884c46d616db0a1cc9401feb8cb998eaeb4",
+                "reference": "c5e3d884c46d616db0a1cc9401feb8cb998eaeb4",
+                "shasum": ""
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.10"
+            },
+            "suggest": {
+                "ablunier/laravel-lang-installer": "Command for easily add languages to a Laravel project",
+                "andrey-helldar/laravel-lang-publisher": "Easy installation and update of translation files for your project",
+                "arcanedev/laravel-lang": "Translations manager and checker for Laravel 5",
+                "overtrue/laravel-lang": "Command to add languages in your project"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "caouecs",
+                    "email": "caouecs@caouecs.net"
+                }
+            ],
+            "description": "Languages for Laravel",
+            "keywords": [
+                "lang",
+                "languages",
+                "laravel",
+                "lpm"
+            ],
+            "time": "2019-03-27T20:34:54+00:00"
+        },
         {
             "name": "chumper/zipper",
             "version": "v1.0.2",
@@ -2686,6 +2768,65 @@
                 "environment"
             ],
             "time": "2019-03-06T09:39:45+00:00"
+        },
+        {
+            "name": "zanysoft/laravel-zip",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zanysoft/laravel-zip.git",
+                "reference": "466663746c92154c48a2d490efc6724f9f6e9652"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zanysoft/laravel-zip/zipball/466663746c92154c48a2d490efc6724f9f6e9652",
+                "reference": "466663746c92154c48a2d490efc6724f9f6e9652",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0",
+                "scrutinizer/ocular": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ZanySoft\\Zip\\ZipServiceProvider"
+                    ],
+                    "aliases": {
+                        "Zip": "ZanySoft\\Zip\\ZipFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ZanySoft\\Zip\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Zany Soft",
+                    "email": "info@zanysoft.co",
+                    "homepage": "http://www.zanysoft.co"
+                }
+            ],
+            "description": "ZipArchive toolbox",
+            "homepage": "http://www.zanysoft.co",
+            "keywords": [
+                "merge",
+                "multiple",
+                "unzip",
+                "zip",
+                "ziparchive"
+            ],
+            "time": "2017-10-10T03:22:41+00:00"
         }
     ],
     "packages-dev": [
@@ -4455,7 +4596,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "caouecs/laravel-lang": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

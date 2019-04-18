@@ -6,7 +6,7 @@ use App\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
-class Homecontroller extends Controller
+class HomeController extends Controller
 {
 
     public function __construct()
