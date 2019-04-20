@@ -7,8 +7,10 @@ use App\Estate_types;
 use App\Files_atributies;
 use App\Files_medias;
 use App\upload;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use \App\Data;
@@ -20,6 +22,8 @@ use function PHPSTORM_META\map;
 class estatesController extends Controller
 {
     //
+
+    use SoftDeletes;
 
     public function __construct()
     {
@@ -51,9 +55,11 @@ class estatesController extends Controller
         $commercialTypes = Data::where('type', '=', 'commercialType')->get();
         $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
         $parents = File::where('data_id', '=', '4')->get();
-        $pictures = Files_medias::where('file_id', '=', $request->id)->get();
+        $albums = Files_medias::where('file_id', '=', $request->id)->where('type','album')->get();
+        $images3ds = Files_medias::where('file_id', '=', $request->id)->where('type','3d')->get();
+        $mains = Files_medias::where('file_id', '=', $request->id)->where('type','main')->get();
         $attr = Files_atributies::where('file_id', '=', $request->id)->get();
-        return view('admin.estates.edit.' . $fileType, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'pictures', 'attr'));
+        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums','mains','images3ds', 'attr'));
     }
 
     function setting(Request $request)
@@ -125,7 +131,7 @@ class estatesController extends Controller
                     }
 
                 }
-            }else{
+            } else {
                 $check = true;
             }
             if ($checkSFW == true && $checkXML == true) {
@@ -213,7 +219,7 @@ class estatesController extends Controller
 
     public function estateList(Request $request)
     {
-        $estates = File::all();
+        $estates = File::where('status','active')->get();
         $info = [];
         foreach ($estates as $estate) {
             $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
@@ -380,13 +386,13 @@ class estatesController extends Controller
     {
         $provinces = City::where('parent', '0')->get();
         $list = array();
-        $temp=array();
+        $temp = array();
         foreach ($provinces as $province => $val) {
             $getCites = City::where('parent', $val->id)->get();
 //            $temp[$val->id]=array();
             foreach ($getCites as $getCite => $name) {
                 if ($name->name != "") {
-                    $list[]= [
+                    $list[] = [
                         "name" => $name->name,
                         "id" => $name->id,
                         "province" => $val->name];
@@ -395,5 +401,11 @@ class estatesController extends Controller
             $temp[$val->id] = $list;
         }
         return $temp;
+    }
+
+    public function changeStatus(Request $request, File $file)
+    {
+        DB::table('files')->where('id', $request->id)->update(['status'=> $request->val]);
+        return back();
     }
 }

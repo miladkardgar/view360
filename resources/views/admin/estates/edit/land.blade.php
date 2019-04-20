@@ -183,26 +183,113 @@
                             icon: '<i class="icon-file-check"></i>',
                             modal: modalTemplate
                         },
+
+                        initialPreview: [
+                            @foreach($albums as $album)
+                                "<img class='file-preview-image kv-preview-data' src='{{url($album->fileInfo->file)}}'>",
+                            @endforeach
+                        ],
+                        initialPreviewConfig: [
+                                @foreach($albums as $album)
+                            {
+                                caption: "{{$album->fileInfo->name}}",
+                                size: "{{$album->fileInfo->size}}",
+                                url: "{{$album->fileInfo->folder}}",
+                                key: "{{$album->fileInfo->id}}"
+                            },
+                            @endforeach
+                        ],
+                        initialCaption: 'فایلی انتخاب نشده است',
+                        previewZoomButtonClasses: previewZoomButtonClasses,
+                        previewZoomButtonIcons: previewZoomButtonIcons
+                    });
+                    $('.file-input-ajax3d').fileinput({
+                        browseLabel: 'انتخاب فایل',
+                        uploadUrl: "{{url('/admin/estates/upload')}}",
+                        uploadAsync: false,
+                        maxFileCount: 1,
+                        maxFileSize: 1000000,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
+                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                        browseOnZoneClick: true,
+                        fileActionSettings: {
+                            removeIcon: '<i class="icon-bin"></i>',
+                            uploadClass: '',
+                            zoomIcon: '<i class="icon-zoomin3"></i>',
+                            zoomClass: '',
+                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
+                        },
                         layoutTemplates: {
                             icon: '<i class="icon-file-check"></i>',
                             modal: modalTemplate
                         },
                         initialPreview: [
-                            @foreach($pictures as $picture)
-                                "<img class='file-preview-image kv-preview-data' src='{{url($picture->fileInfo->file)}}'>",
+                            @foreach($image3ds as $image3d)
+                                "<img class='file-preview-image kv-preview-data' src='{{url($image3d->fileInfo->file)}}'>",
                             @endforeach
                         ],
                         initialPreviewConfig: [
-                                @foreach($pictures as $picture)
+                                @foreach($image3ds as $image3d)
                             {
-                                caption: "{{$picture->fileInfo->name}}",
-                                size: "{{$picture->fileInfo->size}}",
-                                url: "{{$picture->fileInfo->folder}}",
-                                key: "{{$picture->fileInfo->id}}"
+                                caption: "{{$image3d->fileInfo->name}}",
+                                size: "{{$image3d->fileInfo->size}}",
+                                url: "{{$image3d->fileInfo->folder}}",
+                                key: "{{$image3d->fileInfo->id}}"
                             },
                             @endforeach
-
                         ],
+                        initialCaption: 'فایلی انتخاب نشده است',
+                        previewZoomButtonClasses: previewZoomButtonClasses,
+                        previewZoomButtonIcons: previewZoomButtonIcons
+                    });
+                    $('.file-input-ajaxMain').fileinput({
+                        browseLabel: 'انتخاب فایل',
+                        uploadUrl: "{{url('/admin/estates/upload')}}",
+                        uploadAsync: false,
+                        maxFileCount: 1,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
+                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                        browseOnZoneClick: true,
+                        fileActionSettings: {
+                            removeIcon: '<i class="icon-bin"></i>',
+                            uploadClass: '',
+                            zoomIcon: '<i class="icon-zoomin3"></i>',
+                            zoomClass: '',
+                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
+                        },
+                        layoutTemplates: {
+                            icon: '<i class="icon-file-check"></i>',
+                            modal: modalTemplate
+                        },
+
+                        initialPreview: [
+                            @foreach($mains as $main)
+                                "<img class='file-preview-image kv-preview-data' src='{{url($main->fileInfo->file)}}'>",
+                            @endforeach
+                        ],
+                        initialPreviewConfig: [
+                                @foreach($mains as $main)
+                            {
+                                caption: "{{$main->fileInfo->name}}",
+                                size: "{{$main->fileInfo->size}}",
+                                url: "{{$main->fileInfo->folder}}",
+                                key: "{{$main->fileInfo->id}}"
+                            },
+                            @endforeach
+                        ],
+
                         initialCaption: 'فایلی انتخاب نشده است',
                         previewZoomButtonClasses: previewZoomButtonClasses,
                         previewZoomButtonIcons: previewZoomButtonIcons

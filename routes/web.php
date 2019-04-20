@@ -52,6 +52,9 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::post('/admin/users/store', 'UsersUIController@store');
 
     Route::get('/admin/estate/list', 'EstatesController@list');
+    Route::get('/admin/estate/list/changeStatus/{id}/{val}', 'EstatesController@changeStatus');
+
+
     Route::get('/admin/estate/setting', 'EstatesController@setting');
     Route::get('/admin/estate/edit/{id}', 'EstatesController@edit');
     Route::get('/admin/estate/add/{id}', 'EstatesController@add');

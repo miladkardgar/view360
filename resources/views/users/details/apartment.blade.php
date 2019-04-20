@@ -21,7 +21,6 @@
     @if($con)
         <script src="{{url('/public/assets/js/dananao/tour.js')}}"></script>
         <script>
-
             var vars = {};
             vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";
             vars["plugin[vtoureditor].keep"] = true;
