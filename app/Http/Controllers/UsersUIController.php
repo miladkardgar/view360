@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\About;
+use App\City;
 use App\Data;
 use App\File;
+use App\file_contact;
 use App\Files_atributies;
 use App\Files_medias;
 use App\User;
@@ -28,8 +30,13 @@ class UsersUIController extends Controller
     {
         $contact = new Option();
         $contact = $contact->find(1);
-
-        return view('users.index',compact('contact'));
+        $fileTypes = Data::fileTypes()->get();
+        $transactionTypes = Data::transactionTypes()->get();
+        $usageTypes = Data::usageTypes()->get();
+        $cityTypes = Data::cityTypes()->get();
+        $provinces = City::where('parent',0)->get();
+        $attrs = Data::where('type','possibilities')->get();
+        return view('users.index',compact('contact','fileTypes','transactionTypes','usageTypes','cityTypes','provinces','attrs'));
     }
     public function about(){
         $about = new About();
@@ -82,18 +89,43 @@ class UsersUIController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(Request $request,User $user)
     {
-        $validatedData = $request->validate([
+        $register = $request->validate([
             'name' => 'required|max:100',
             'family' => 'required|max:100',
             'email' => 'required|email|unique:users,email',
             'mobile' => 'required|numeric',
-            'password' => 'required|min:6|max:100',
+            'password' => 'required|min:6|max:100|confirmed',
         ]);
+        $register['password'] = bcrypt($request->password);
+        if($user->create($register)){
 
-        User::create(request($validatedData));
-        return redirect('register');
+            $email = Request("email");
+            $password = Request("password");
+            if (Auth::attempt(['email' => $email, 'password' => $password])) {
+                return redirect()->route('index')->with(['result'=>'success','message'=>'ثبت نام شما با موفقیت انجام شد.']);
+            }
+
+        }else{
+            return back();
+        };
+    }
+
+    public function contactSubmit(Request $request){
+        file_contact::create($this->validateFile($request));
+        return back()->with(['result' => "success", 'message' => "درخواست شما با موفقیت ارسال شد."]);
+    }
+
+
+    private function validateFile(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|min:3',
+            'email' => 'required|email',
+            'subject' => 'required|min:2',
+            'message' => 'required|min:5',
+        ]);
     }
 
 }

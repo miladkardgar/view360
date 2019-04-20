@@ -1,4 +1,5 @@
 @extends('users.layouts.master')
+@section('title','درباره ما')
 @section('body')
     <main id="ts-main" class="rtl">
         <section id="breadcrumb">
@@ -26,9 +27,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8">
-                            <div>
-                                {{htmlspecialchars($datas->text,ENT_NOQUOTES)}}
-                            </div>
+                            <div>{!! html_entity_decode($datas->text) !!}</div>
                             <a href="contact" class="btn btn-primary">تماس با ما</a>
                         </div>
                         <div class="col-md-4"></div>

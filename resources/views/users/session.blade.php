@@ -4,6 +4,8 @@
         Swal.fire({
             type: '{{Session::get('result')}}',
             text: '{{Session::get('message')}}',
+        },function (result) {
+            console.log(result);
         });
 
     </script>

@@ -1,4 +1,6 @@
 @extends('admin.layouts.admin_content_layout')
+@section('title','لیست فایل ها')
+
 @section('meta')
     <meta name="_token" content="{{csrf_token()}}"/>
 @stop
@@ -60,7 +62,7 @@
     <div id="resFileInfo"></div>
     <div class="card">
         <div class="card-body text-black-50">
-            <h4>لیست کاربران</h4>
+            <h4>لیست فایل ها</h4>
             <table class="table" id="usersTable">
                 <thead>
                 <tr>
@@ -105,9 +107,9 @@
                         <td>{{$fileList->address}}</td>
                         <td>@php echo $status @endphp</td>
                         <td>
-                            <button class="btn btn-xs btn-outline-@php echo $color; @endphp btn_ChangeStatus"
-                                    data-id="{{$fileList->id}}" data-value="@php echo $status; @endphp">
-                                <i class="icon-@php echo $icon @endphp"></i></button>
+{{--                            <button class="btn btn-xs btn-outline-@php echo $color; @endphp btn_ChangeStatus"--}}
+{{--                                    data-id="{{$fileList->id}}" data-value="@php echo $status; @endphp">--}}
+{{--                                <i class="icon-@php echo $icon @endphp"></i></button>--}}
                             <a href="/admin/estate/edit/{{$fileList->id}}" class="btn btn-xs btn-outline-dark btn_ChangeRole"><i class="icon-database-edit2"></i></a>
                         </td>
                     </tr>

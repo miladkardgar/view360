@@ -5,7 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>View 360</title>
+    <title>view360 - @yield('title')</title>
+    @yield('meta')
 
     <link rel="stylesheet" href="{{ url('/public/assets/css/bootstrap-rtl.css')}}">
     <link rel="stylesheet" href="{{ url('/public/assets/css/jquery.scrollbar.css')}}">

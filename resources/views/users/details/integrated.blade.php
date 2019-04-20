@@ -1,6 +1,8 @@
 @php
     $site_settings = app('site_settings');
 @endphp
+@section('title',$data->title)
+
 @extends('users.layouts.master')
 @section('script')
     <script src="{{url('/public/assets/js/krpano/krpano.js')}}"></script>

@@ -12,4 +12,5 @@ CKEDITOR.editorConfig = function( config ) {
     config.font_names = 'IRANSans;' + config.font_names;
     config.font_names = 'Titr;' + config.font_names;
     config.font_names = 'Nastaliq;' + config.font_names;
+
 };

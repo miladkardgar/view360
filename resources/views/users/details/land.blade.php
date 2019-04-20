@@ -1,22 +1,39 @@
 @php
     $site_settings = app('site_settings');
 @endphp
+@section('title',$data->title)
 @extends('users.layouts.master')
+{!! $con = false !!}
+@foreach($medias3d as $m3)
+    @if($m3->fileInfo->mime=="xml")
+        @php
+            $xml = $m3->fileInfo->file;
+        @endphp
+    @elseif($m3->fileInfo->mime=="swf")
+        @php
+            $swf = $m3->fileInfo->file;
+            $con = true;
+        @endphp
+    @endif
+@endforeach
 @section('script')
-    <script src="{{url('/public/assets/js/krpano/krpano.js')}}"></script>
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
-    <script>
-        embedpano({
-            swf: "{{url('/public/assets/js/krpano/krpano.swf')}}",
-            xml: "{{url('/public/assets/js/krpano/test.xml')}}",
-            target: "krpanoDIV",
-            html5: "only",
-            value: '159'
-        });
-    </script>
-    <script>
-
-    </script>
+    @if($con)
+        <script src="{{url('/public/assets/js/krpano/krpano.js')}}"></script>
+        <script>
+            var vars = {};
+            vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";
+            vars["plugin[vtoureditor].keep"] = true;
+            embedpano({
+                swf: "{{url($swf)}}",
+                xml: "{{url($xml)}}",
+                target: "krpanoDIV",
+                initvars: {design: "flat"},
+                html5: "auto",
+                passQueryParameters: true
+            });
+        </script>
+    @endif
 @endsection
 @section('body')
     <main id="ts-main" class="rtl">
@@ -44,7 +61,9 @@
                         </h5>
                     </div>
                 </div>
-                <div id="krpanoDIV" style="width:100%;height:500px;"></div>
+                @if($con)
+                    <div id="krpanoDIV" style="width:100%;height:500px;"></div>
+                @endif
             </div>
         </section>
 

@@ -1,13 +1,14 @@
 @extends('admin.layouts.admin_content_layout')
+@section('title','لیست کاربران')
 
 @section('meta')
-<meta name="_token" content="{{csrf_token()}}"/>
+    <meta name="_token" content="{{csrf_token()}}"/>
 @stop
 @section('css')
-<link href="{{url('/public/assets/admin/js/plugins/datatable/datatables.css')}}" rel="stylesheet">
+    <link href="{{url('/public/assets/admin/js/plugins/datatable/datatables.css')}}" rel="stylesheet">
 @stop
 @section('js')
-<script src="{{url('/public/assets/admin/js/plugins/datatable/datatables.js')}}" type="text/javascript"></script>
+    <script src="{{url('/public/assets/admin/js/plugins/datatable/datatables.js')}}" type="text/javascript"></script>
     <script src="{{url('/public/assets/admin/js/main/bootstrap.min.js')}}" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -26,15 +27,15 @@
                     data: {id: id, val: val},
                     success: function (result) {
                         var res = JSON.parse(result);
-                        if(res.result==="success"){
-                            window.location.href ="";
+                        if (res.result === "success") {
+                            window.location.href = "";
                         }
                     }, error: function (error) {
-                        console.log("error"+error)
+                        console.log("error" + error)
                     }
                 })
             });
-            $(".btn_ChangeRole").on("click",function () {
+            $(".btn_ChangeRole").on("click", function () {
                 var id = $(this).data("id");
                 var role = $(this).data("role");
                 $("#modal_changeRole").modal("show");
@@ -45,14 +46,13 @@
                     success: function (result) {
                         $("#modal_changeRole_body").html(result)
                     }, error: function (error) {
-                        console.log("error"+error)
+                        console.log("error" + error)
                     }
                 })
 
             })
 
         });
-
 
 
     </script>
@@ -95,15 +95,16 @@
                         <td>{{$user->name}}</td>
                         <td>{{$user->family}}</td>
                         <td>{{$user->email}}</td>
-                        <td>{{$user->roles->title}}</td>
+                        <td>{{isset($user->roles->title)?$user->roles->title:''}}</td>
                         <td>{{$user->mobile}}</td>
                         <td>{{$user->naCode}}</td>
                         <td>{{$user->status}}</td>
                         <td>
                             <button class="btn btn-xs btn-outline-@php echo $color; @endphp btn_ChangeStatus"
                                     data-id="{{$user->id}}" data-value="@php echo $status; @endphp"><i
-                                        class="icon-@php echo $icon @endphp"></i></button>
-                            <button class="btn btn-xs btn-outline-dark btn_ChangeRole" data-id="{{$user->id}}" data-role="{{$user->roles->id}}"><i class="icon-person"></i></button>
+                                    class="icon-@php echo $icon @endphp"></i></button>
+                            <button class="btn btn-xs btn-outline-dark btn_ChangeRole" data-id="{{$user->id}}"
+                                    data-role="{{isset($user->roles->id)?$user->roles->title:''}}}"><i class="icon-person"></i></button>
                         </td>
                     </tr>
                 @endforeach

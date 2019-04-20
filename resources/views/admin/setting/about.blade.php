@@ -42,7 +42,7 @@
                             <input type="checkbox" class="custom-control-input" id="textStatus" name="textStatus"
                                    @if(isset($option->textStatus) && $option->textStatus==1)
                                    checked
-                                    @endif>
+                                @endif>
                             <label class="custom-control-label" for="textStatus">نمایش متن اصلی</label>
                         </div>
                         <hr>
@@ -51,7 +51,7 @@
                             <label for="editor">متن</label>
                             <textarea contenteditable="true" name="text" id="text" cols="30" rows="10">
                         @if(isset($option->text) && $option->text!="")
-                                    {{$option->text}}
+                                    {{html_entity_decode($option->text)}}
                                 @endif
                     </textarea>
                         </div>

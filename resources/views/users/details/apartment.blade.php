@@ -1,44 +1,40 @@
 @php
     $site_settings = app('site_settings');
-
 @endphp
+@section('title',$data->title)
+{!! $con = false !!}
 @foreach($medias3d as $m3)
-
-    @if($m3->fileInfo->mime=="text/xml")
+    @if($m3->fileInfo->mime=="xml")
         @php
             $xml = $m3->fileInfo->file;
         @endphp
-    @else
+    @elseif($m3->fileInfo->mime=="swf")
         @php
             $swf = $m3->fileInfo->file;
+                    $con = true;
         @endphp
     @endif
 @endforeach
 @extends('users.layouts.master')
 @section('script')
-    <script src="{{url('/public/assets/js/dananao/tour.js')}}"></script>
-    <script src="{{url('/public/assets/js/dananao/plugins/scrollarea.js')}}"></script>
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
-    <script>
+    @if($con)
+        <script src="{{url('/public/assets/js/dananao/tour.js')}}"></script>
+        <script>
 
-        var vars = {};
-        vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";
-        vars["plugin[vtoureditor].keep"] = true;
-
-        embedpano({
-            swf: "{{url($swf)}}",
-            xml: "{{url('/public/assets/js/dananao/tour.xml')}}",
-            target: "krpanoDIV",
-            initvars:{design:"flat"},
-            html5:"auto",
-            passQueryParameters:true
-        });
-
-
-    </script>
-    <script>
-
-    </script>
+            var vars = {};
+            vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";
+            vars["plugin[vtoureditor].keep"] = true;
+            embedpano({
+                swf: "{{url($swf)}}",
+                xml: "{{url($xml)}}",
+                target: "krpanoDIV",
+                initvars: {design: "flat"},
+                html5: "auto",
+                passQueryParameters: true
+            });
+        </script>
+    @endif
 @endsection
 @section('body')
     <main id="ts-main" class="rtl">
@@ -67,12 +63,13 @@
                         </h5>
                     </div>
                 </div>
-                <div id="krpanoDIV" style="width:100%;height:500px;"></div>
+                @if($con)
+                    <div id="krpanoDIV" style="width:100%;height:500px;"></div>
+                @endif
             </div>
         </section>
 
         <section id="gallery-carousel">
-
             <div class="owl-carousel ts-gallery-carousel ts-gallery-carousel__multi" data-owl-dots="1"
                  data-owl-items="3" data-owl-center="1" data-owl-loop="1">
                 @foreach($medias as $media)

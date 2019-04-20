@@ -303,7 +303,7 @@ $(document).ready(function($) {
         var context = canvas.getContext("2d");
         var maxRadius  = 50;
         var minRadius  = 3;
-        var colors = ["#5c81f9",  "#66d3f7"];
+        var colors = ["#02A04C",  "#66d3f7"];
         var numColors  =  colors.length;
 
         for(var i=0;i<50;i++){

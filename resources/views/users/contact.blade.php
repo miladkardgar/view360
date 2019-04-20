@@ -1,4 +1,6 @@
 @extends('users.layouts.master')
+@section('title','تماس با ما')
+
 @section('body')
     <main id="ts-main" class="rtl">
 
@@ -75,25 +77,25 @@
                         </p>
 
                         @if(isset($contact->site_tel) && $contact->site_tel!="")
-                        <figure class="ts-center__vertical">
-                            <i class="fa fa-phone ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
-                            <dl class="mb-0">
-                                <dt>تلفن</dt>
-                                <dd class="ts-opacity__50">{{$contact->site_tel}}</dd>
-                            </dl>
-                        </figure>
+                            <figure class="ts-center__vertical">
+                                <i class="fa fa-phone ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
+                                <dl class="mb-0">
+                                    <dt>تلفن</dt>
+                                    <dd class="ts-opacity__50">{{$contact->site_tel}}</dd>
+                                </dl>
+                            </figure>
                         @endif
 
                         @if(isset($contact->site_email) && $contact->site_email!="")
-                        <figure class="ts-center__vertical">
-                            <i class="fa fa-envelope ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
-                            <dl class="mb-0">
-                                <dt>پست الکترونیکی</dt>
-                                <dd class="ts-opacity__50">
-                                    <a href="#">{{$contact->site_email}}</a>
-                                </dd>
-                            </dl>
-                        </figure>
+                            <figure class="ts-center__vertical">
+                                <i class="fa fa-envelope ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
+                                <dl class="mb-0">
+                                    <dt>پست الکترونیکی</dt>
+                                    <dd class="ts-opacity__50">
+                                        <a href="#">{{$contact->site_email}}</a>
+                                    </dd>
+                                </dl>
+                            </figure>
                         @endif
 
                         @if(isset($contact->site_fax) && $contact->site_fax!="")
@@ -119,9 +121,9 @@
 
                         <!--Form-->
                         <form id="form-contact" method="post" class="clearfix ts-form ts-form-email"
-                              data-php-path="assets/php/email.php">
-
-                            <!--Row-->
+                              data-php-path="assets/php/email.php" action="contact/submit">
+                        {{csrf_field()}}
+                        <!--Row-->
                             <div class="row">
 
                                 <!--Name-->
@@ -129,7 +131,7 @@
                                     <div class="form-group">
                                         <label for="form-contact-name">نام و نام خانوادگی *</label>
                                         <input type="text" class="form-control" id="form-contact-name" name="name"
-                                               placeholder="نام و نام خانوادگی" required>
+                                               placeholder="نام و نام خانوادگی" required value="{{old('name')}}">
                                     </div>
                                 </div>
 
@@ -138,7 +140,7 @@
                                     <div class="form-group">
                                         <label for="form-contact-email">پست الکترونیکی *</label>
                                         <input type="email" class="form-control" id="form-contact-email" name="email"
-                                               placeholder="پست الکترونیکی" required>
+                                               placeholder="پست الکترونیکی" required value="{{old('email')}}">
                                     </div>
                                 </div>
 
@@ -149,22 +151,29 @@
                             <div class="form-group">
                                 <label for="form-contact-email">موضوع *</label>
                                 <input type="text" class="form-control" id="form-contact-subject" name="subject"
-                                       placeholder="موضوع" required>
+                                       placeholder="موضوع" required value="{{old('subject')}}">
                             </div>
 
                             <!--Message-->
                             <div class="form-group">
                                 <label for="form-contact-message">پیام *</label>
                                 <textarea class="form-control" id="form-contact-message" rows="5" name="message"
-                                          placeholder="متن پیام" required></textarea>
+                                          placeholder="متن پیام" required>{{old('message')}}</textarea>
                             </div>
 
                             <!--Submit button-->
                             <div class="form-group clearfix">
-                                <button type="submit" class="btn btn-primary float-left" id="form-contact-submit">ارسال پیام
+                                <button type="submit" class="btn btn-primary float-left" id="form-contact-submit">ارسال
+                                    پیام
                                 </button>
                             </div>
 
+                            @if(session('result'))
+                                @include('users.session')
+                            @endif
+                            @if($errors->any())
+                                @include('users.errors')
+                            @endif
                             <div class="form-contact-status"></div>
 
                         </form>

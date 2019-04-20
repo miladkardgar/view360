@@ -1,4 +1,5 @@
 @extends('users.layouts.pages')
+@section('title','view360')
 @section('body')
     <section id="ts-hero" class=" mb-0">
         <div class="ts-full-screen d-flex">
@@ -18,34 +19,67 @@
                 </div>
             </div>
 
-            <div class="ts-results__vertical ts-results__grid ts-shadow__sm w-100 h-100 scrollbar-inner bg-white ts-z-index__2">
+            <div
+                class="ts-results__vertical ts-results__grid ts-shadow__sm w-100 h-100 scrollbar-inner bg-white ts-z-index__2">
                 <section class="ts-form__grid" data-bg-color="#f6f6f6">
                     <h4 class="font-weight-normal ts-text-color-light">فیلتر های جست و جو</h4>
                     <form class="ts-form ts-box mb-0">
                         <div class="form-row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <input type="text" class="form-control" id="keyword" name="keyword"
-                                           placeholder="آدرس٬ شهر...">
-                                </div>
-                            </div>
                             <div class="col-md-3">
-                                <select class="custom-select mb-3" id="type" name="category">
+                                <select class="custom-select mb-3" id="cityType" name="cityType">
                                     <option value="">نوع</option>
-                                    <option value="1">آپارتمان</option>
-                                    <option value="2">ویلا</option>
-                                    <option value="3">زمین</option>
-                                    <option value="4">کارگاه</option>
+                                    @foreach($cityTypes as $cityType)
+                                        <option value="{{$cityType->id}}">{{$cityType->title}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select class="custom-select mb-3" id="status" name="status">
-                                    <option value="">وضعیت</option>
-                                    <option value="1">فروش</option>
-                                    <option value="2">رهن</option>
+                                <select class="custom-select mb-3" id="fileType" name="fileType">
+                                    <option value="">نوع</option>
+                                    @foreach($fileTypes as $fileType)
+                                        <option value="{{$fileType->id}}">{{$fileType->title}}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
+                                <select class="custom-select mb-3" id="transactionType" name="transactionType">
+                                    <option value="">وضعیت</option>
+                                    @foreach($transactionTypes as $transactionType)
+                                        <option value="{{$transactionType->id}}">{{$transactionType->title}}</option>
+                                    @endforeach()
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="custom-select mb-3" id="usageType" name="usageType">
+                                    <option value="">کاربری</option>
+                                    @foreach($usageTypes as $usageType)
+                                        <option value="{{$usageType->id}}">{{$usageType->title}}</option>
+                                    @endforeach()
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <select class="custom-select mb-3" id="province_id" name="province_id">
+                                    <option value="">استان</option>
+                                    @foreach($provinces as $province)
+                                        <option value="{{$province->id}}">
+                                            {{$province->name}}</option>
+                                    @endforeach()
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="custom-select mb-3" id="city_id" name="city_id">
+                                    <option value="">شهر</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="custom-select mb-3" id="region_id" name="region_id">
+                                    <option value="">منطقه</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-sm-6">
                                 <label for="min-area">کمترین متراژ</label>
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control border-left-0" id="min-area">
@@ -54,31 +88,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                                 <label for="max-area">بیشترین متراژ</label>
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control border-left-0" id="max-area">
                                     <div class="input-group-append">
                                         <span class="input-group-text bg-white border-right-0">متر مربع</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label for="min-price">کمترین قیمت</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control border-left-0" id="min-price">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text bg-white border-right-0">تومان</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label for="max-price">بیشترین قیمت</label>
-
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control border-left-0" id="max-price">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text bg-white border-right-0">تومان</span>
                                     </div>
                                 </div>
                             </div>
@@ -124,77 +139,13 @@
 
                                     <div class="ts-column-count-3">
 
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_1"
-                                                   name="features[]" value="ch_1">
-                                            <label class="custom-control-label" for="ch_1">تهویه هوا</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_2"
-                                                   name="features[]" value="ch_2">
-                                            <label class="custom-control-label" for="ch_2">تخت خواب</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_3"
-                                                   name="features[]" value="ch_3">
-                                            <label class="custom-control-label" for="ch_3">گرمایش</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_4"
-                                                   name="features[]" value="ch_4">
-                                            <label class="custom-control-label" for="ch_4">اینترنت</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_5"
-                                                   name="features[]" value="ch_5">
-                                            <label class="custom-control-label" for="ch_5">ماکروفر</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_6"
-                                                   name="features[]" value="ch_6">
-                                            <label class="custom-control-label" for="ch_6">سیگار</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_7"
-                                                   name="features[]" value="ch_7">
-                                            <label class="custom-control-label" for="ch_7">Terrace</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_8"
-                                                   name="features[]" value="ch_8">
-                                            <label class="custom-control-label" for="ch_8">Balcony</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_9"
-                                                   name="features[]" value="ch_9">
-                                            <label class="custom-control-label" for="ch_9">Iron</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_10"
-                                                   name="features[]" value="ch_10">
-                                            <label class="custom-control-label" for="ch_10">Hi-Fi</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_11"
-                                                   name="features[]" value="ch_11">
-                                            <label class="custom-control-label" for="ch_11">Beach</label>
-                                        </div>
-
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="ch_12"
-                                                   name="features[]" value="ch_12">
-                                            <label class="custom-control-label" for="ch_12">Parking</label>
-                                        </div>
+                                        @foreach($attrs as $attr)
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="ch_{{$attr->id}}"
+                                                       name="attrs[]" value="{{$attr->id}}">
+                                                <label class="custom-control-label" for="ch_{{$attr->id}}">{{$attr->title}}</label>
+                                            </div>
+                                        @endforeach
 
                                     </div>
                                     <!--end ts-column-count-3-->
@@ -231,6 +182,61 @@
 
         </div>
         <!--end full-screen-->
+        @include('users.session')
 
     </section>
+@endsection
+
+@section('meta')
+    <meta name="_token" content="{{csrf_token()}}"/>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $(document).on("change",'#city_id', function () {
+                var cID = $(this).val();
+                $.ajax({
+                    url: "{{url('ajax/cityList')}}",
+                    data: {id: cID},
+                    method: "POST",
+                    success: function (result) {
+                        $("#region_id").html("");
+                        $("#region_id").append("<option value=''>منطقه</option>");
+                        $.each(result, function (i, item) {
+                            $("#region_id").append("<option value='" + item.id + "'>" + item.name + "</option>")
+                        })
+                    },
+                    error() {
+                        console.log("error get area list");
+                    }
+                })
+            })
+
+            $(document).on("change",'#province_id', function () {
+                var pID = $(this).val();
+                $.ajax({
+                    url: "{{url('ajax/cityList')}}",
+                    data: {id: pID},
+                    method: "POST",
+                    success: function (result) {
+                        $("#city_id").html("");
+                        $("#city_id").append("<option value=''>شهر</option>");
+                        $("#region_id").html("");
+                        $.each(result, function (i, item) {
+                            $("#city_id").append("<option value='" + item.id + "'>" + item.name + "</option>")
+                        });
+                        $("#city_id").change();
+                    },
+                    error() {
+                        console.log("error get area list");
+                    }
+                })
+            });
+        })
+    </script>
 @endsection

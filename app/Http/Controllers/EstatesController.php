@@ -7,7 +7,6 @@ use App\Estate_types;
 use App\Files_atributies;
 use App\Files_medias;
 use App\upload;
-use Chumper\Zipper\Facades\Zipper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +14,7 @@ use Illuminate\View\View;
 use \App\Data;
 use \App\Doc_type;
 use \App\File;
+use ZanySoft\Zip\Zip;
 use function PHPSTORM_META\map;
 
 class estatesController extends Controller
@@ -62,7 +62,7 @@ class estatesController extends Controller
         $Attrs[] = Data::where('type', '=', 'possibilities')->get();
         $path = url('/public/assets/webfonts/fontawsome/metadata/icons.json');
         $json = json_decode(file_get_contents($path), true);
-        return view('admin.estates.setting', compact('json','Attrs'));
+        return view('admin.estates.setting', compact('json', 'Attrs'));
     }
 
     function add(Request $request)
@@ -103,59 +103,105 @@ class estatesController extends Controller
 
     function store(Request $request)
     {
-        dd($request->file('file'));
-        die;
-        $file = File::create($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
-            'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
-            'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
-            'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
-            'title', 'city_type_id', 'parent_id', 'province_id']));
-        if ($file->id != "") {
-            $upload = '';
-            if ($request->hasfile('file')) {
-                $uploadFilesId = $this->uploadFile(request(), $file->id,$type='album');
-                $uploadFilesId = $uploadFilesId->getData();
-                foreach ($uploadFilesId->id as $item => $val) {
-                    Files_medias::create(['file_id' => $file->id, 'media_id' => $val,'type'=>"album"]);
-                }
-            }
 
-            if ($request->hasfile('fileMain')) {
-                $uploadFilesId = $this->uploadFile(request(), $file->id,$type='main');
-                $uploadFilesId = $uploadFilesId->getData();
-                foreach ($uploadFilesId->id as $item => $val) {
-                    Files_medias::create(['file_id' => $file->id, 'media_id' => $val,"type"=>"main"]);
-                }
-            }
-
+        if ($this->validateRequest($request)) {
+            $check = false;
+            $checkSFW = false;
+            $checkXML = false;
             if ($request->hasfile('file3d')) {
-                $uploadFilesId = $this->uploadFile(request(), $file->id,$type='3d');
-                $uploadFilesId = $uploadFilesId->getData();
-                foreach ($uploadFilesId->id as $item => $val) {
-                    Files_medias::create(['file_id' => $file->id, 'media_id' => $val,"type"=>"3d"]);
-                }
-            }
+                foreach (request()->file3d as $uploadFile) {
+                    $mime = $uploadFile->getClientMimeType();
+                    if ($mime == "application/zip") {
+                        $zip = Zip::open($uploadFile);
+                        $listFiles = $zip->listFiles();
+                        foreach ($listFiles as $listFile) {
+                            if (strpos($listFile, "tour.swf") !== false) {
+                                $checkSFW = true;
+                            }
+                            if (strpos($listFile, "tour.xml") !== false) {
+                                $checkXML = true;
+                            }
+                        }
+                    }
 
-            $req = $request->all();
-            foreach ($req as $item => $val) {
-                if (strpos($item, "possibilities_") !== false) {
-                    $pos = new Files_atributies();
-                    $pos->data_id = $val;
-                    $pos->file_id = $file->id;
-                    $pos->type = "possibilities";
-                    $pos->save();
                 }
+            }else{
+                $check = true;
+            }
+            if ($checkSFW == true && $checkXML == true) {
+                $check = true;
+            }
+            if ($check == true) {
+                $file = File::create($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
+                    'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
+                    'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
+                    'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
+                    'title', 'city_type_id', 'parent_id', 'province_id']));
+                if ($file->id != "") {
+                    $upload = '';
+                    if ($request->hasfile('file')) {
+                        $uploadFilesId = $this->uploadFile(request(), $file->id, $type = 'album');
+                        $uploadFilesId = $uploadFilesId->getData();
+                        foreach ($uploadFilesId->id as $item => $val) {
+                            Files_medias::create(['file_id' => $file->id, 'media_id' => $val, 'type' => "album"]);
+                        }
+                    }
+
+                    if ($request->hasfile('fileMain')) {
+                        $uploadFilesId = $this->uploadFile(request(), $file->id, $type = 'main');
+                        $uploadFilesId = $uploadFilesId->getData();
+                        foreach ($uploadFilesId->id as $item => $val) {
+                            Files_medias::create(['file_id' => $file->id, 'media_id' => $val, "type" => "main"]);
+                        }
+                    }
+
+                    if ($request->hasfile('file3d')) {
+                        $uploadFilesId = $this->uploadFile(request(), $file->id, $type = '3d');
+                        $uploadFilesId = $uploadFilesId->getData();
+                        foreach ($uploadFilesId->id as $item => $val) {
+                            Files_medias::create(['file_id' => $file->id, 'media_id' => $val, "type" => "3d"]);
+                        }
+                    }
+
+                    $req = $request->all();
+                    foreach ($req as $item => $val) {
+                        if (strpos($item, "possibilities_") !== false) {
+                            $pos = new Files_atributies();
+                            $pos->data_id = $val;
+                            $pos->file_id = $file->id;
+                            $pos->type = "possibilities";
+                            $pos->save();
+                        }
+                    }
+                }
+                return redirect()->intended('/admin/estate/list');
+            } else {
+                return back()->withErrors('فایل ارسالی ناقص میباشد.');
             }
         }
-        return redirect()->intended('/admin/estate/list');
     }
 
-    private function validateRequest()
+    private function validateRequest(Request $request)
     {
 
         return tap(request()->validate([
-            'ownerName' => 'required|min:3'
+            'ownerPhone' => 'iran_mobile',
+            'ownerName' => 'min:0|max:200',
+            'address' => 'address|min:0|max:255',
+            'lat' => 'required',
+            'lon' => 'required',
         ]), function () {
+            if (request()->hasFile('file3d')) {
+                request()->validate([
+                    'file3d.*' => 'file|mimes:zip',
+                ]);
+            }
+
+            if (request()->hasFile('fileMain')) {
+                request()->validate([
+                    'fileMain.*' => 'file|image',
+                ]);
+            }
             if (request()->hasFile('file')) {
                 request()->validate([
                     'file.*' => 'file|image',
@@ -170,13 +216,17 @@ class estatesController extends Controller
         $estates = File::all();
         $info = [];
         foreach ($estates as $estate) {
-            $img = Files_medias::where('File_id',$estate->id)->where('type','main')->get();
+            $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
             $imageInfo = upload::find($img)->first();
-            $url= $imageInfo['file'];
+            $url = $imageInfo['file'];
             $getTitle = Data::where('id', '=', $estate->data_id)->first();
             $info[] = array(
                 "id" => $estate->id,
                 "title" => $getTitle->title,
+                "fileType" => $estate->data_id,
+                "province_id" => $estate->province_id,
+                "city_id" => $estate->city_id,
+                "region_id" => $estate->region_id,
                 "price" => "50000",
                 "category" => $estate->data_id,
                 "marker_image" => url($url),
@@ -195,22 +245,25 @@ class estatesController extends Controller
         return $info;
     }
 
-    private function uploadFile(Request $request, $fileID,$type)
+    private function uploadFile(Request $request, $fileID, $type)
     {
         if (!Storage::exists('/public/files/' . date("Y"))) {
-            Storage::makeDirectory('/public/files/' . date("Y"), 0775, true, true);
+            Storage::makeDirectory('/public/files/' . date("Y"), 775, true, true);
         }
         if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m"))) {
-            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m"), 0775, true, true);
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m"), 775, true, true);
         }
         if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d"))) {
-            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d"), 0775, true, true);
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d"), 775, true, true);
         }
         if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID)) {
-            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID, 0775, true, true);
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID, 775, true, true);
+        }
+        if (!Storage::exists('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip")) {
+            Storage::makeDirectory('/public/files/' . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip", 775, true, true);
         }
         $uploadID = [];
-        if($type=='album') {
+        if ($type == 'album') {
             if ($request->hasfile('file')) {
                 foreach (request()->file as $uploadFile) {
                     $file = $uploadFile;
@@ -224,8 +277,8 @@ class estatesController extends Controller
                         "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
                     );
                     $upload = new upload();
-                    $upload->file = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
-                    $upload->folder = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
                     $upload->name = $filename;
                     $upload->mime = $mime;
                     $upload->size = $size;
@@ -235,7 +288,7 @@ class estatesController extends Controller
                 }
             }
         }
-        if($type=='main') {
+        if ($type == 'main') {
             if ($request->hasfile('fileMain')) {
                 foreach (request()->fileMain as $uploadFile) {
                     $file = $uploadFile;
@@ -249,8 +302,8 @@ class estatesController extends Controller
                         "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
                     );
                     $upload = new upload();
-                    $upload->file = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
-                    $upload->folder = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
                     $upload->name = $filename;
                     $upload->mime = $mime;
                     $upload->size = $size;
@@ -260,7 +313,7 @@ class estatesController extends Controller
                 }
             }
         }
-        if($type=='3d') {
+        if ($type == '3d') {
             if ($request->hasfile('file3d')) {
                 foreach (request()->file3d as $uploadFile) {
                     $file = $uploadFile;
@@ -270,20 +323,38 @@ class estatesController extends Controller
                     $mime = $file->getClientMimeType();
                     $size = $file->getSize();
 
+                    $zip = Zip::open($uploadFile);
+                    $zip->extract("storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip");
                     $file->storeAs(
                         "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
                     );
 
-                    if($mime=="zip") {
-                        $Path = public_path("files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime);
-                        Zipper::make($Path)->extractTo('Appdividend');
-                    }
                     $upload = new upload();
-                    $upload->file = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
-                    $upload->folder = "/public/storage/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
                     $upload->name = $filename;
                     $upload->mime = $mime;
                     $upload->size = $size;
+                    $upload->users()->associate(auth()->user());
+                    $upload->save();
+                    $uploadID[] = $upload->id;
+
+                    $upload = new upload();
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip/tour.swf";
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip";
+                    $upload->name = "tour.swf";
+                    $upload->mime = "swf";
+                    $upload->size = "1";
+                    $upload->users()->associate(auth()->user());
+                    $upload->save();
+                    $uploadID[] = $upload->id;
+
+                    $upload = new upload();
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip/tour.xml";
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip";
+                    $upload->name = "tour.xml";
+                    $upload->mime = "xml";
+                    $upload->size = "1";
                     $upload->users()->associate(auth()->user());
                     $upload->save();
                     $uploadID[] = $upload->id;
@@ -298,9 +369,31 @@ class estatesController extends Controller
         Data::create($request->all());
         return back();
     }
+
     public function deleteAttr(Request $request)
     {
         Data::find($request->id)->delete();
         return back();
+    }
+
+    public function getCityListSetting()
+    {
+        $provinces = City::where('parent', '0')->get();
+        $list = array();
+        $temp=array();
+        foreach ($provinces as $province => $val) {
+            $getCites = City::where('parent', $val->id)->get();
+//            $temp[$val->id]=array();
+            foreach ($getCites as $getCite => $name) {
+                if ($name->name != "") {
+                    $list[]= [
+                        "name" => $name->name,
+                        "id" => $name->id,
+                        "province" => $val->name];
+                }
+            }
+            $temp[$val->id] = $list;
+        }
+        return $temp;
     }
 }
