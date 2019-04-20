@@ -40,7 +40,6 @@ class estatesController extends Controller
     }
 
 
-
     function setting(Request $request)
     {
         $Attrs[] = Data::where('type', '=', 'possibilitiesVila')->get();
@@ -197,7 +196,7 @@ class estatesController extends Controller
 
     public function estateList(Request $request)
     {
-        $estates = File::where('status','active')->get();
+        $estates = File::where('status', 'active')->get();
         $info = [];
         foreach ($estates as $estate) {
             $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
@@ -383,10 +382,9 @@ class estatesController extends Controller
 
     public function changeStatus(Request $request, File $file)
     {
-        DB::table('files')->where('id', $request->id)->update(['status'=> $request->val]);
+        DB::table('files')->where('id', $request->id)->update(['status' => $request->val]);
         return back();
     }
-
 
 
     public function edit(Request $request)
@@ -404,13 +402,14 @@ class estatesController extends Controller
         $commercialTypes = Data::where('type', '=', 'commercialType')->get();
         $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
         $parents = File::where('data_id', '=', '4')->get();
-        $albums = Files_medias::where('file_id', '=', $request->id)->where('type','album')->get();
-        $images = Files_medias::where('file_id', '=', $request->id)->where('type','3d')->get();
-        $mains = Files_medias::where('file_id', '=', $request->id)->where('type','main')->get();
+        $albums = Files_medias::where('file_id', '=', $request->id)->where('type', 'album')->get();
+        $images = Files_medias::where('file_id', '=', $request->id)->where('type', '3d')->get();
+        $mains = Files_medias::where('file_id', '=', $request->id)->where('type', 'main')->get();
         $attrs = Files_atributies::where('file_id', '=', $request->id)->get();
-        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums','mains','images', 'attrs'));
+        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums', 'mains', 'images', 'attrs'));
     }
-    public function update(Request $request,File $file)
+
+    public function update(Request $request, File $file)
     {
 
         $file->update($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
@@ -418,6 +417,33 @@ class estatesController extends Controller
             'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
             'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
             'title', 'city_type_id', 'parent_id', 'province_id']));
+
+        $attrs = Files_atributies::where('file_id', $request->id)->get('data_id');
+        $req = $request->all();
+        $checkAttrs = array();
+        foreach ($req as $item => $val) {
+            if (strpos($item, "possibilities_") !== false) {
+                $check = Files_atributies::where('data_id', $val)->where('file_id', $request->id)->first();
+                if (!$check) {
+                    $pos = new Files_atributies();
+                    $pos->data_id = $val;
+                    $pos->file_id = $request->id;
+                    $pos->type = "possibilities";
+                    $pos->save();
+                }
+                array_push($checkAttrs, $val);
+
+            }
+        }
+        $attrs2 = array();
+        foreach ($attrs as $data => $val) {
+            array_push($attrs2, $val->data_id);
+        }
+        $diff = array_diff($attrs2, $checkAttrs);
+        foreach ($diff as $item) {
+            Files_atributies::where('data_id', $item)->where('file_id', $request->id)->delete();
+        }
+
         return back();
     }
 }
