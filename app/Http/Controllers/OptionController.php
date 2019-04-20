@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data;
+use App\file_contact;
 use App\Option;
 use App\About;
 use App\User;
@@ -47,6 +48,7 @@ class OptionController extends Controller
     public function store(Request $request)
     {
         //
+
     }
 
     /**
@@ -81,6 +83,30 @@ class OptionController extends Controller
     public function update(Request $request, Option $option)
     {
         //
+        $data = $request->validate(
+            [
+                "site_title"=>'required',
+                "site_description"=>'required',
+                "site_email"=>'nullable|email',
+                "site_email2"=>'nullable|email',
+                "site_tel"=>'nullable',
+                "site_tel2"=>'nullable',
+                "site_mobile"=>'nullable|iran_mobile',
+                "site_mobile2"=>'nullable|iran_mobile',
+                "site_url"=>'',
+                "site_fax"=>'',
+                "site_instagram"=>'',
+                "site_telegram"=>'',
+                "site_twitter"=>'',
+                "site_facebook"=>'',
+                "site_address"=>'',
+                "site_address2"=>'',
+                "site_lat"=>'',
+                "site_lon"=>'',
+            ]
+        );
+        $option->update($data);
+        return back();
     }
 
     /**
@@ -93,7 +119,6 @@ class OptionController extends Controller
     {
         //
     }
-
     public function about()
     {
         $option = new About();
@@ -106,9 +131,16 @@ class OptionController extends Controller
             return view('admin.setting.about');
         }
     }
-
     public function aboutStore(Request $request)
     {
+
+
+        function dataready($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
         $option = new About();
         $option2 = $option->find(1);
         $status = 0;
@@ -133,7 +165,7 @@ class OptionController extends Controller
         }
         if (isset($option2)) {
             $option2->textStatus = $status;
-            $option2->text = $request->text;
+            $option2->text = dataready($request->text);
             $option2->managerStatus = $manager;
             $option2->noticeStatus = $notice;
             $option2->counterStatus = $counter;
@@ -141,13 +173,31 @@ class OptionController extends Controller
             $option2->save();
         } else {
             $option->textStatus = $status;
-            $option->text = $request->text;
+            $option->text = dataready($request->text);
             $option->managerStatus = $manager;
             $option->noticeStatus = $notice;
             $option->counterStatus = $counter;
             $option->logosStatus = $logos;
             $option->save();
         }
+
         return redirect('/admin/setting/about');
     }
+    public function contact(){
+        $contacts = file_contact::all();
+        return view('admin.setting.contact',compact('contacts'));
+    }
+    public function setting(){
+        $info = Option::find(1);
+        return view('admin.setting.setting',compact('info'));
+    }
+    public function contactView(Request $request)
+    {
+        $conInfo = file_contact::find($request->id);
+        if(isset($conInfo->id)){
+            file_contact::find($request->id)->update(['read_status','1']);
+        }
+        return view('admin.setting.contactView',compact('conInfo'));
+    }
+
 }

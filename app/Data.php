@@ -18,4 +18,21 @@ class Data extends Model
     {
         return $this->hasMany(Files_atributies::class);
     }
+
+    public function scopeFileTypes($query)
+    {
+        return $query->where('type','fileType');
+    }
+    public function scopeTransactionTypes($query)
+    {
+        return $query->where('type','transactionType');
+    }
+    public function scopeUsageTypes($query)
+    {
+        return $query->where('type','usageType');
+    }
+    public function scopeCityTypes($query)
+    {
+        return $query->where('type','cityType');
+    }
 }

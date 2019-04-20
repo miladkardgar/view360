@@ -33,13 +33,13 @@
                         <div
                             class="media-title font-weight-semibold">{{auth()->user()->name}} {{auth()->user()->family}}</div>
                         <div class="font-size-xs opacity-50">
-                            <i class="icon-pin font-size-sm"></i> &nbsp;Role
+                            <i class="icon-pin font-size-sm"></i> &nbsp;{{auth()->user()->roles->title}}
                         </div>
                     </div>
 
-                    <div class="ml-3 align-self-center">
-                        <a href="#" class="text-white"><i class="icon-cog3"></i></a>
-                    </div>
+{{--                    <div class="ml-3 align-self-center">--}}
+{{--                        <a href="#" class="text-white"><i class="icon-cog3"></i></a>--}}
+{{--                    </div>--}}
                 </div>
             </div>
         </div>
@@ -98,11 +98,11 @@
                         <li class="nav-item"><a href="/admin/users/list"
                                                 class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='list' ? 'active' : '' }}">لیست
                                 کاربران</a></li>
-                        <li class="nav-item"><a href="/admin/users/permissions"
-                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='permissions' ? 'active' : '' }}">دسترسی
-                                ها</a></li>
-                        <li class="nav-item"><a href="/admin/users/setting"
-                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='setting' ? 'active' : '' }}">تنظیمات</a>
+{{--                        <li class="nav-item"><a href="/admin/users/permissions"--}}
+{{--                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='permissions' ? 'active' : '' }}">دسترسی--}}
+{{--                                ها</a></li>--}}
+{{--                        <li class="nav-item"><a href="/admin/users/setting"--}}
+{{--                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='setting' ? 'active' : '' }}">تنظیمات</a>--}}
                         </li>
                     </ul>
                 </li>
@@ -118,6 +118,9 @@
                         <li class="nav-item"><a href="/admin/setting/contact"
                                                 class="nav-link {{ Request::segment(2) === 'setting' && Request::segment(3) === 'contact' ? 'active' : '' }}">تماس
                                 با ما</a></li>
+
+                        <li class="nav-item">
+                            <a href="/admin/setting/setting" class="nav-link {{ Request::segment(2) === 'setting' && Request::segment(3) === 'setting' ? 'active' : '' }}">تنظیمات</a></li>
                     </ul>
                 </li>
                 <!-- /page kits -->

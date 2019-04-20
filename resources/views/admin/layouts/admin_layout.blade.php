@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @yield('meta')
 
-    <title>{{config('app.name')}}</title>
+    <title>@yield('title')</title>
     {{--core css--}}
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
     <link href="{{url('public/assets/admin/icons/icomoon/styles.css')}}" rel="stylesheet" type="text/css">

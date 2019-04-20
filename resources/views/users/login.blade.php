@@ -1,4 +1,6 @@
 @extends('users.layouts.master')
+@section('title','ورود')
+
 @section('script')
     @if($errors->any())
         <script>

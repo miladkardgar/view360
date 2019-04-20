@@ -47,17 +47,18 @@ class UsersController extends Controller
         return view('admin.users.login');
     }
 
-    public function store(Request $request)
+    public function store(Request $request,User $user)
     {
 
-
-        $register = new \App\User();
-        $register->name = Request("name");
-        $register->family = Request("family");
-        $register->password = bcrypt(Request("password"));
-        $register->email = Request("email");
-        $register->mobile = Request("mobile");
-        $register->save();
+        $register = $request->validate([
+            'name' => 'required|max:100',
+            'family' => 'required|max:100',
+            'email' => 'required|email|unique:users,email',
+            'mobile' => 'required|iran_mobile',
+            'password' => 'required|min:6|max:100|confirmed',
+        ]);
+        $register['password'] = bcrypt($request->password);
+        $user->create($register);
         return redirect('/admin/');
     }
 

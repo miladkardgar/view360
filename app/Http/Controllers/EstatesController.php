@@ -125,6 +125,8 @@ class estatesController extends Controller
                     }
 
                 }
+            }else{
+                $check = true;
             }
             if ($checkSFW == true && $checkXML == true) {
                 $check = true;
@@ -221,6 +223,10 @@ class estatesController extends Controller
             $info[] = array(
                 "id" => $estate->id,
                 "title" => $getTitle->title,
+                "fileType" => $estate->data_id,
+                "province_id" => $estate->province_id,
+                "city_id" => $estate->city_id,
+                "region_id" => $estate->region_id,
                 "price" => "50000",
                 "category" => $estate->data_id,
                 "marker_image" => url($url),
@@ -271,8 +277,8 @@ class estatesController extends Controller
                         "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
                     );
                     $upload = new upload();
-                    $upload->file = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
-                    $upload->folder = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
                     $upload->name = $filename;
                     $upload->mime = $mime;
                     $upload->size = $size;
@@ -296,8 +302,8 @@ class estatesController extends Controller
                         "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/", $filenameTime, 'public'
                     );
                     $upload = new upload();
-                    $upload->file = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
-                    $upload->folder = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
                     $upload->name = $filename;
                     $upload->mime = $mime;
                     $upload->size = $size;
@@ -324,8 +330,8 @@ class estatesController extends Controller
                     );
 
                     $upload = new upload();
-                    $upload->file = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
-                    $upload->folder = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/" . $filenameTime;
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID;
                     $upload->name = $filename;
                     $upload->mime = $mime;
                     $upload->size = $size;
@@ -334,8 +340,8 @@ class estatesController extends Controller
                     $uploadID[] = $upload->id;
 
                     $upload = new upload();
-                    $upload->file = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip/tour.swf";
-                    $upload->folder = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip";
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip/tour.swf";
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip";
                     $upload->name = "tour.swf";
                     $upload->mime = "swf";
                     $upload->size = "1";
@@ -344,8 +350,8 @@ class estatesController extends Controller
                     $uploadID[] = $upload->id;
 
                     $upload = new upload();
-                    $upload->file = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip/tour.xml";
-                    $upload->folder = "files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip";
+                    $upload->file = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip/tour.xml";
+                    $upload->folder = "storage/app/public/files/" . date("Y") . "/" . date("m") . "/" . date("d") . "/" . $fileID . "/zip";
                     $upload->name = "tour.xml";
                     $upload->mime = "xml";
                     $upload->size = "1";

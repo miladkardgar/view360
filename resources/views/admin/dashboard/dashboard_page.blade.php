@@ -1,4 +1,5 @@
 @extends('admin.layouts.admin_content_layout')
+@section('title','داشبورد')
 
 @section('meta')
 @stop
@@ -7,7 +8,17 @@
 @section('js')
 @stop
 @section('content')
-    <span class="alpha-info center text-info p- m-5"> اطلاعات صفحه در اینجا قرار میگیرد</span>
+    <div class="card m-5 p-5">
+        <div class="card-body">
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <br>

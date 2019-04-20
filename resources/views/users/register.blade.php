@@ -1,16 +1,5 @@
 @extends('users.layouts.master')
-@section('script')
-    @if($errors->any())
-        <script>
-            Swal.fire({
-                type: 'error',
-                title: 'خطا!',
-                text: '{{$errors->first()}}',
-                footer: '<a href>کلمه عبور را فراموش کرده اید؟</a>'
-            })
-        </script>
-    @endif
-@endsection
+@section('title','ثبت نام')
 @section('body')
     <main id="ts-main" class="rtl">
 
@@ -68,21 +57,21 @@
                                     {{csrf_field()}}
                                     <div class="form-group">
                                         <input type="text" class="form-control" id="register-name" name="name"
-                                               placeholder="نام" required>
+                                               placeholder="نام" required value="{{old('name')}}">
                                     </div>
 
                                     <div class="form-group">
                                         <input type="text" class="form-control" id="register-family" name="family"
-                                               placeholder="نام خانوادگی" required>
+                                               placeholder="نام خانوادگی" required value="{{old('family')}}">
                                     </div>
                                     <div class="form-group">
                                         <input type="email" class="form-control" id="register-email" placeholder="ایمیل"
-                                               required name="email">
+                                               required name="email" value="{{old('email')}}">
                                     </div>
                                     <div class="form-group">
-                                        <input type="number" class="form-control" id="register-email"
+                                        <input type="number" class="form-control" id="mobile"
                                                placeholder="موبایل"
-                                               required name="mobile">
+                                               required name="mobile" value="{{old('mobile')}}">
                                     </div>
 
                                     <!--Password-->
@@ -100,7 +89,7 @@
                                     <!--Repeat Password-->
                                     <div class="input-group ts-has-password-toggle">
                                         <input type="password" class="form-control border-right-0"
-                                               placeholder="تکرار کلمه عبور" required>
+                                               placeholder="تکرار کلمه عبور" required name="password_confirmation">
                                         <div class="input-group-append">
                                             <a href="#"
                                                class="input-group-text bg-white border-left-0 ts-password-toggle">
@@ -118,6 +107,7 @@
                                     </div>
 
                                 @include('users.errors')
+                                @include('users.session')
 
                                 <!--Submit button-->
                                     <button type="submit" class="btn btn-primary float-left">ثبت نام</button>

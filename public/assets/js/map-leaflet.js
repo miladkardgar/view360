@@ -1,4 +1,4 @@
-$(document).ready(function($) {
+$(document).ready(function ($) {
     "use strict";
 
     var mapId = "ts-map-hero";
@@ -33,6 +33,7 @@ $(document).ready(function($) {
         var zoomPosition = mapElement.attr("data-ts-map-zoom-position");
         var mapBoxAccessToken = 'sk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdHN2czc4ZzAwMmk0YWx6b3pxc3djeGkifQ.14LK8WpxZqIvuqkFxbRe8g';
         var mapBoxId = mapElement.attr("data-ts-map-mapbox-id");
+        var form = $(".ts-form");
 
         if (mapElement.attr("data-ts-display-additional-info")) {
             var displayAdditionalInfoTemp = mapElement.attr("data-ts-display-additional-info").split(";");
@@ -65,12 +66,9 @@ $(document).ready(function($) {
         }).addTo(map);
 
 
-
-
-        if( controls !== 0 && zoomPosition ){
+        if (controls !== 0 && zoomPosition) {
             L.control.zoom({position: zoomPosition}).addTo(map);
-        }
-        else if ( controls !== 0 ){
+        } else if (controls !== 0) {
             L.control.zoom({position: "topright"}).addTo(map);
         }
 
@@ -81,27 +79,26 @@ $(document).ready(function($) {
         loadData();
     }
 
+
     function loadData(parameters) {
         $.ajax({
             // url: "/public/assets/db/items.json",
-            url:"/estate/list",
+            url: "/estate/list",
             dataType: "json",
             method: "GET",
             cache: false,
             success: function (results) {
-
+                console.log(parameters);
                 if (typeof parameters !== "undefined" && parameters["formData"]) {
-                    // loadFormData(parameters);
-                }
-                else {
+                    //loadFormData(parameters);
+                }else{
                     allMarkersData = results;
                     loadedMarkersData = allMarkersData;
                 }
-
                 createMarkers(); // call function to create markers
             },
             error: function (e) {
-                console.log(e);
+                // console.log(e);
             }
         });
     }
@@ -121,12 +118,12 @@ $(document).ready(function($) {
 
             markerContent.innerHTML =
                 '<div class="ts-marker-wrapper">' +
-                    '<a href="#" class="ts-marker" data-ts-id="' + loadedMarkersData[i]["id"] + '" data-ts-ln="' + i + '">' +
-                    ( ( loadedMarkersData[i]["ribbon"] !== undefined ) ? '<div class="ts-marker__feature">' + loadedMarkersData[i]["ribbon"] + '</div>' : "" ) +
-                    ( ( loadedMarkersData[i]["title"] !== undefined ) ? '<div class="ts-marker__title">' + loadedMarkersData[i]["title"] + '</div>' : "" ) +
-                    // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-marker__info">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
-                    ( ( loadedMarkersData[i]["marker_image"] !== undefined ) ? '<div class="ts-marker__image ts-black-gradient" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' : '<div class="ts-marker__image ts-black-gradient" style="background-image: url(/public/assets/img/marker-default-img.png)"></div>' ) +
-                    '</a>' +
+                '<a href="#" class="ts-marker" data-ts-id="' + loadedMarkersData[i]["id"] + '" data-ts-ln="' + i + '">' +
+                ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-marker__feature">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
+                ((loadedMarkersData[i]["title"] !== undefined) ? '<div class="ts-marker__title">' + loadedMarkersData[i]["title"] + '</div>' : "") +
+                // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-marker__info">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
+                ((loadedMarkersData[i]["marker_image"] !== undefined) ? '<div class="ts-marker__image ts-black-gradient" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' : '<div class="ts-marker__image ts-black-gradient" style="background-image: url(/public/assets/img/marker-default-img.png)"></div>') +
+                '</a>' +
                 '</div>';
 
             placeLeafletMarker({"i": i, "markerContent": markerContent, "method": "latitudeLongitude"});
@@ -187,7 +184,7 @@ $(document).ready(function($) {
                 "parentMarker": marker,
                 "i": i,
                 // "url": "/public/assets/db/items.json"
-                "url":"/estate/list"
+                "url": "/estate/list"
             });
         });
 
@@ -247,25 +244,25 @@ $(document).ready(function($) {
 
         infoboxHtml.innerHTML =
             '<div class="infobox-wrapper">' +
-                '<div class="ts-infobox" data-ts-id="' + loadedMarkersData[i]["id"] + '">' +
-                    '<img src="/public/assets/img/infobox-close.svg" class="ts-close">' +
+            '<div class="ts-infobox" data-ts-id="' + loadedMarkersData[i]["id"] + '">' +
+            '<img src="/public/assets/img/infobox-close.svg" class="ts-close">' +
 
-                    ( ( loadedMarkersData[i]["ribbon"] !== undefined ) ? '<div class="ts-ribbon">' + loadedMarkersData[i]["ribbon"] + '</div>' : "" ) +
-                    ( ( loadedMarkersData[i]["ribbon_corner"] !== undefined ) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[i]["ribbon_corner"] + '</span></div>' : "" ) +
+            ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-ribbon">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
+            ((loadedMarkersData[i]["ribbon_corner"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[i]["ribbon_corner"] + '</span></div>' : "") +
 
-                    '<a href="' + loadedMarkersData[i]["url"] + '" class="ts-infobox__wrapper ts-black-gradient">' +
-                        ( ( loadedMarkersData[i]["badge"] !== undefined && loadedMarkersData[i]["badge"].length > 0 ) ? '<div class="badge badge-dark">' + loadedMarkersData[i]["badge"] + '</div>' : "" ) +
-                        '<div class="ts-infobox__content rtl" style="font-family: IRANSans">' +
-                            '<figure class="ts-item__info">' +
-                                // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-item__info-badge">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
-                                ( ( loadedMarkersData[i]["title"] !== undefined && loadedMarkersData[i]["title"].length > 0 ) ? '<h4>' + loadedMarkersData[i]["title"] + '</h4>' : "" ) +
-                                ( ( loadedMarkersData[i]["address"] !== undefined && loadedMarkersData[i]["address"].length > 0 ) ? '<aside><i class="fa fa-map-marker mr-2"></i>' + loadedMarkersData[i]["address"] + '</aside>' : "" ) +
-                            '</figure>' +
-                            // additionalInfoHTML({display: displayAdditionalInfo, i: i}) +
-                            '</div>' +
-                        '<div class="ts-infobox_image" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' +
-                    '</a>' +
-                '</div>' +
+            '<a href="' + loadedMarkersData[i]["url"] + '" class="ts-infobox__wrapper ts-black-gradient">' +
+            ((loadedMarkersData[i]["badge"] !== undefined && loadedMarkersData[i]["badge"].length > 0) ? '<div class="badge badge-dark">' + loadedMarkersData[i]["badge"] + '</div>' : "") +
+            '<div class="ts-infobox__content rtl" style="font-family: IRANSans">' +
+            '<figure class="ts-item__info">' +
+            // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-item__info-badge">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
+            ((loadedMarkersData[i]["title"] !== undefined && loadedMarkersData[i]["title"].length > 0) ? '<h4>' + loadedMarkersData[i]["title"] + '</h4>' : "") +
+            ((loadedMarkersData[i]["address"] !== undefined && loadedMarkersData[i]["address"].length > 0) ? '<aside><i class="fa fa-map-marker mr-2"></i>' + loadedMarkersData[i]["address"] + '</aside>' : "") +
+            '</figure>' +
+            // additionalInfoHTML({display: displayAdditionalInfo, i: i}) +
+            '</div>' +
+            '<div class="ts-infobox_image" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' +
+            '</a>' +
+            '</div>' +
             '</div>';
     }
 
@@ -283,15 +280,14 @@ $(document).ready(function($) {
             if (loadedMarkersData[i][displayParameter[0]] !== undefined) {
                 additionalInfoHtml +=
                     '<dl>' +
-                        '<dt>' + displayParameter[1] + '</dt>' +
-                        '<dd>' + loadedMarkersData[i][displayParameter[0]] + ((displayParameter[a] === "area") ? unit : "") + '</dd>' +
+                    '<dt>' + displayParameter[1] + '</dt>' +
+                    '<dd>' + loadedMarkersData[i][displayParameter[0]] + ((displayParameter[a] === "area") ? unit : "") + '</dd>' +
                     '</dl>';
             }
         }
         if (additionalInfoHtml) {
             // return '<div class="ts-description-lists">' + additionalInfoHtml + '</div>';
-        }
-        else {
+        } else {
             return "";
         }
     }
@@ -311,8 +307,7 @@ $(document).ready(function($) {
             if (map.getBounds().contains(newMarkers[i].getLatLng())) {
                 visibleMarkersOnMap.push(newMarkers[i]);
                 //newMarkers[i].addTo(map);
-            }
-            else {
+            } else {
                 //newMarkers[i].setVisible(false);
                 //newMarkers[i].remove();
             }
@@ -329,35 +324,35 @@ $(document).ready(function($) {
                 for (var a = 0; a < loadedMarkersData[id]["additional_info"].length; a++) {
                     additionalInfoHtml +=
                         '<dl>' +
-                            '<dt>' + loadedMarkersData[id]["additional_info"][a]["title"] + '</dt>' +
-                            '<dd>' + loadedMarkersData[id]["additional_info"][a]["value"] + '</dd>' +
+                        '<dt>' + loadedMarkersData[id]["additional_info"][a]["title"] + '</dt>' +
+                        '<dd>' + loadedMarkersData[id]["additional_info"][a]["value"] + '</dd>' +
                         '</dl>';
                 }
             }
-            
+
             resultsHtml.push(
                 '<div class="ts-result-link" data-ts-id="' + loadedMarkersData[id]["id"] + '" data-ts-ln="' + newMarkers[id].loopNumber + '">' +
-                    '<span class="ts-center-marker"><img src="/public/assets/img/result-center.svg"></span>' +
-                    '<a href="' + loadedMarkersData[id]["url"] + '" class="card ts-item ts-card ts-result">' +
-                        ( ( loadedMarkersData[id]["ribbon"] !== undefined ) ? '<div class="ts-ribbon">' + loadedMarkersData[id]["ribbon"] + '</div>' : "" ) +
-                        ( ( loadedMarkersData[id]["ribbon_corner"] !== undefined ) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[id]["ribbon_corner"] + '</span></div>' : "" ) +
-                        '<div href="detail-01.html" class="card-img ts-item__image" style="background-image: url(' + loadedMarkersData[id]["marker_image"] + ')"></div>' +
-                        '<div class="card-body">' +
-                            // '<div class="ts-item__info-badge">' + formatPrice(loadedMarkersData[id]["price"]) + '</div>' +
-                            '<figure class="ts-item__info">' +
-                                '<h4>' + loadedMarkersData[id]["title"] + '</h4>' +
-                                '<aside>' +
-                                '<i class="fa fa-map-marker mr-2"></i>' + loadedMarkersData[id]["address"] + '</aside>' +
-                            '</figure>' +
-                            // additionalInfoHTML({display: displayAdditionalInfo, i: id}) +
-                        '</div>' +
-                        '<div class="card-footer">' +
-                            '<span class="ts-btn-arrow">جزئیات</span>' +
-                        '</div>' +
-                    '</a>' +
+                '<span class="ts-center-marker"><img src="/public/assets/img/result-center.svg"></span>' +
+                '<a href="' + loadedMarkersData[id]["url"] + '" class="card ts-item ts-card ts-result">' +
+                ((loadedMarkersData[id]["ribbon"] !== undefined) ? '<div class="ts-ribbon">' + loadedMarkersData[id]["ribbon"] + '</div>' : "") +
+                ((loadedMarkersData[id]["ribbon_corner"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[id]["ribbon_corner"] + '</span></div>' : "") +
+                '<div href="detail-01.html" class="card-img ts-item__image" style="background-image: url(' + loadedMarkersData[id]["marker_image"] + ')"></div>' +
+                '<div class="card-body">' +
+                // '<div class="ts-item__info-badge">' + formatPrice(loadedMarkersData[id]["price"]) + '</div>' +
+                '<figure class="ts-item__info">' +
+                '<h4>' + loadedMarkersData[id]["title"] + '</h4>' +
+                '<aside>' +
+                '<i class="fa fa-map-marker mr-2"></i>' + loadedMarkersData[id]["address"] + '</aside>' +
+                '</figure>' +
+                // additionalInfoHTML({display: displayAdditionalInfo, i: id}) +
+                '</div>' +
+                '<div class="card-footer">' +
+                '<span class="ts-btn-arrow">جزئیات</span>' +
+                '</div>' +
+                '</a>' +
                 '</div>'
             );
-            
+
         }
 
 
@@ -366,8 +361,7 @@ $(document).ready(function($) {
         var $results = $("#ts-results").find(".ts-sly-frame");
         if ($results.hasClass("ts-loaded")) {
             $results.sly("reload");
-        }
-        else {
+        } else {
             initializeSly();
         }
 
@@ -380,15 +374,14 @@ $(document).ready(function($) {
                 $("#ts-map-hero").addClass("ts-dim-map");
             });
 
-            $("#ts-map-hero").on("click", function(){
+            $("#ts-map-hero").on("click", function () {
                 if (resultsBar.hasClass("ts-expanded")) {
                     resultsBar.removeClass("ts-expanded");
                     $("#ts-map-hero").removeClass("ts-dim-map");
                     resultsBar.find(".ts-results__vertical").css("pointer-events", "none");
                 }
             });
-        }
-        else {
+        } else {
             resultsBar.removeClass("ts-expanded");
             resultsBar.find(".ts-results__vertical").css("pointer-events", "auto");
             $("#ts-map-hero").removeClass("ts-dim-map");
@@ -401,7 +394,7 @@ $(document).ready(function($) {
 
     $(document).on("click", ".ts-center-marker", function () {
         $(".ts-marker").parent().removeClass("ts-active-marker");
-        map.setView( newMarkers[ $(this).parent().attr("data-ts-ln") ].getLatLng() );
+        map.setView(newMarkers[$(this).parent().attr("data-ts-ln")].getLatLng());
         var id = $(this).parent().attr("data-ts-id");
         $(".ts-marker[data-ts-id='" + id + "']").parent().addClass("ts-active-marker");
     });
@@ -413,7 +406,7 @@ $(document).ready(function($) {
     $(document).on({
         mouseenter: function () {
             var id = $(this).parent().attr("data-ts-id");
-            timer = setTimeout(function(){
+            timer = setTimeout(function () {
                 $(".ts-marker").parent().addClass("ts-marker-hide");
                 $(".ts-marker[data-ts-id='" + id + "']").parent().addClass("ts-active-marker");
             }, 500);
@@ -430,7 +423,7 @@ $(document).ready(function($) {
 
 
     var simpleMapId = "ts-map-simple";
-    if( $("#"+simpleMapId).length ){
+    if ($("#" + simpleMapId).length) {
 
         mapElement = $(document.getElementById(simpleMapId));
         mapDefaultZoom = parseInt(mapElement.attr("data-ts-map-zoom"), 10);
@@ -439,7 +432,7 @@ $(document).ready(function($) {
         controls = parseInt(mapElement.attr("data-ts-map-controls"), 10);
         scrollWheel = parseInt(mapElement.attr("data-ts-map-scroll-wheel"), 10);
         leafletMapProvider = mapElement.attr("data-ts-map-leaflet-provider");
-        var markerDrag = parseInt( mapElement.attr("data-ts-map-marker-drag"), 10 );
+        var markerDrag = parseInt(mapElement.attr("data-ts-map-marker-drag"), 10);
 
 
         if (!mapDefaultZoom) {
@@ -458,7 +451,7 @@ $(document).ready(function($) {
             accessToken: mapBoxAccessToken
         }).addTo(map);
 
-        ( controls === 1 ) ? L.control.zoom({position: "topright"}).addTo(map) : "";
+        (controls === 1) ? L.control.zoom({position: "topright"}).addTo(map) : "";
 
         var icon = L.icon({
             iconUrl: "/public/assets/img/marker-small.png",
@@ -466,13 +459,12 @@ $(document).ready(function($) {
             iconAnchor: [11, 29]
         });
 
-        var marker = L.marker([centerLatitude, centerLongitude],{
+        var marker = L.marker([centerLatitude, centerLongitude], {
             icon: icon,
             draggable: markerDrag
         }).addTo(map);
 
     }
-
 
 
 });

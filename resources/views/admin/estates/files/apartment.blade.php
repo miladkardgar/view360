@@ -4,7 +4,6 @@
 @stop
 @section('css')
     <link rel="stylesheet" href="{{ url('public/assets/admin/css/leaflet.css')}}">
-
     <style>
         #mapid {
             height: 480px;

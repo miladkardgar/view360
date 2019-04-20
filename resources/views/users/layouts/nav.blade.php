@@ -5,8 +5,8 @@
     <nav id="ts-secondary-navigation" class="navbar p-0 rtl">
         <div class="container justify-content-end justify-content-sm-between">
             <div class="navbar-nav d-none d-sm-block rtl">
-                <span class="mr-4"><i class="fa fa-phone-square mr-1"></i>{{$site_settings->tel}}</span>
-                <a href="#"><i class="fa fa-envelope mr-1"></i>{{$site_settings->email}}</a>
+                <span class="mr-4"><i class="fa fa-phone-square mr-1"></i>{{$site_settings->site_tel}}</span>
+                <a href="#"><i class="fa fa-envelope mr-1"></i>{{$site_settings->site_email}}</a>
             </div>
 
             <!--Right Side-->
