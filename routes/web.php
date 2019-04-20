@@ -54,10 +54,7 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::get('/admin/estate/list', 'EstatesController@list');
     Route::get('/admin/estate/list/changeStatus/{id}/{val}', 'EstatesController@changeStatus');
 
-
     Route::get('/admin/estate/setting', 'EstatesController@setting');
-    Route::get('/admin/estate/edit/{id}', 'EstatesController@edit');
-    Route::get('/admin/estate/add/{id}', 'EstatesController@add');
 
     Route::post('/admin/estate/setting/storeAttr', 'EstatesController@storeAttr');
     Route::get('/admin/estate/setting/removeAttr/{id}', 'EstatesController@deleteAttr');
@@ -66,8 +63,12 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::post('/admin/estate/getInfo', 'EstatesController@getInfo');
     Route::post('/admin/estate/getCityList', 'EstatesController@getCityList');
     Route::post('/admin/estate/getArea', 'EstatesController@getArea');
+
+    Route::get('/admin/estate/add/{id}', 'EstatesController@add');
     Route::post('/admin/estate/add', 'EstatesController@store');
-    Route::patch('/admin/estate/update', 'EstatesController@update');
+
+    Route::get('/admin/estate/edit/{id}', 'EstatesController@edit');
+    Route::patch('/admin/estate/update/{file}', 'EstatesController@update');
 
     Route::get('/admin/setting/about', 'OptionController@about');
     Route::post('/admin/setting/about/store', 'OptionController@aboutStore');

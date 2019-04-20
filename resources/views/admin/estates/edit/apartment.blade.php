@@ -2,25 +2,7 @@
 @section('meta')
     <meta name="_token" content="{{csrf_token()}}"/>
 @stop
-
 @section('title',$req->data->title)
-
-{!! $con = false !!}
-@foreach($images3ds as $m3)
-    @if($m3->fileInfo->mime=="xml")
-        @php
-            $xml = $m3->fileInfo->file;
-        @endphp
-    @elseif($m3->fileInfo->mime=="swf")
-        @php
-            $swf = $m3->fileInfo->file;
-                    $con = true;
-        @endphp
-    @endif
-@endforeach
-
-
-
 @section('css')
     <link rel="stylesheet" href="{{ url('public/assets/admin/css/leaflet.css')}}">
 
@@ -249,20 +231,21 @@
                             modal: modalTemplate
                         },
                         initialPreview: [
-                            @foreach($images3ds as $image3d)
-                                @if($image3d->fileInfo->mime=="application/zip")
-                                "<img class='file-preview-image kv-preview-data' src='{{url($image3d->fileInfo->file)}}'>",
+                            @foreach($images as $image)
+                                @if($image->fileInfo->mime=="application/zip")
+                                "<img class='file-preview-image kv-preview-data' src='{{url($image->fileInfo->file)}}'>",
                                 @endif
                             @endforeach
                         ],
+
                         initialPreviewConfig: [
-                                @foreach($images3ds as $image3d)
-                                @if($image3d->fileInfo->mime=="application/zip")
+                                @foreach($images as $image)
+                                @if($image->fileInfo->mime=="application/zip")
                             {
-                                caption: "{{$image3d->fileInfo->name}}",
-                                size: "{{$image3d->fileInfo->size}}",
-                                url: "{{$image3d->fileInfo->folder}}",
-                                key: "{{$image3d->fileInfo->id}}"
+                                caption: "{{$image->fileInfo->name}}",
+                                size: "{{$image->fileInfo->size}}",
+                                url: "{{$image->fileInfo->folder}}",
+                                key: "{{$image->fileInfo->id}}"
                             },
                             @endif
                             @endforeach
@@ -346,16 +329,16 @@
 @section('content')
     <div class="card">
         <div class="card-header bg-indigo">
-            <input type="hidden" name="data_id" value="{{$req->data_id}}">
-            <h4 class="text-center ">{{$req->title}}</h4>
+            <h4 class="text-center ">{{$req->data->title}}</h4>
         </div>
         <div class="card-body text-black-50">
-            <form action="/admin/estate/update" method="post" enctype="multipart/form-data">
+            <form action="/admin/estate/update/{{$req->id}}" method="post" enctype="multipart/form-data">
                 {{method_field('patch')}}
                 {{csrf_field()}}
                 @include('admin.errors')
                 <section id="information-section">
-                    <input type="hidden" name="data_id" value="{{$req->id}}">
+                    <input type="hidden" name="id" value="{{$req->id}}">
+                    <input type="hidden" name="data_id" value="{{$req->data_id}}">
                     <input type="hidden" name="user_id" value="{{Auth::id()}}">
                     <div class="row">
                         <div class="col-12 col-md-3">
@@ -365,8 +348,7 @@
                                     <select name="transaction_type" id="transaction_type" required class="form-control">
                                         <option value="">انتخاب نمایید.</option>
                                         @foreach($transActionTypesVila as $transAction)
-                                            <option value="{{$transAction->id}}"
-                                                    {{$transAction->id === old('transaction_type')?'selected':'' }}>{{$transAction->title}}</option>
+                                            <option value="{{$transAction->id}}" {{$transAction->id === old('transaction_type')?'selected':'' || $transAction->id === $req->transaction_type?'selected':''}}>{{$transAction->title}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -378,7 +360,7 @@
                                 <div class="col-12">
                                     <input type="number" class="form-control" min="1" max="10000000" name="area"
                                            id="area"
-                                           value="{{Request::old('area')}}">
+                                           value="{{old('area') ?? $req->area}}">
                                 </div>
                             </div>
                         </div>
@@ -388,7 +370,7 @@
                                 <div class="col-12">
                                     <input type="number" class="form-control" min="1" max="30" name="bedroom"
                                            id="bedroom"
-                                           value="{{Request::old('bedroom')}}">
+                                           value="{{Request::old('bedroom') ?? $req->bedroom}}">
                                 </div>
                             </div>
                         </div>
@@ -401,7 +383,8 @@
                                             <option value="">انتخاب نمایید.</option>
                                             @foreach($parents as $parent)
                                                 <option value="{{$parent->id}}"
-                                                        {{$parent->id === Request::old('parent_id')?'checked':''}}>{{$parent->title}}</option>
+                                                    {{$parent->id === Request::old('parent_id')?'checked':''
+                                                    ?? $parent->id === $req->parent_id?'selected':''}}>{{$parent->title}}</option>
                                             @endforeach
                                         </select>
                                         <small class="text-info">اگر چنانچه این فایل مربوط به مجتمع خاصی است لطفاً نام
@@ -427,7 +410,10 @@
                                                        id="possibilities_{{$possibilities2->id}}"
                                                        value="{{$possibilities2->id}}"
                                                        name="possibilities_{{$possibilities2->id}}"
-                                                        {{$possibilities2->id === Request::old('possibilities_'.$possibilities2->id)?'selected':''}}>
+                                                    {{$possibilities2->id === old('possibilities_'.$possibilities2->id)?'selected':''}}
+                                                @foreach($attrs as $attr)
+                                                    {{$attr->data_id === $possibilities2->id?'checked':''}}
+                                                    @endforeach>
                                                 <label class="custom-control-label"
                                                        for="possibilities_{{$possibilities2->id}}">{{$possibilities2->title}}</label>
                                             </div>
@@ -437,13 +423,12 @@
                                 @endforeach
                             </div>
                         </div>
-
                         <div class="col-12 col-md-12">
                             <div class="form-group">
                                 <label for="description">توضیحات</label>
                                 <div class="col-12">
                         <textarea name="description" id="description" cols="30" rows="5"
-                                  class="form-control">{{Request::old('description')}}</textarea>
+                                  class="form-control">{{old('description') ?? $req->description}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -457,10 +442,7 @@
                                 <div class="col-12">
                                     <select name="province_id" id="province_id" class="form-control">
                                         @foreach($provinceLists as $provinceList)
-                                            <option value="{{$provinceList->id}}"
-                                                    {{$provinceList->id === 107 ? 'selected':'' }}
-                                                    {{$provinceList->id === Request::old('province_id')?'selected':''}}>
-                                                {{$provinceList->name}}</option>
+                                            <option value="{{$provinceList->id}}" {{$provinceList->id === old('province_id') ? 'selected':'' || $provinceList->id === $req->province_id ? 'selected':'' || $provinceList->id === 107 ? 'selected':'' }}>{{$provinceList->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -494,7 +476,7 @@
                                 <label for="ownerName">نام مالک یا واسط</label>
                                 <div class="col-12">
                                     <input type="text" name="ownerName" id="ownerName" class="form-control"
-                                           required="required" value="{{Request::old('ownerName')}}">
+                                           required="required" value="{{old('ownerName') ?? $req->ownerName}}">
                                 </div>
                             </div>
                         </div>
@@ -503,7 +485,7 @@
                                 <label for="ownerPhone">شماره تلفن</label>
                                 <div class="col-12">
                                     <input type="number" name="ownerPhone" id="ownerPhone" class="form-control"
-                                           value="{{Request::old('ownerPhone')}}">
+                                           value="{{old('ownerPhone')?? $req->ownerPhone}}">
                                 </div>
                             </div>
                         </div>
@@ -512,7 +494,7 @@
                                 <label for="address">آدرس ملک</label>
                                 <div class="col-12">
                                     <input type="text" name="address" id="address" class="form-control"
-                                           value="{{Request::old('address')}}">
+                                           value="{{old('address')?? $req->address}}">
                                 </div>
                             </div>
                         </div>
@@ -524,7 +506,7 @@
                             <div class="form-group">
                                 <label for="file">تصاویر اصلی</label>
                                 <input type="file" class="file-input-ajaxMain" multiple="multiple" name="fileMain[]"
-                                       data-fouc  accept=".jpg,.gif,.png"
+                                       data-fouc accept=".jpg,.gif,.png"
                                        id="fileMain">
                                 <span class="form-text text-muted">حداکثر یک تصویر قابل بارگذاری مباشد.</span>
                             </div>
@@ -555,8 +537,8 @@
                             <div class="form-group">
                                 <label for="mapid">موقعیت جغرافیایی</label>
                                 <div id="mapid"></div>
-                                <input type="hidden" name="lat" id="lat" value="">
-                                <input type="hidden" name="lon" id="lon" value="">
+                                <input type="hidden" name="lat" id="lat" value="{{old('lat')?? $req->lat}}">
+                                <input type="hidden" name="lon" id="lon" value="{{old('lon')?? $req->lon}}">
                             </div>
                         </div>
                     </div>

@@ -21,10 +21,4 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-<<<<<<< Updated upstream
-
-#    RewriteRule ^([^\.]+)$ $index.php [NC,L]
-
-=======
->>>>>>> Stashed changes
 </IfModule>

@@ -39,28 +39,7 @@ class estatesController extends Controller
         return view('admin.estates.list', compact('filesList'));
     }
 
-    public function edit(Request $request)
-    {
-        $req = File::findOrFail($request->id);
-        $fileType = Data::findOrFail($req->data_id)->file;
-        $transActionTypes = Data::where('type', '=', 'transactionType')->get();
-        $ownerShipDocumentTypes = Data::where('type', '=', 'ownerShipDocumentType')->get();
-        $usageTypes = Data::where('type', '=', 'usageType')->get();
-        $provinceLists = City::where("status", "=", "active")->where("parent", "=", "0")->get();
-        $cityType = Data::where('type', '=', 'cityType')->get();
-        $transActionTypesVila = Data::where('type', '=', 'transactionTypeVila')->get();
-        $possibilitiesVila = Data::where('type', '=', 'possibilitiesVila')->get();
-        $possibilities = Data::where('type', '=', 'possibilities')->get();
-        $floorsCount = Data::where('type', '=', 'floorCount')->get();
-        $commercialTypes = Data::where('type', '=', 'commercialType')->get();
-        $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
-        $parents = File::where('data_id', '=', '4')->get();
-        $albums = Files_medias::where('file_id', '=', $request->id)->where('type','album')->get();
-        $images3ds = Files_medias::where('file_id', '=', $request->id)->where('type','3d')->get();
-        $mains = Files_medias::where('file_id', '=', $request->id)->where('type','main')->get();
-        $attr = Files_atributies::where('file_id', '=', $request->id)->get();
-        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums','mains','images3ds', 'attr'));
-    }
+
 
     function setting(Request $request)
     {
@@ -202,7 +181,6 @@ class estatesController extends Controller
                     'file3d.*' => 'file|mimes:zip',
                 ]);
             }
-
             if (request()->hasFile('fileMain')) {
                 request()->validate([
                     'fileMain.*' => 'file|image',
@@ -406,6 +384,40 @@ class estatesController extends Controller
     public function changeStatus(Request $request, File $file)
     {
         DB::table('files')->where('id', $request->id)->update(['status'=> $request->val]);
+        return back();
+    }
+
+
+
+    public function edit(Request $request)
+    {
+        $req = File::findOrFail($request->id);
+        $transActionTypes = Data::where('type', '=', 'transactionType')->get();
+        $ownerShipDocumentTypes = Data::where('type', '=', 'ownerShipDocumentType')->get();
+        $usageTypes = Data::where('type', '=', 'usageType')->get();
+        $provinceLists = City::where("status", "=", "active")->where("parent", "=", "0")->get();
+        $cityType = Data::where('type', '=', 'cityType')->get();
+        $transActionTypesVila = Data::where('type', '=', 'transactionTypeVila')->get();
+        $possibilitiesVila = Data::where('type', '=', 'possibilitiesVila')->get();
+        $possibilities = Data::where('type', '=', 'possibilities')->get();
+        $floorsCount = Data::where('type', '=', 'floorCount')->get();
+        $commercialTypes = Data::where('type', '=', 'commercialType')->get();
+        $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
+        $parents = File::where('data_id', '=', '4')->get();
+        $albums = Files_medias::where('file_id', '=', $request->id)->where('type','album')->get();
+        $images = Files_medias::where('file_id', '=', $request->id)->where('type','3d')->get();
+        $mains = Files_medias::where('file_id', '=', $request->id)->where('type','main')->get();
+        $attrs = Files_atributies::where('file_id', '=', $request->id)->get();
+        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums','mains','images', 'attrs'));
+    }
+    public function update(Request $request,File $file)
+    {
+
+        $file->update($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
+            'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
+            'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
+            'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
+            'title', 'city_type_id', 'parent_id', 'province_id']));
         return back();
     }
 }
