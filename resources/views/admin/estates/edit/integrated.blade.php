@@ -1,274 +1,24 @@
 @extends('admin.layouts.admin_content_layout')
+@section('title',$req->data->title ." | ". $req->id ." | ". $req->getRegion->name)
 @section('meta')
     <meta name="_token" content="{{csrf_token()}}"/>
 @stop
 @section('css')
     <link rel="stylesheet" href="{{ url('public/assets/admin/css/leaflet.css')}}">
-
-    <style>
-        #mapid {
-            height: 480px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url('public/assets/admin/css/styles.css?v=1')}}">
+    <link rel="stylesheet" href="{{ url('public/assets/admin/js/plugins/sweet/sweetalert2.min.css?v=1')}}">
 @stop
 @section('js')
-    <script type="text/javascript"
-            src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/purify.min.js')}}"></script>
-    <script type="text/javascript"
-            src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/sortable.min.js')}}"></script>
-    <script type="text/javascript"
-            src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/fileinput.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/purify.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/sortable.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/fileinput.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/admin/js/plugins/sweet/sweetalert2.all.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/js/owl.carousel.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/js/magnifig.js')}}"></script>
+    <script type="text/javascript" src="{{url('public/assets/admin/js/custom.js')}}"></script>
     <script type="text/javascript"
             integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
             crossorigin="" src="{{url('public/assets/admin/js/leaflet.js')}}"></script>
-    <script>
-
-        $(document).ready(function () {
-            var lat = "{{$req->lat}}";
-            var lon = "{{$req->lon}}";
-            var mymap = L.map('mapid').setView([lat,lon], 13);
-            var marker = L.marker([lat, lon]).addTo(mymap);
-            marker.bindPopup("<span>موقعیت فایل: </span>" + lat + " | " + lon + "<br>").openPopup();            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg', {
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                maxZoom: 18,
-                id: 'mapbox.streets',
-                accessToken: 'pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg',
-            }).addTo(mymap);
-            mymap.on('click', function (e) {
-                $(".leaflet-marker-pane").html("");
-                $(".leaflet-shadow-pane").html("");
-                var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
-                marker.bindPopup("<span>موقعیت فایل: </span>" + e.latlng.lat + " | " + e.latlng.lng + "<br>").openPopup();
-                $("#lat").val(e.latlng.lat);
-                $("#lon").val(e.latlng.lng);
-            });
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            var FileUpload = function () {
-                var _componentFileUpload = function () {
-                    if (!$().fileinput) {
-                        console.warn('Warning - fileinput.min.js is not loaded.');
-                        return;
-                    }
-                    var modalTemplate = '<div class="modal-dialog modal-lg" role="document">\n' +
-                        '  <div class="modal-content">\n' +
-                        '    <div class="modal-header align-items-center">\n' +
-                        '      <h6 class="modal-title">{heading} <small><span class="kv-zoom-title"></span></small></h6>\n' +
-                        '      <div class="kv-zoom-actions btn-group">{toggleheader}{fullscreen}{borderless}{close}</div>\n' +
-                        '    </div>\n' +
-                        '    <div class="modal-body">\n' +
-                        '      <div class="floating-buttons btn-group"></div>\n' +
-                        '      <div class="kv-zoom-body file-zoom-content"></div>\n' + '{prev} {next}\n' +
-                        '    </div>\n' +
-                        '  </div>\n' +
-                        '</div>\n';
-
-                    // Buttons inside zoom modal
-                    var previewZoomButtonClasses = {
-                        toggleheader: 'btn btn-light btn-icon btn-header-toggle btn-sm',
-                        fullscreen: 'btn btn-light btn-icon btn-sm',
-                        borderless: 'btn btn-light btn-icon btn-sm',
-                        close: 'btn btn-light btn-icon btn-sm'
-                    };
-
-                    // Icons inside zoom modal classes
-                    var previewZoomButtonIcons = {
-                        prev: '<i class="icon-arrow-left32"></i>',
-                        next: '<i class="icon-arrow-right32"></i>',
-                        toggleheader: '<i class="icon-menu-open"></i>',
-                        fullscreen: '<i class="icon-screen-full"></i>',
-                        borderless: '<i class="icon-alignment-unalign"></i>',
-                        close: '<i class="icon-cross2 font-size-base"></i>'
-                    };
-
-                    // File actions
-                    var fileActionSettings = {
-                        zoomClass: '',
-                        zoomIcon: '<i class="icon-zoomin3"></i>',
-                        dragClass: 'p-2',
-                        dragIcon: '<i class="icon-three-bars"></i>',
-                        removeClass: '',
-                        removeErrorClass: 'text-danger',
-                        removeIcon: '<i class="icon-bin"></i>',
-                        indicatorNew: '<i class="icon-file-plus text-success"></i>',
-                        indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
-                        indicatorError: '<i class="icon-cross2 text-danger"></i>',
-                        indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>'
-                    };
-                    //
-                    // AJAX upload
-                    //
-
-
-                    $('.file-input-ajax').fileinput({
-                        browseLabel: 'انتخاب فایل',
-                        uploadUrl: "{{url('/admin/estates/upload')}}",
-                        uploadAsync: false,
-                        maxFileCount: 10,
-                        showUpload: false,
-                        removeLabel: "حذف همه",
-                        initialPreview: [],
-                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
-                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
-                        browseOnZoneClick: true,
-                        fileActionSettings: {
-                            removeIcon: '<i class="icon-bin"></i>',
-                            uploadClass: '',
-                            zoomIcon: '<i class="icon-zoomin3"></i>',
-                            zoomClass: '',
-                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
-                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
-                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
-                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
-                        },
-                        layoutTemplates: {
-                            icon: '<i class="icon-file-check"></i>',
-                            modal: modalTemplate
-                        },
-
-                        initialPreview: [
-                            @foreach($albums as $album)
-                                "<img class='file-preview-image kv-preview-data' src='{{url($album->fileInfo->file)}}'>",
-                            @endforeach
-                        ],
-                        initialPreviewConfig: [
-                                @foreach($albums as $album)
-                            {
-                                caption: "{{$album->fileInfo->name}}",
-                                size: "{{$album->fileInfo->size}}",
-                                url: "{{$album->fileInfo->folder}}",
-                                key: "{{$album->fileInfo->id}}"
-                            },
-                            @endforeach
-                        ],
-                        initialCaption: 'فایلی انتخاب نشده است',
-                        previewZoomButtonClasses: previewZoomButtonClasses,
-                        previewZoomButtonIcons: previewZoomButtonIcons
-                    });
-                    $('.file-input-ajax3d').fileinput({
-                        browseLabel: 'انتخاب فایل',
-                        uploadUrl: "{{url('/admin/estates/upload')}}",
-                        uploadAsync: false,
-                        maxFileCount: 1,
-                        maxFileSize: 1000000,
-                        showUpload: false,
-                        removeLabel: "حذف همه",
-                        initialPreview: [],
-                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
-                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
-                        browseOnZoneClick: true,
-                        fileActionSettings: {
-                            removeIcon: '<i class="icon-bin"></i>',
-                            uploadClass: '',
-                            zoomIcon: '<i class="icon-zoomin3"></i>',
-                            zoomClass: '',
-                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
-                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
-                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
-                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
-                        },
-                        layoutTemplates: {
-                            icon: '<i class="icon-file-check"></i>',
-                            modal: modalTemplate
-                        },
-                        initialPreview: [
-                            @foreach($images as $image)
-                                @if($image->fileInfo->mime=="application/zip")
-                                "<img class='file-preview-image kv-preview-data' src='{{url($image->fileInfo->file)}}'>",
-                            @endif
-                            @endforeach
-                        ],
-
-                        initialPreviewConfig: [
-                                @foreach($images as $image)
-                                @if($image->fileInfo->mime=="application/zip")
-                            {
-                                caption: "{{$image->fileInfo->name}}",
-                                size: "{{$image->fileInfo->size}}",
-                                url: "{{$image->fileInfo->folder}}",
-                                key: "{{$image->fileInfo->id}}"
-                            },
-                            @endif
-                            @endforeach
-                        ],
-                        initialCaption: 'فایلی انتخاب نشده است',
-                        previewZoomButtonClasses: previewZoomButtonClasses,
-                        previewZoomButtonIcons: previewZoomButtonIcons
-                    });
-                    $('.file-input-ajaxMain').fileinput({
-                        browseLabel: 'انتخاب فایل',
-                        uploadUrl: "{{url('/admin/estates/upload')}}",
-                        uploadAsync: false,
-                        maxFileCount: 1,
-                        showUpload: false,
-                        removeLabel: "حذف همه",
-                        initialPreview: [],
-                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
-                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
-                        browseOnZoneClick: true,
-                        fileActionSettings: {
-                            removeIcon: '<i class="icon-bin"></i>',
-                            uploadClass: '',
-                            zoomIcon: '<i class="icon-zoomin3"></i>',
-                            zoomClass: '',
-                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
-                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
-                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
-                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
-                        },
-                        layoutTemplates: {
-                            icon: '<i class="icon-file-check"></i>',
-                            modal: modalTemplate
-                        },
-
-                        initialPreview: [
-                            @foreach($mains as $main)
-                                "<img class='file-preview-image kv-preview-data' src='{{url($main->fileInfo->file)}}'>",
-                            @endforeach
-                        ],
-                        initialPreviewConfig: [
-                                @foreach($mains as $main)
-                            {
-                                caption: "{{$main->fileInfo->name}}",
-                                size: "{{$main->fileInfo->size}}",
-                                url: "{{$main->fileInfo->folder}}",
-                                key: "{{$main->fileInfo->id}}"
-                            },
-                            @endforeach
-                        ],
-
-                        initialCaption: 'فایلی انتخاب نشده است',
-                        previewZoomButtonClasses: previewZoomButtonClasses,
-                        previewZoomButtonIcons: previewZoomButtonIcons
-                    });
-
-                    $('#btn-modify').on('click', function () {
-                        $btn = $(this);
-                        if ($btn.text() == 'Disable file input') {
-                            $('#file-input-methods').fileinput('disable');
-                            $btn.html('Enable file input');
-                            alert('Hurray! I have disabled the input and hidden the upload button.');
-                        } else {
-                            $('#file-input-methods').fileinput('enable');
-                            $btn.html('Disable file input');
-                            alert('Hurray! I have reverted back the input to enabled with the upload button.');
-                        }
-                    });
-                };
-
-                return {
-                    init: function () {
-                        _componentFileUpload();
-                    }
-                }
-            }();
-            FileUpload.init();
-        });
-    </script>
-
 @endsection
 @section('content')
     <div class="card">
@@ -276,6 +26,66 @@
             <h4 class="text-center">{{$req->data->title}}</h4>
         </div>
         <div class="card-body text-black-50">
+            @include('admin.session')
+            <section id="gallery-carousel">
+                <section id="gallery-carousel position-relative">
+                    <h3>عکس ها</h3>
+                    <div class="owl-carousel ts-gallery-carousel" data-owl-auto-height="1" data-owl-dots="1"
+                         data-owl-loop="1">
+                    @foreach($albums as $album)
+                        <!--Slide-->
+                            <div class="slide">
+                                <div class="ts-image"
+                                     data-bg-image="{{url($album->fileInfo->file)}}">
+                                    <a href="{{url($album->fileInfo->file)}}"
+                                       class="ts-zoom popup-image"><i
+                                            class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <a href="javascript:;" onclick="deleteImage({{$album->fileInfo->id}})"
+                                       class="ts-delete btn-danger"><i class="fa fa-trash"></i>حذف</a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+                <div class="row pt-2">
+                    <div class="col-6">
+                        <h3>تصویر اصلی</h3>
+
+                        @foreach($mains as $main)
+                            <div class="slide">
+                                <div class="ts-image" style="height: 300px;background-size: cover;"
+                                     data-bg-image="{{url($main->fileInfo->file)}}">
+                                    <a href="{{url($main->fileInfo->file)}}"
+                                       class="ts-zoom popup-image"><i
+                                            class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                    <a href="javascript:;" onclick="deleteImage({{$main->fileInfo->id}})"
+                                       class="ts-delete btn-danger"><i class="fa fa-trash"></i>حذف</a>
+                                </div>
+                            </div>
+                            {{--                            <img class='file-preview-image'  width="300" src='{{url($main->fileInfo->file)}}'>--}}
+                        @endforeach
+                    </div>
+                    <div class="col-6">
+                        <h3>فایل 3d</h3>
+
+                        @foreach($images as $image)
+                            @if($image->fileInfo->mime=="application/zip")
+                                <div class="slide">
+                                    <div class="ts-image" style="height: 300px;background-repeat: no-repeat;margin-left: auto; margin-right: auto"
+                                         data-bg-image="{{url("public/assets/img/3d.png")}}">
+                                        <a href="{{url("public/assets/img/3d.png")}}"
+                                           class="ts-zoom popup-image"><i
+                                                class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                        <a href="javascript:;" onclick="deleteImage({{$image->fileInfo->id}})"
+                                           class="ts-delete btn-danger"><i class="fa fa-trash"></i>حذف</a>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+                <hr>
+            </section>
             <form action="/admin/estate/update/{{$req->id}}" method="post" enctype="multipart/form-data">
                 {{method_field('patch')}}
                 {{csrf_field()}}
@@ -314,7 +124,8 @@
                                 <div class="col-12">
                                     <select name="province_id" id="province_id" class="form-control">
                                         @foreach($provinceLists as $provinceList)
-                                            <option value="{{$provinceList->id}}" {{$provinceList->id === old('province_id') ? 'selected':'' || $provinceList->id === $req->province_id ? 'selected':'' || $provinceList->id === 107 ? 'selected':'' }}>{{$provinceList->name}}</option>
+                                            <option
+                                                value="{{$provinceList->id}}" {{$provinceList->id === old('province_id') ? 'selected':'' || $provinceList->id === $req->province_id ? 'selected':'' || $provinceList->id === 107 ? 'selected':'' }}>{{$provinceList->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -324,7 +135,7 @@
                             <div class="form-group">
                                 <label for="city_id">شهر</label>
                                 <div class="col-12">
-                                    <select name="city_id" id="city_id" class="form-control">
+                                    <select name="city_id" id="city_id" class="form-control" data-city-id="{{$req->city_id}}">
                                         <option value="">انتخاب نمایید</option>
                                     </select>
                                 </div>
@@ -334,7 +145,7 @@
                             <div class="form-group">
                                 <label for="region_id">منطقه</label>
                                 <div class="col-12">
-                                    <select name="region_id" id="region_id" class="form-control">
+                                    <select name="region_id" id="region_id" class="form-control" data-region-id="{{$req->region_id}}">
                                     </select>
                                 </div>
                             </div>

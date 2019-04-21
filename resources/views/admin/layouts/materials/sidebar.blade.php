@@ -65,13 +65,13 @@
                     <a href="#" class="nav-link"><i class="icon-copy"></i> <span>مدیریت املاک</span></a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="Estate">
-                        <li class="nav-item nav-item-submenu {{ Request::segment(2) === 'estate' && Request::segment(3)==='add'  ? 'nav-item-open' : '' }}">
+                        <li class="nav-item nav-item-submenu {{ Request::segment(2) === 'estate' && (Request::segment(3)==='add' || Request::segment(3)==='edit')  ? 'nav-item-open' : '' }}">
                             <a href="#" class="nav-link">افزودن ملک</a>
                             <ul class="nav nav-group-sub"
-                                style="{{ Request::segment(2) === 'estate' && Request::segment(3)==='add' ? 'display:block' : 'display:none' }}">
+                                style="{{ Request::segment(2) === 'estate' && (Request::segment(3)==='add' || Request::segment(3)==='edit') ? 'display:block' : 'display:none' }}">
                                 @foreach($estateAdd as $estate)
                                     <li class="nav-item"><a href="/admin/estate/add/{{$estate->id}}"
-                                                            class="nav-link {{ Request::segment(2) === 'estate' && Request::segment(3)==='add' && Request::segment(4)==$estate->id ? 'active' : '' }}">{{$estate->title}}</a>
+                                                            class="nav-link {{ Request::segment(2) === 'estate' && (Request::segment(3)==='add' || Request::segment(3)==='edit') && (Request::segment(4)==$estate->id)  ? 'active' : '' }}">{{$estate->title}}</a>
                                     </li>
                                 @endforeach
                             </ul>

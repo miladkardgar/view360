@@ -145,7 +145,7 @@
                                data-id="{{$fileList->id}}" data-value="@php echo $status; @endphp"
                                href="/admin/estate/changeStatus/{{$fileList->id}}/{{$val}}">
                                 <i class="icon-@php echo $icon @endphp"></i></a>
-                            <a href="/admin/estate/edit/{{$fileList->id}}/"
+                            <a href="/admin/estate/edit/{{$fileList->data_id}}/{{$fileList->id}}/"
                                class="btn btn-xs btn-outline-dark btn_ChangeRole"><i
                                         class="icon-database-edit2"></i></a>
                         </td>

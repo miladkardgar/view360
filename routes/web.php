@@ -67,8 +67,9 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::get('/admin/estate/add/{id}', 'EstatesController@add');
     Route::post('/admin/estate/add', 'EstatesController@store');
 
-    Route::get('/admin/estate/edit/{id}', 'EstatesController@edit');
+    Route::get('/admin/estate/edit/{data_id}/{id}', 'EstatesController@edit');
     Route::patch('/admin/estate/update/{file}', 'EstatesController@update');
+    Route::get('/admin/estate/update/deleteImages/{id}', 'EstatesController@deleteImage');
 
     Route::get('/admin/setting/about', 'OptionController@about');
     Route::post('/admin/setting/about/store', 'OptionController@aboutStore');

@@ -160,7 +160,7 @@ class estatesController extends Controller
                 }
                 return redirect()->intended('/admin/estate/list');
             } else {
-                return back()->withErrors('فایل ارسالی ناقص میباشد.');
+                return back()->withErrors('فایل سه بعدی ارسالی ناقص میباشد.');
             }
         }
     }
@@ -409,41 +409,108 @@ class estatesController extends Controller
         return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums', 'mains', 'images', 'attrs'));
     }
 
+    public function deleteImage(Request $request, Files_medias $files_medias)
+    {
+        if($files_medias->where('media_id',$request->id)->count()>0){
+            $files_medias->where('media_id', $request->id)->delete();
+            return back()->with(["result" => "success", "message" => "تصویر مورد نظر حذف گردید."]);
+        }
+        return back()->with(["result" => "error", "message" => "تصویر مورد نظر در سیستم یافت نشد."]);
+    }
+
     public function update(Request $request, File $file)
     {
-
-        $file->update($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
-            'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
-            'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
-            'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
-            'title', 'city_type_id', 'parent_id', 'province_id']));
-
-        $attrs = Files_atributies::where('file_id', $request->id)->get('data_id');
-        $req = $request->all();
-        $checkAttrs = array();
-        foreach ($req as $item => $val) {
-            if (strpos($item, "possibilities_") !== false) {
-                $check = Files_atributies::where('data_id', $val)->where('file_id', $request->id)->first();
-                if (!$check) {
-                    $pos = new Files_atributies();
-                    $pos->data_id = $val;
-                    $pos->file_id = $request->id;
-                    $pos->type = "possibilities";
-                    $pos->save();
+        if ($this->validateRequest($request)) {
+            $check = false;
+            $checkSFW = false;
+            $checkXML = false;
+            if ($request->hasfile('file3d')) {
+                foreach (request()->file3d as $uploadFile) {
+                    $mime = $uploadFile->getClientMimeType();
+                    if ($mime == "application/zip") {
+                        $zip = Zip::open($uploadFile);
+                        $listFiles = $zip->listFiles();
+                        foreach ($listFiles as $listFile) {
+                            if (strpos($listFile, "tour.swf") !== false) {
+                                $checkSFW = true;
+                            }
+                            if (strpos($listFile, "tour.xml") !== false) {
+                                $checkXML = true;
+                            }
+                        }
+                    }
                 }
-                array_push($checkAttrs, $val);
-
+            } else {
+                $check = true;
             }
-        }
-        $attrs2 = array();
-        foreach ($attrs as $data => $val) {
-            array_push($attrs2, $val->data_id);
-        }
-        $diff = array_diff($attrs2, $checkAttrs);
-        foreach ($diff as $item) {
-            Files_atributies::where('data_id', $item)->where('file_id', $request->id)->delete();
-        }
+            if ($checkSFW == true && $checkXML == true) {
+                $check = true;
+            }
+            if ($check == true) {
+                $file->update($request->only(['data_id', 'transaction_type', 'area', 'rooms', 'bathroom', 'bedroom', 'parking', 'lat', 'lon', 'city_id',
+                    'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
+                    'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
+                    'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
+                    'title', 'city_type_id', 'parent_id', 'province_id']));
 
-        return back();
+                if ($request->hasfile('file')) {
+                    $uploadFilesId = $this->uploadFile(request(), $request->id, $type = 'album');
+                    $uploadFilesId = $uploadFilesId->getData();
+                    foreach ($uploadFilesId->id as $item => $val) {
+                        Files_medias::create(['file_id' => $request->id, 'media_id' => $val, 'type' => "album"]);
+                    }
+                }
+
+                if ($request->hasfile('fileMain')) {
+                    Files_medias::where('type', 'main')->where('file_id', $request->id)->delete();
+                    $uploadFilesId = $this->uploadFile(request(), $request->id, $type = 'main');
+                    $uploadFilesId = $uploadFilesId->getData();
+                    foreach ($uploadFilesId->id as $item => $val) {
+                        Files_medias::create(['file_id' => $request->id, 'media_id' => $val, "type" => "main"]);
+                    }
+                }
+
+                if ($request->hasfile('file3d')) {
+                    Files_medias::where('type', '3d')->where('file_id', $request->id)->delete();
+                    $uploadFilesId = $this->uploadFile(request(), $request->id, $type = '3d');
+                    $uploadFilesId = $uploadFilesId->getData();
+                    foreach ($uploadFilesId->id as $item => $val) {
+                        Files_medias::create(['file_id' => $request->id, 'media_id' => $val, "type" => "3d"]);
+                    }
+                }
+
+                $attrs = Files_atributies::where('file_id', $request->id)->get('data_id');
+                $req = $request->all();
+                $checkAttrs = array();
+                foreach ($req as $item => $val) {
+                    if (strpos($item, "possibilities_") !== false) {
+                        $check = Files_atributies::where('data_id', $val)->where('file_id', $request->id)->first();
+                        if (!$check) {
+                            $pos = new Files_atributies();
+                            $pos->data_id = $val;
+                            $pos->file_id = $request->id;
+                            $pos->type = "possibilities";
+                            $pos->save();
+                        }
+                        array_push($checkAttrs, $val);
+
+                    }
+                }
+                $attrs2 = array();
+                foreach ($attrs as $data => $val) {
+                    array_push($attrs2, $val->data_id);
+                }
+                $diff = array_diff($attrs2, $checkAttrs);
+                foreach ($diff as $item) {
+                    Files_atributies::where('data_id', $item)->where('file_id', $request->id)->delete();
+                }
+                return back()->with(["result"=>"success","message"=>"اطلاعات شما با موفقیت ویرایش شد."]);
+            } else {
+                return back()->withErrors('فایل سه بعدی ارسالی ناقص میباشد.');
+            }
+        }else{
+            return back()->with(["result"=>"error","message"=>"خطا در پارامتر های ارسالی"]);
+
+        }
     }
 }

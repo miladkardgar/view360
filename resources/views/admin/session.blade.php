@@ -1,5 +1,5 @@
 @if(session('result'))
-    <script src="{{url('/public/assets/js/sweet.min.js')}}"></script>
+    <script src="{{url('public/assets/admin/js/plugins/sweet/sweetalert2.all.min.js')}}"></script>
     <script>
         Swal.fire({
             position: 'top-end',
@@ -8,6 +8,5 @@
             showConfirmButton: false,
             timer: 1500
         })
-
     </script>
 @endif

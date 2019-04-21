@@ -1506,8 +1506,21 @@ button {
     position: relative;
 }
 
+
+
 [class*="ts-gallery-carousel"] .ts-zoom {
     background-color: #fff;
+    border-radius: .25rem;
+    bottom: 1rem;
+    box-shadow: 0 .125rem .3125rem rgba(0, 0, 0, .1);
+    display: inline-block;
+    right: 1rem;
+    padding: .5rem;
+    position: absolute;
+}
+
+[class*="ts-gallery-carousel"] .ts-delete {
+    /*background-color: #ff0000;*/
     border-radius: .25rem;
     bottom: 1rem;
     box-shadow: 0 .125rem .3125rem rgba(0, 0, 0, .1);
@@ -1517,8 +1530,11 @@ button {
     position: absolute;
 }
 
+
+
+
 [class*="ts-gallery-carousel"] .ts-zoom i {
-    margin-left: .5rem;
+    margin-right: .5rem;
     opacity: .5;
 }
 
