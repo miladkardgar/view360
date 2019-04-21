@@ -424,7 +424,8 @@ function deleteImage(id) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'بله! حذفش کن.'
+        confirmButtonText: 'بله! حذفش کن.',
+        cancelButtonText: 'انصراف'
     }).then((result) => {
         if (result.value) {
             window.location.href = '/admin/estate/update/deleteImages/' + id;

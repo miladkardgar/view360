@@ -6722,3 +6722,4 @@ a.text-dark:hover, a.text-dark:focus {
 
 .invisible {
   visibility: hidden !important; }
+.swal2-icon.swal2-warning {font-size: unset !important;}

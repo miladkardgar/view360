@@ -20,7 +20,7 @@ Route::get('/admin/password-recovery', 'UsersController@passwordRecovery');
 
 
 Route::post('login', 'UsersUIController@authenticate');
-Route::post('register', 'UsersUIController@store');
+Route::post('register', ['as'=>'index','uses'=>'UsersUIController@store']);
 Route::get('/estate/list', 'EstatesController@estateList');
 Route::post('/contact/{id}/store', 'FileContactController@store');
 
@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::post('/admin/users/list/changeRole/update', 'UsersController@update');
     Route::get('/admin/users/permissions', 'UsersController@usersPermissions');
     Route::get('/admin/users/setting', 'UsersController@usersSetting');
-    Route::post('/admin/users/store', 'UsersUIController@store');
+    Route::post('/admin/users/store', ['as'=>'panel','uses'=>'UsersUIController@store']);
 
     Route::get('/admin/estate/list', 'EstatesController@list');
     Route::get('/admin/estate/list/changeStatus/{id}/{val}', 'EstatesController@changeStatus');

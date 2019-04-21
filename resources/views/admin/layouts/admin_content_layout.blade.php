@@ -4,6 +4,7 @@
     <div class="page-container bg-slate-100">
         <div class="page-content">
             @include('admin.layouts.materials.sidebar')
+            @include('admin.session')
             <div class="content-wrapper">
                 <div class="content">
                     @yield('content')

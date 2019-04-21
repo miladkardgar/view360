@@ -382,8 +382,11 @@ class estatesController extends Controller
 
     public function changeStatus(Request $request, File $file)
     {
-        DB::table('files')->where('id', $request->id)->update(['status' => $request->val]);
-        return back();
+        if($file->where('id', $request->id)->update(['status' => $request->val])) {
+            return back()->with(['result' => "success", "message" => "فایل مورد نظر " . $request->val . " گردید."]);
+        }else{
+            return back()->with(['result' => "error", "message" => "فایل مورد نظر یافت نشد!"]);
+        }
     }
 
 

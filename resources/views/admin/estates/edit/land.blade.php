@@ -30,7 +30,6 @@
             <h4 class="text-center">{{$req->data->title}}</h4>
         </div>
         <div class="card-body text-black-50">
-            @include('admin.session')
             <section id="gallery-carousel">
                 <section id="gallery-carousel position-relative">
                     <h3>عکس ها</h3>

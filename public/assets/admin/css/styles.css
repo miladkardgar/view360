@@ -915,9 +915,7 @@ img.mfp-img {
     padding: .5rem!important;
     position: absolute!important;
 }
-.swal2-icon.swal2-warning {
-    font-size: unset !important;
-}
+.swal2-icon.swal2-warning {font-size: unset !important;}
 #mapid {
     height: 480px;
 }
