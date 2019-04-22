@@ -9,11 +9,14 @@ use App\File;
 use App\file_contact;
 use App\Files_atributies;
 use App\Files_medias;
+use App\upload;
 use App\User;
 use Illuminate\Http\Request;
 use \App\Option;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use ZanySoft\Zip\Zip;
 
 class UsersUIController extends Controller
 {
@@ -99,10 +102,61 @@ class UsersUIController extends Controller
     {
         $email = Request("username");
         $password = Request("password");
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            return redirect()->intended('/');
+        $userStatus = User::where('email', $email)->first();
+        if ($userStatus->status === "active") {
+            if (Auth::attempt(['email' => $email, 'password' => $password, "status" => 'active'])) {
+                return redirect()->intended('/');
+            } else {
+                return back()->with(['result' => 'error', 'message' => 'نام کاربری یا کلمه عبور اشتباه می باشد.']);
+            }
         } else {
-            return redirect()->back()->withErrors(['نام کاربری یا کلمه عبور اشتباه می باشد.']);
+            return back()->with(['result' => 'error', 'message' => 'حساب کاربری شما غیر فعال میباشد.']);
+        }
+    }
+
+    public function profile()
+    {
+        $userInfo = User::find(Auth::id());
+        return view('users.profile', compact('userInfo'));
+    }
+
+    public function updateProfile(Request $request, User $user)
+    {
+
+        if (Auth::id()) {
+
+            if ($request->password) {
+                $data = $request->validate(
+                    [
+                        "name" => 'required|min:2',
+                        "family" => 'required|min:2',
+                        "mobile" => 'nullable|iran_mobile',
+                        "naCode" => 'nullable|melli_code',
+                        'password' => 'min:0|max:100|confirmed',
+                    ]
+                );
+                $data['password'] = bcrypt($request->password);
+
+            } else {
+                $data = $request->validate(
+                    [
+                        "name" => 'required|min:2',
+                        "family" => 'required|min:2',
+                        "mobile" => 'nullable|iran_mobile',
+                        "naCode" => 'nullable|melli_code',
+                    ]
+                );
+            }
+            if ($data) {
+                if ($request->hasfile('file')) {
+                    $uploadFilesId = $this->uploadFile(request(), Auth::id());
+                    $data['media_id'] = $uploadFilesId;
+                }
+                $user->where('id', $request->id)->update($data);
+                return back()->with(['result' => 'success', 'message' => 'مشخصات شما با موفقیت ویرایش شد.']);
+            } else {
+                return back()->with(['result' => 'error', 'message' => 'مشخصات شما با موفقیت ویرایش شد.']);
+            }
         }
     }
 
@@ -119,7 +173,6 @@ class UsersUIController extends Controller
         ]);
         $register['password'] = bcrypt($request->password);
         if ($user->create($register)) {
-
             $email = Request("email");
             $password = Request("password");
             if ($ro === "panel") {
@@ -141,7 +194,6 @@ class UsersUIController extends Controller
         return back()->with(['result' => "success", 'message' => "درخواست شما با موفقیت ارسال شد."]);
     }
 
-
     private function validateFile(Request $request)
     {
         return $request->validate([
@@ -150,6 +202,35 @@ class UsersUIController extends Controller
             'subject' => 'required|min:2',
             'message' => 'required|min:5',
         ]);
+    }
+
+
+    private function uploadFile(Request $request, $userID)
+    {
+        if (!Storage::exists('/public/files/users-image/')) {
+            Storage::makeDirectory('/public/files/users-image/', 775, true, true);
+        }
+        $uploadID = '';
+        if ($request->hasfile('file')) {
+            $file = request()->file;
+            $fileName = $file->getClientOriginalName();
+            $filename = str_replace(" ", "_", $fileName);
+            $filenameTime = time() . "_" . $userID . "_" . $filename;
+            $mime = $file->getClientMimeType();
+            $size = $file->getSize();
+
+            $file->storeAs("files/users-image/", $filenameTime, 'public');
+            $upload = new upload();
+            $upload->file = "storage/app/public/files/users-image/" . $filenameTime;
+            $upload->folder = "storage/app/public/files/users-image";
+            $upload->name = $filename;
+            $upload->mime = $mime;
+            $upload->size = $size;
+            $upload->users()->associate(auth()->user());
+            $upload->save();
+            $uploadID = $upload->id;
+        }
+        return $uploadID;
     }
 
 }

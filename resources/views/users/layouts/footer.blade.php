@@ -10,7 +10,7 @@
                     <a href="#" class="brand">
                         <img src="{{url('/public/assets/img.png')}}" width="80" alt="">
                     </a>
-                    <p class="mb-4">
+                    <p class="mb-4 text-justify">
                         {{$site_settings->site_description}}
                     </p>
                     <a href="contact" class="btn btn-outline-dark mb-4">ارتباط با ما</a>
@@ -30,25 +30,20 @@
 
                 <div class="col-md-4">
                     <h4>تماس با ما</h4>
-                    <address class="ts-text-color-light">
+                    <nav class="nav flex-row flex-md-column mb-4">
 
-                        {{isset($site_settings->site_address)?$site_settings->site_address:''}}
-                        <br>
-                        {{isset($site_settings->site_address2)?$site_settings->site_address2:''}}
-                        <br>
+                        <a href="/" class="nav-link">{{isset($site_settings->site_address)?$site_settings->site_address:''}} {{isset($site_settings->site_address2)?$site_settings->site_address2:''}}</a>
                         @if(isset($site_settings->site_email))
-                            <strong>پست الکترونیکی: </strong>
-                            <a href="#" class="btn-link">{{$site_settings->site_email}}</a>
-                            <br>
+                            <a href="/" class="nav-link"><strong>پست الکترونیکی: </strong>
+                            {{$site_settings->site_email}}</a>
                         @endif
                         @if(isset($site_settings->site_tel))
-                            <strong>تلفن:</strong>{{$site_settings->site_tel}}<br>
+                            <a href="/" class="nav-link"><strong>تلفن:</strong>{{$site_settings->site_tel}}</a>
                         @endif
                         @if(isset($site_settings->site_fax))
-                            <strong>فاکس: </strong>{{$site_settings->site_fax}}
+                            <a href="/" class="nav-link"><strong>فاکس: </strong>{{$site_settings->site_fax}}</a>
                         @endif
-
-                    </address>
+                    </nav>
                 </div>
 
             </div>

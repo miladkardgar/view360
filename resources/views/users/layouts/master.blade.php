@@ -22,6 +22,7 @@
 =====================================================================================================================-->
 <div class="ts-page-wrapper ts-has-bokeh-bg" id="page-top">
     @include('users.layouts.nav')
+    @include('users.session')
     @yield('body')
     @include('users.layouts.footer')
 </div>

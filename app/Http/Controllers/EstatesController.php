@@ -46,7 +46,8 @@ class estatesController extends Controller
         $Attrs[] = Data::where('type', '=', 'possibilities')->get();
         $path = url('/public/assets/webfonts/fontawsome/metadata/icons.json');
         $json = json_decode(file_get_contents($path), true);
-        return view('admin.estates.setting', compact('json', 'Attrs'));
+        $provinces = City::all();
+        return view('admin.estates.setting', compact('json', 'Attrs','provinces'));
     }
 
     function add(Request $request)
@@ -515,5 +516,45 @@ class estatesController extends Controller
             return back()->with(["result"=>"error","message"=>"خطا در پارامتر های ارسالی"]);
 
         }
+    }
+
+    public function changeStatusCites(Request $request,City $city)
+    {
+        $city->where('id',$request->id)->update(['status'=>$request->val]);
+        $city->where('parent',$request->id)->update(['status'=>$request->val]);
+        return back()->with(['result'=>'success','message'=>'تغییر وضعیت شهر مورد نظر اعمال شد.']);
+    }
+
+
+    public function addCity(Request $request)
+    {
+        $res = '
+<form action="/admin/estate/setting/city/addCity/store/' . $request->id . '" method="post">' . csrf_field() . '
+        <div class="row">
+            <div class="col-12 col-md-12">
+                <div class="form-group">
+                    <input type="hidden" name="parent" value="'.$request->id.'">
+                    <label for="selectRole">نام شهر را وارد نمایید</label>
+                    <input type="text" name="name" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-link" data-dismiss="modal">انصراف</button>
+            <button type="submit" class="btn bg-primary">افزودن</button>
+        </div>
+    </form>';
+        return $res;
+    }
+
+    public function addStore(Request $request,City $city)
+    {
+
+        $data = $request->validate([
+            'name' => 'required|min:2|max:100',
+            'parent' => 'required',
+        ]);
+        City::create($data);
+        return back()->with(['result'=>"success",'message'=>'شهر مورد نظر به سیستم اضافه گردید.']);
     }
 }

@@ -121,7 +121,7 @@
 
             <li class="nav-item dropdown dropdown-user">
                 <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
-                    <img src="{{url('public/assets/admin/images/placeholders/placeholder.jpg')}}" class="rounded-circle"
+                    <img src="{{ isset(auth()->user()->fileInfo->file)?url(auth()->user()->fileInfo->file) : url("public/assets/img/person.png")}}" class="rounded-circle"
                          alt="">
                     <span>{{auth()->user()->name}} {{auth()->user()->family}}</span>
                 </a>
@@ -133,7 +133,7 @@
 {{--                                class="badge badge-pill bg-blue ml-auto">58</span></a>--}}
 {{--                    <div class="dropdown-divider"></div>--}}
 {{--                    <a href="#" class="dropdown-item"><i class="icon-cog5"></i> تنظیمات حساب</a>--}}
-                    <a href="/admin/logout/" class="dropdown-item"><i class="icon-switch2"></i> خروج</a>
+                    <a href="logout" class="dropdown-item"><i class="icon-switch2"></i> خروج</a>
                 </div>
             </li>
         </ul>

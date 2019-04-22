@@ -1,5 +1,8 @@
 @extends('admin.layouts.admin_content_layout')
+@section('title','تنظیمات فایل ها')
+
 @section('meta')
+    <meta name="_token" content="{{csrf_token()}}"/>
 @stop
 @section('css')
     <link href="{{url('/public/assets/webfonts/fontawsome/css/all.css')}}" rel="stylesheet" type="text/css">
@@ -8,9 +11,51 @@
             width: 25px;
             height: 25px;
         }
+
+        ul, #myUL {
+            list-style-type: none;
+        }
+
+        /* Remove margins and padding from the parent ul */
+        #myUL {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style the caret/arrow */
+        .caret {
+            cursor: pointer;
+            user-select: none; /* Prevent text selection */
+        }
+
+        /* Create the caret/arrow with a unicode, and style it */
+        .caret::before {
+            content: "\25C4";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+        .caret-down::before {
+            transform: rotate(90deg);
+        }
+
+        /* Hide the nested list */
+        .nested {
+            display: none;
+        }
+
+        /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+        .active {
+            display: block;
+        }
     </style>
 @stop
 @section('js')
+
+    <script src="{{url('/public/assets/admin/js/plugins/sweet/sweetalert2.all.min.js')}}"
+            type="text/javascript"></script>
     <script>
         function iconSel(name) {
             $("#modal_full").modal('hide');
@@ -19,12 +64,71 @@
             icon.addClass(name + " fa-3x");
         }
 
+        $(document).ready(function () {
 
-        $('.tree-default').fancytree({
-            init: function(event, data) {
-                $('.has-tooltip .fancytree-title').tooltip();
+            var toggler = document.getElementsByClassName("caret");
+            var i;
+
+            for (i = 0; i < toggler.length; i++) {
+                toggler[i].addEventListener("click", function() {
+                    this.parentElement.querySelector(".nested").classList.toggle("active");
+                    this.classList.toggle("caret-down");
+                });
             }
-        });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $(document).on('click', '.changeStatus', function () {
+                var id = $(this).data('id');
+                var value = $(this).data('value');
+                Swal.fire({
+                    title: 'تغییر وضعیت',
+                    text: "آیا از تغییر وضعیت این شهر اطمینان دارید؟",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'بله! انحام بده.',
+                    cancelButtonText: 'انصراف'
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = '/admin/estate/setting/city/changeStatus/' + id + '/' + value;
+                    }
+                })
+            })
+
+            $(document).on('click', '.addCity', function () {
+                var id = $(this).data("id");
+                $("#modal_changeRole").modal("show");
+                $.ajax({
+                    url: "{{url('/admin/estate/setting/city/addCity')}}",
+                    method: "post",
+                    data: {id: id},
+                    success: function (result) {
+                        $("#modal_changeRole_body").html(result)
+                    }, error: function (error) {
+                        console.log("error" + error)
+                    }
+                })
+            })
+
+            $(document).on('click', '.addRegion', function () {
+                var id = $(this).data('id');
+                $("#modal_changeRole").modal("show");
+                $.ajax({
+                    url: "{{url('/admin/estate/setting/city/addCity')}}",
+                    method: "post",
+                    data: {id: id},
+                    success: function (result) {
+                        $("#modal_changeRole_body").html(result)
+                    }, error: function (error) {
+                        console.log("error" + error)
+                    }
+                })
+            })
+        })
     </script>
 @stop
 @section('content')
@@ -41,34 +145,70 @@
                 </ul>
                 <div class="tab-content text-black-50">
                     <div class="tab-pane fade show active" id="cityPanel">
-                        <div class="tree-default">
-                            <ul class="mb-0">
-                                <li class="folder expanded">Expanded folder with children
-                                    <ul>
-                                        <li class="expanded">Expanded sub-item
-                                            <ul>
-                                                <li class="active focused">Active sub-item (active and focus on init)</li>
-                                                <li>Basic <i>menu item</i> with <strong class="font-weight-semibold">HTML support</strong></li>
-                                            </ul>
-                                        </li>
-                                        <li>Collapsed sub-item
-                                            <ul>
-                                                <li>Sub-item 2.2.1</li>
-                                                <li>Sub-item 2.2.2</li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="has-tooltip" title="Look, a tool tip!">Menu item with key and tooltip</li>
-                                <li class="folder">Collapsed folder
-                                    <ul>
-                                        <li>Sub-item 1.1</li>
-                                        <li>Sub-item 1.2</li>
-                                    </ul>
-                                </li>
-                                <li class="selected">This is a selected item</li>
-                            </ul>
+                        <div class="row justify-content-center ">
+
                         </div>
+                        <ul id="myUL">
+                            @foreach($provinces as $province)
+                                @php $status3 = "active"; $color3 = "success"; $icon3 = "check"; @endphp
+                                @if($province->status=="active")
+                                    @php $status3 = "inactive"; $color3 = "danger";$icon3 = "x"; @endphp
+                                @endif
+                                @if($province->parent==0)
+                                    <li>
+                                        <span class="caret">
+                                            <button class="btn changeStatus" data-value="{{$status3}}" data-id="{{$province->id}}">
+                                                <i class="icon-{{$icon3}} text-{{$color3}}"></i>
+                                            </button>
+                                            <button class="btn addCity" data-id="{{$province->id}}">
+                                                <i class="icon-plus2 text-success"></i>
+                                            </button>
+                                            {{$province->name}}
+                                        </span>
+                                        <ul class="nested">
+                                        @foreach($provinces as $item)
+                                            @if($item->parent == $province->id)
+                                                @php $status = "active"; $color = "success"; $icon = "check"; @endphp
+                                                @if($item->status=="active")
+                                                    @php $status = "inactive"; $color = "danger";$icon = "x"; @endphp
+                                                @endif
+
+                                                    <li>
+                                                        <span class="caret">
+                                                            <button class="btn changeStatus" data-value="{{$status}}" data-id="{{$item->id}}">
+                                                                <i class="icon-{{$icon}} text-{{$color}}"></i>
+                                                            </button>
+                                                            <button class="btn addRegion" data-id="{{$item->id}}">
+                                                                <i class="icon-plus2 text-success"></i>
+                                                            </button>
+                                                            {{$item->name}}
+                                                        </span>
+                                                        <ul class="nested">
+                                                        @foreach($provinces as $value)
+                                                            @if($value->parent == $item->id)
+                                                                @php $status2 = "active"; $color2 = "success"; $icon2 = "check"; @endphp
+                                                                @if($value->status=="active")
+                                                                    @php $status2 = "inactive"; $color2 = "danger";$icon2 = "x"; @endphp
+                                                                @endif
+                                                                    <li>
+                                                                        <button class="btn changeStatus"
+                                                                                data-value="{{$status2}}"
+                                                                                data-id="{{$value->id}}"><i
+                                                                                class="icon-{{$icon2}} text-{{$color2}}"></i>
+                                                                        </button> {{$value->name}}
+                                                                    </li>
+                                                            @endif
+                                                        @endforeach
+                                                        </ul>
+                                                    </li>
+                                            @endif
+                                        @endforeach
+                                        </ul>
+                                    </li>
+                                @endif
+
+                            @endforeach
+                        </ul>
                     </div>
                     <div class="tab-pane fade" id="attrsList">
                         <form action="/admin/estate/setting/storeAttr" method="post">
@@ -177,6 +317,21 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="modal_changeRole" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h6 class="modal-title">افزودن موقعیت شهری و منطقه ای</h6>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body text-black-50" id="modal_changeRole_body">
+
                 </div>
             </div>
         </div>

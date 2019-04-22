@@ -161,6 +161,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Hekmatinasser\Verta\VertaServiceProvider::class,
+
 
         /*
          * Package Service Providers...
@@ -229,6 +231,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Zipper' => 'Chumper\Zipper\Zipper',
+        'Verta' => Hekmatinasser\Verta\Verta::class,
+
     ],
 
 ];

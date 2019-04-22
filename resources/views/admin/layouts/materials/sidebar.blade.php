@@ -25,8 +25,9 @@
             <div class="card-body">
                 <div class="media">
                     <div class="mr-3">
-                        <a href="#"><img src="{{url('public/assets/admin/images/placeholders/placeholder.jpg')}}"
-                                         width="38" height="38" class="rounded-circle" alt=""></a>
+                        <a href="#"><img
+                                src="{{ isset(auth()->user()->fileInfo->file)?url(auth()->user()->fileInfo->file) : url("public/assets/img/person.png")}}"
+                                width="38" height="38" class="rounded-circle" alt=""></a>
                     </div>
 
                     <div class="media-body">
@@ -37,9 +38,9 @@
                         </div>
                     </div>
 
-{{--                    <div class="ml-3 align-self-center">--}}
-{{--                        <a href="#" class="text-white"><i class="icon-cog3"></i></a>--}}
-{{--                    </div>--}}
+                    {{--                    <div class="ml-3 align-self-center">--}}
+                    {{--                        <a href="#" class="text-white"><i class="icon-cog3"></i></a>--}}
+                    {{--                    </div>--}}
                 </div>
             </div>
         </div>
@@ -98,11 +99,11 @@
                         <li class="nav-item"><a href="/admin/users/list"
                                                 class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='list' ? 'active' : '' }}">لیست
                                 کاربران</a></li>
-{{--                        <li class="nav-item"><a href="/admin/users/permissions"--}}
-{{--                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='permissions' ? 'active' : '' }}">دسترسی--}}
-{{--                                ها</a></li>--}}
-{{--                        <li class="nav-item"><a href="/admin/users/setting"--}}
-{{--                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='setting' ? 'active' : '' }}">تنظیمات</a>--}}
+                        {{--                        <li class="nav-item"><a href="/admin/users/permissions"--}}
+                        {{--                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='permissions' ? 'active' : '' }}">دسترسی--}}
+                        {{--                                ها</a></li>--}}
+                        {{--                        <li class="nav-item"><a href="/admin/users/setting"--}}
+                        {{--                                                class="nav-link {{ Request::segment(2) === 'users' && Request::segment(3)==='setting' ? 'active' : '' }}">تنظیمات</a>--}}
                         </li>
                     </ul>
                 </li>
@@ -120,7 +121,9 @@
                                 با ما</a></li>
 
                         <li class="nav-item">
-                            <a href="/admin/setting/setting" class="nav-link {{ Request::segment(2) === 'setting' && Request::segment(3) === 'setting' ? 'active' : '' }}">تنظیمات</a></li>
+                            <a href="/admin/setting/setting"
+                               class="nav-link {{ Request::segment(2) === 'setting' && Request::segment(3) === 'setting' ? 'active' : '' }}">تنظیمات</a>
+                        </li>
                     </ul>
                 </li>
                 <!-- /page kits -->

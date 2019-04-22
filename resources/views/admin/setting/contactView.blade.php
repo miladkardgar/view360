@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin_content_layout')
-
+@section('title','ارتباط با ما |‌ ' .$conInfo->name)
 @section('meta')
 @stop
 @section('css')

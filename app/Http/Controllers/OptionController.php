@@ -15,10 +15,11 @@ class OptionController extends Controller
 
     public function __construct()
     {
-        App::singleton('estates', function(){
-            return Data::where('type','=','fileType')->get();
+        App::singleton('estates', function () {
+            return Data::where('type', '=', 'fileType')->get();
         });
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +43,7 @@ class OptionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -54,7 +55,7 @@ class OptionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Option $option
+     * @param \App\Option $option
      * @return \Illuminate\Http\Response
      */
     public function show(Option $option)
@@ -65,7 +66,7 @@ class OptionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Option $option
+     * @param \App\Option $option
      * @return \Illuminate\Http\Response
      */
     public function edit(Option $option)
@@ -76,8 +77,8 @@ class OptionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Option $option
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Option $option
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Option $option)
@@ -85,24 +86,24 @@ class OptionController extends Controller
         //
         $data = $request->validate(
             [
-                "site_title"=>'required',
-                "site_description"=>'required',
-                "site_email"=>'nullable|email',
-                "site_email2"=>'nullable|email',
-                "site_tel"=>'nullable',
-                "site_tel2"=>'nullable',
-                "site_mobile"=>'nullable|iran_mobile',
-                "site_mobile2"=>'nullable|iran_mobile',
-                "site_url"=>'',
-                "site_fax"=>'',
-                "site_instagram"=>'',
-                "site_telegram"=>'',
-                "site_twitter"=>'',
-                "site_facebook"=>'',
-                "site_address"=>'',
-                "site_address2"=>'',
-                "site_lat"=>'',
-                "site_lon"=>'',
+                "site_title" => 'required',
+                "site_description" => 'required',
+                "site_email" => 'nullable|email',
+                "site_email2" => 'nullable|email',
+                "site_tel" => 'nullable',
+                "site_tel2" => 'nullable',
+                "site_mobile" => 'nullable|iran_mobile',
+                "site_mobile2" => 'nullable|iran_mobile',
+                "site_url" => '',
+                "site_fax" => '',
+                "site_instagram" => '',
+                "site_telegram" => '',
+                "site_twitter" => '',
+                "site_facebook" => '',
+                "site_address" => '',
+                "site_address2" => '',
+                "site_lat" => '',
+                "site_lon" => '',
             ]
         );
         $option->update($data);
@@ -112,35 +113,39 @@ class OptionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Option $option
+     * @param \App\Option $option
      * @return \Illuminate\Http\Response
      */
     public function destroy(Option $option)
     {
         //
     }
+
     public function about()
     {
         $option = new About();
         $option = $option->find(1);
-        $usersList = User::all()->where("status","=","active");
+        $usersList = User::all()->where("status", "=", "active");
 
         if (isset($option)) {
-            return view('admin.setting.about', compact('option','usersList'));
+            return view('admin.setting.about', compact('option', 'usersList'));
         } else {
             return view('admin.setting.about');
         }
     }
+
     public function aboutStore(Request $request)
     {
 
 
-        function dataready($data) {
+        function dataready($data)
+        {
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data);
             return $data;
         }
+
         $option = new About();
         $option2 = $option->find(1);
         $status = 0;
@@ -183,21 +188,44 @@ class OptionController extends Controller
 
         return redirect('/admin/setting/about');
     }
-    public function contact(){
-        $contacts = file_contact::all();
-        return view('admin.setting.contact',compact('contacts'));
-    }
-    public function setting(){
-        $info = Option::find(1);
-        return view('admin.setting.setting',compact('info'));
-    }
-    public function contactView(Request $request)
+
+    public function contact()
     {
-        $conInfo = file_contact::find($request->id);
-        if(isset($conInfo->id)){
-            file_contact::find($request->id)->update(['read_status','1']);
-        }
-        return view('admin.setting.contactView',compact('conInfo'));
+        $contacts = file_contact::all();
+        return view('admin.setting.contact', compact('contacts'));
     }
 
+    public function setting()
+    {
+        $info = Option::find(1);
+        return view('admin.setting.setting', compact('info'));
+    }
+
+    public function contactView(Request $request)
+    {
+        $conInfo = file_contact::find($request->id)->first();
+        if (isset($conInfo->id)) {
+            file_contact::where('id', $request->id)->update(['read_status'=> '1']);
+        }
+        return view('admin.setting.contactView', compact('conInfo'));
+    }
+
+    public function uploadImage(Request $request) {
+        $CKEditor = $request->input('CKEditor');
+        $funcNum  = $request->input('CKEditorFuncNum');
+        $message  = $url = '';
+        if (Input::hasFile('upload')) {
+            $file = Input::file('upload');
+            if ($file->isValid()) {
+                $filename =rand(1000,9999).$file->getClientOriginalName();
+                $file->move(public_path().'/wysiwyg/', $filename);
+                $url = url('wysiwyg/' . $filename);
+            } else {
+                $message = 'An error occurred while uploading the file.';
+            }
+        } else {
+            $message = 'No file uploaded.';
+        }
+        return '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$url.'", "'.$message.'")</script>';
+    }
 }

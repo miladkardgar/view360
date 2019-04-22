@@ -1,18 +1,5 @@
 @extends('users.layouts.master')
 @section('title','ورود')
-
-@section('script')
-    @if($errors->any())
-        <script>
-            Swal.fire({
-                type: 'error',
-                title: 'خطا!',
-                text: '{{$errors->first()}}',
-                footer: '<a href>کلمه عبور را فراموش کرده اید؟</a>'
-            })
-        </script>
-    @endif
-@endsection
 @section('body')
     <main id="ts-main" class="rtl">
 
@@ -105,11 +92,8 @@
                                         <button type="submit" class="btn btn-primary">ورود</button>
 
                                     </div>
-
                                     @include('users.errors')
-
                                     <hr>
-
                                     <!--Forgot password link-->
                                     <a href="#" class="ts-text-small">
                                         <i class="fa fa-sync-alt ts-text-color-primary mr-2"></i>
