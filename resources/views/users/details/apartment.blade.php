@@ -15,20 +15,25 @@
         @endphp
     @endif
 @endforeach
+
 @extends('users.layouts.master')
 @section('script')
+
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
     @if($con)
-        <script src="{{url('/public/assets/js/dananao/tour.js')}}"></script>
-        <script>
+
+    <script src="{{url('/public/assets/js/dananao/tour.js')}}">
+        </script>
+    <script>
             var vars = {};
             vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";
-            vars["plugin[vtoureditor].keep"] = true;
+            vars["plugin[vtoureditor].keep"] = false;
             embedpano({
                 swf: "{{url($swf)}}",
                 xml: "{{url($xml)}}",
                 target: "krpanoDIV",
-                initvars: {design: "flat"},
+
+                initvars: {design: "117"},
                 html5: "auto",
                 passQueryParameters: true
             });
@@ -36,23 +41,13 @@
     @endif
 @endsection
 @section('body')
+
     <main id="ts-main" class="rtl">
+        @if($con)
+            <div id="krpanoDIV" style="width:100%;height:600px; direction: ltr"></div>
+        @endif
 
-        <!--BREADCRUMB
-            =========================================================================================================-->
-        <section id="breadcrumb">
-            <div class="container">
-                <nav aria-label="breadcrumb">
-                    {{--                    <ol class="breadcrumb">--}}
-                    {{--                        <li class="breadcrumb-item"><a href="#">Home</a></li>--}}
-                    {{--                        <li class="breadcrumb-item"><a href="#">Library</a></li>--}}
-                    {{--                        <li class="breadcrumb-item active" aria-current="page">Data</li>--}}
-                    {{--                    </ol>--}}
-                </nav>
-            </div>
-        </section>
-
-        <section id="page-title">
+        <section id="page-title" class="pt-2">
             <div class="container">
                 <div class="d-block d-sm-flex justify-content-between">
                     <div class="ts-title mb-0">
@@ -62,29 +57,11 @@
                         </h5>
                     </div>
                 </div>
-                @if($con)
-                    <div id="krpanoDIV" style="width:100%;height:500px;"></div>
-                @endif
+
             </div>
         </section>
 
-        <section id="gallery-carousel">
-            <div class="owl-carousel ts-gallery-carousel ts-gallery-carousel__multi" data-owl-dots="1"
-                 data-owl-items="3" data-owl-center="1" data-owl-loop="1">
-                @foreach($medias as $media)
-                    <div class="slide">
-                        <div class="ts-image"
-                             data-bg-image="{{url($media->fileInfo->file)}}">
-                            <a href="{{url($media->fileInfo->file)}}"
-                               class="ts-zoom popup-image"><i
-                                    class="fa fa-search-plus"></i>بزرگنمایی</a>
-                        </div>
-                    </div>
-                @endforeach
 
-            </div>
-
-        </section>
         <section id="content">
             <div class="container">
                 <div class="row flex-wrap-reverse">
@@ -170,15 +147,7 @@
                                 </form>
                             </div>
                         </section>
-                        <section id="location">
-                            <h3>موقعیت</h3>
-                            <div class="ts-box">
-                                <dl class="ts-description-list__line mb-0">
-                                    <dt><i class="fa fa-map-marker ts-opacity__30 mr-2"></i>آدرس:</dt>
-                                    <dd class="border-bottom pb-2">{{$fileInfos->address}}</dd>
-                                </dl>
-                            </div>
-                        </section>
+
                     </div>
                     <div class="col-md-7 col-lg-8">
                         <section id="quick-info">
@@ -237,8 +206,24 @@
                                         </li>
                                     @endforeach
                                 </ul>
-
                             @endif
+                        </section>
+                        <section id="gallery-carousel">
+                            <div class="owl-carousel ts-gallery-carousel ts-gallery-carousel__multi" data-owl-dots="1"
+                                 data-owl-items="3" data-owl-center="1" data-owl-loop="1">
+                                @foreach($medias as $media)
+                                    <div class="slide">
+                                        <div class="ts-image"
+                                             data-bg-image="{{url($media->fileInfo->file)}}">
+                                            <a href="{{url($media->fileInfo->file)}}"
+                                               class="ts-zoom popup-image"><i
+                                                        class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            </div>
+
                         </section>
                         <section id="map-location">
 

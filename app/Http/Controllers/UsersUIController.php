@@ -41,6 +41,18 @@ class UsersUIController extends Controller
         $attrs = Data::where('type', 'possibilities')->get();
         return view('users.index', compact('contact', 'fileTypes', 'transactionTypes', 'usageTypes', 'cityTypes', 'provinces', 'attrs'));
     }
+    public function index2()
+    {
+        $contact = new Option();
+        $contact = $contact->find(1);
+        $fileTypes = Data::fileTypes()->get();
+        $transactionTypes = Data::transactionTypes()->get();
+        $usageTypes = Data::usageTypes()->get();
+        $cityTypes = Data::cityTypes()->get();
+        $provinces = City::where('parent', 0)->get();
+        $attrs = Data::where('type', 'possibilities')->get();
+        return view('users.index2', compact('contact', 'fileTypes', 'transactionTypes', 'usageTypes', 'cityTypes', 'provinces', 'attrs'));
+    }
 
     public function about()
     {

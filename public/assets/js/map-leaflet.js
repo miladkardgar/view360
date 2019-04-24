@@ -53,16 +53,19 @@ $(document).ready(function ($) {
         // =================================================================================================================
         map = L.map(mapId, {
             zoomControl: false,
-            scrollWheelZoom: scrollWheel
+            // scrollWheelZoom: scrollWheel
+            scrollWheelZoom:true
         });
         map.setView([centerLatitude, centerLongitude], mapDefaultZoom);
 
 
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 12,
+            attribution: '',
+            maxZoom: 18,
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg',
+            zoomDelta: 0.25,
+            zoomSnap: 0
         }).addTo(map);
 
 
