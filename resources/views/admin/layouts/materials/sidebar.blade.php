@@ -83,6 +83,12 @@
                         <li class="nav-item"><a href="/admin/estate/list"
                                                 class="nav-link {{ Request::segment(2) === 'estate' && Request::segment(3)==='list' ? 'active' : '' }}">لیست
                                 املاک</a></li>
+
+
+                        <li class="nav-item"><a href="/admin/estate/subdomains"
+                                                class="nav-link {{ Request::segment(2) === 'estate' && Request::segment(3)==='subdomains' ? 'active' : '' }}">مدیریت ساب دامین ها</a></li>
+
+
                         <li class="nav-item"><a href="/admin/estate/setting"
                                                 class="nav-link {{ Request::segment(2) === 'estate' && Request::segment(3)==='setting' ? 'active' : '' }}">تنظیمات</a>
                         </li>

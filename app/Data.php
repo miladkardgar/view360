@@ -35,4 +35,10 @@ class Data extends Model
     {
         return $query->where('type','cityType');
     }
+
+    public function fileInfo()
+    {
+        return $this->belongsTo(upload::class,'upload_id');
+    }
+
 }

@@ -39,6 +39,13 @@ class estatesController extends Controller
         return view('admin.estates.list', compact('filesList'));
     }
 
+    function subdomains(Request $request)
+    {
+        $filesList = File::all();
+
+        return view('admin.estates.subdomains', compact('filesList'));
+    }
+
 
     function setting(Request $request)
     {
@@ -47,7 +54,8 @@ class estatesController extends Controller
         $path = url('/public/assets/webfonts/fontawsome/metadata/icons.json');
         $json = json_decode(file_get_contents($path), true);
         $provinces = City::all();
-        return view('admin.estates.setting', compact('json', 'Attrs','provinces'));
+        $fileTypes = Data::where("type", "fileType")->get();
+        return view('admin.estates.setting', compact('json', 'Attrs', 'provinces', 'fileTypes'));
     }
 
     function add(Request $request)
@@ -383,13 +391,12 @@ class estatesController extends Controller
 
     public function changeStatus(Request $request, File $file)
     {
-        if($file->where('id', $request->id)->update(['status' => $request->val])) {
+        if ($file->where('id', $request->id)->update(['status' => $request->val])) {
             return back()->with(['result' => "success", "message" => "فایل مورد نظر " . $request->val . " گردید."]);
-        }else{
+        } else {
             return back()->with(['result' => "error", "message" => "فایل مورد نظر یافت نشد!"]);
         }
     }
-
 
     public function edit(Request $request)
     {
@@ -415,7 +422,7 @@ class estatesController extends Controller
 
     public function deleteImage(Request $request, Files_medias $files_medias)
     {
-        if($files_medias->where('media_id',$request->id)->count()>0){
+        if ($files_medias->where('media_id', $request->id)->count() > 0) {
             $files_medias->where('media_id', $request->id)->delete();
             return back()->with(["result" => "success", "message" => "تصویر مورد نظر حذف گردید."]);
         }
@@ -508,23 +515,21 @@ class estatesController extends Controller
                 foreach ($diff as $item) {
                     Files_atributies::where('data_id', $item)->where('file_id', $request->id)->delete();
                 }
-                return back()->with(["result"=>"success","message"=>"اطلاعات شما با موفقیت ویرایش شد."]);
+                return back()->with(["result" => "success", "message" => "اطلاعات شما با موفقیت ویرایش شد."]);
             } else {
                 return back()->withErrors('فایل سه بعدی ارسالی ناقص میباشد.');
             }
-        }else{
-            return back()->with(["result"=>"error","message"=>"خطا در پارامتر های ارسالی"]);
-
+        } else {
+            return back()->with(["result" => "error", "message" => "خطا در پارامتر های ارسالی"]);
         }
     }
 
-    public function changeStatusCites(Request $request,City $city)
+    public function changeStatusCites(Request $request, City $city)
     {
-        $city->where('id',$request->id)->update(['status'=>$request->val]);
-        $city->where('parent',$request->id)->update(['status'=>$request->val]);
-        return back()->with(['result'=>'success','message'=>'تغییر وضعیت شهر مورد نظر اعمال شد.']);
+        $city->where('id', $request->id)->update(['status' => $request->val]);
+        $city->where('parent', $request->id)->update(['status' => $request->val]);
+        return back()->with(['result' => 'success', 'message' => 'تغییر وضعیت شهر مورد نظر اعمال شد.']);
     }
-
 
     public function addCity(Request $request)
     {
@@ -533,7 +538,7 @@ class estatesController extends Controller
         <div class="row">
             <div class="col-12 col-md-12">
                 <div class="form-group">
-                    <input type="hidden" name="parent" value="'.$request->id.'">
+                    <input type="hidden" name="parent" value="' . $request->id . '">
                     <label for="selectRole">نام شهر را وارد نمایید</label>
                     <input type="text" name="name" class="form-control">
                 </div>
@@ -547,7 +552,7 @@ class estatesController extends Controller
         return $res;
     }
 
-    public function addStore(Request $request,City $city)
+    public function addStore(Request $request, City $city)
     {
 
         $data = $request->validate([
@@ -555,6 +560,43 @@ class estatesController extends Controller
             'parent' => 'required',
         ]);
         City::create($data);
-        return back()->with(['result'=>"success",'message'=>'شهر مورد نظر به سیستم اضافه گردید.']);
+        return back()->with(['result' => "success", 'message' => 'شهر مورد نظر به سیستم اضافه گردید.']);
+    }
+
+    function fileTypeSetting(Request $request)
+    {
+        $req = $request->all();
+        foreach ($req as $item => $val) {
+            if (strpos($item, "file_") !== false) {
+                $idFile = trim(str_replace("file_", "", $item));
+                if ($request->hasfile($item)) {
+                    if (!Storage::exists('/public/files/fileTypes')) {
+                        Storage::makeDirectory('/public/files/fileTypes', 775, true, true);
+                    }
+                    foreach (request()->$item as $uploadFile) {
+                        $file = $uploadFile;
+                        $fileName = $file->getClientOriginalName();
+                        $filename = str_replace(" ", "_", $fileName);
+                        $filenameTime = time() . "_" . $filename;
+                        $mime = $file->getClientMimeType();
+                        $size = $file->getSize();
+                        $file->storeAs(
+                            "files/fileTypes", $filenameTime, 'public');
+                        $upload = new upload();
+                        $upload->file = "storage/app/public/files/fileTypes/" . $filenameTime;
+                        $upload->folder = "storage/app/public/files/fileTypes/";
+                        $upload->name = $filename;
+                        $upload->mime = $mime;
+                        $upload->size = $size;
+                        $upload->users()->associate(auth()->user());
+                        $upload->save();
+                        $uploadID = $upload->id;
+                        Data::where('id', $idFile)->update(['upload_id' => $uploadID]);
+                    }
+                }
+            }
+        }
+        return back()->with(['result' => "success", 'message' => 'تغییرات فایل ها انجام پذیرفت.']);
+
     }
 }

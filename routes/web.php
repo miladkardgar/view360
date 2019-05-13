@@ -64,6 +64,9 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::get('/admin/estate/list', 'EstatesController@list');
     Route::get('/admin/estate/list/changeStatus/{id}/{val}', 'EstatesController@changeStatus');
 
+    Route::get('/admin/estate/subdomains', 'EstatesController@subdomains');
+
+
     Route::get('/admin/estate/setting', 'EstatesController@setting');
     Route::get('/admin/estate/setting/city/changeStatus/{id}/{val}', 'EstatesController@changeStatusCites');
     Route::post('/admin/estate/setting/city/addCity', 'EstatesController@addCity');
@@ -72,6 +75,9 @@ Route::group(['middleware' => ['auth','role']], function () {
     Route::post('/admin/estate/setting/storeAttr', 'EstatesController@storeAttr');
     Route::get('/admin/estate/setting/removeAttr/{id}', 'EstatesController@deleteAttr');
     Route::get('/admin/estate/setting/getCityListSetting', 'EstatesController@getCityListSetting');
+
+
+    Route::post('/admin/estate/setting/fileType', 'EstatesController@fileTypeSetting');
 
     Route::post('/admin/estate/getInfo', 'EstatesController@getInfo');
     Route::post('/admin/estate/getCityList', 'EstatesController@getCityList');
