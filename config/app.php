@@ -164,7 +164,6 @@ return [
 //        Spatie\Permission\PermissionServiceProvider::class,
 
 
-
         /*
          * Package Service Providers...
          */
@@ -178,7 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         \Chumper\Zipper\ZipperServiceProvider::class,
-        Anetwork\Validation\PersianValidationServiceProvider::class
+        Anetwork\Validation\PersianValidationServiceProvider::class,
 
 
     ],

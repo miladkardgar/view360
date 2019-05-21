@@ -210,6 +210,8 @@ class estatesController extends Controller
         foreach ($estates as $estate) {
             $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
             $imageInfo = upload::find($img)->first();
+            $dataInfo = Data::where("id",$estate->data_id)->get()->first();
+            $image = $dataInfo->fileInfo->file;
             $url = $imageInfo['file'];
             $getTitle = Data::where('id', '=', $estate->data_id)->first();
             $info[] = array(
@@ -221,7 +223,8 @@ class estatesController extends Controller
                 "region_id" => $estate->region_id,
                 "price" => "50000",
                 "category" => $estate->data_id,
-                "marker_image" => url($url),
+                "marker_image" => url($image),
+                "marker_image2" => url($url),
                 "url" => $estate->data_id . "/" . $estate->id,
                 "address" => $estate->address,
                 "latitude" => $estate->lat,

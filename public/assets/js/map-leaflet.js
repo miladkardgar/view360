@@ -263,7 +263,7 @@ $(document).ready(function ($) {
             '</figure>' +
             // additionalInfoHTML({display: displayAdditionalInfo, i: i}) +
             '</div>' +
-            '<div class="ts-infobox_image" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' +
+            '<div class="ts-infobox_image" style="background-image: url(' + loadedMarkersData[i]["marker_image2"] + ')"></div>' +
             '</a>' +
             '</div>' +
             '</div>';
@@ -339,7 +339,7 @@ $(document).ready(function ($) {
                 '<a href="' + loadedMarkersData[id]["url"] + '" class="card ts-item ts-card ts-result">' +
                 ((loadedMarkersData[id]["ribbon"] !== undefined) ? '<div class="ts-ribbon">' + loadedMarkersData[id]["ribbon"] + '</div>' : "") +
                 ((loadedMarkersData[id]["ribbon_corner"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[id]["ribbon_corner"] + '</span></div>' : "") +
-                '<div href="detail-01.html" class="card-img ts-item__image" style="background-image: url(' + loadedMarkersData[id]["marker_image"] + ')"></div>' +
+                '<div href="detail-01.html" class="card-img ts-item__image" style="background-image: url(' + loadedMarkersData[id]["marker_image2"] + ')"></div>' +
                 '<div class="card-body">' +
                 // '<div class="ts-item__info-badge">' + formatPrice(loadedMarkersData[id]["price"]) + '</div>' +
                 '<figure class="ts-item__info">' +

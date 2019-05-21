@@ -452,7 +452,7 @@
                                     <div class="col-12 col-md-4">
                                         <div class="card">
                                             @if($fileType->upload_id !="")
-                                                <img class="card-img-top" src="{{url($fileType->fileInfo->file)}}"
+                                                <img class="card-img-top" width="100" src="{{url($fileType->fileInfo->file)}}"
                                                      alt="Card image cap">
                                             @endif
                                             <div class="card-body">
