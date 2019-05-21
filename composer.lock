@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "185c5561b924c30b39c3a6adc8dd3b72",
+    "content-hash": "cb49daee450e5ef73f980207748edad3",
     "packages": [
         {
             "name": "anetwork/validation",
@@ -51,12 +51,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/caouecs/Laravel-lang.git",
-                "reference": "c5e3d884c46d616db0a1cc9401feb8cb998eaeb4"
+                "reference": "83827a58ced53aec1c272cac46a9f9b3d82ddc09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/c5e3d884c46d616db0a1cc9401feb8cb998eaeb4",
-                "reference": "c5e3d884c46d616db0a1cc9401feb8cb998eaeb4",
+                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/83827a58ced53aec1c272cac46a9f9b3d82ddc09",
+                "reference": "83827a58ced53aec1c272cac46a9f9b3d82ddc09",
                 "shasum": ""
             },
             "require-dev": {
@@ -86,7 +86,7 @@
                 "laravel",
                 "lpm"
             ],
-            "time": "2019-03-27T20:34:54+00:00"
+            "time": "2019-05-03T20:57:56+00:00"
         },
         {
             "name": "chumper/zipper",
@@ -1641,6 +1641,51 @@
             "time": "2018-07-19T23:38:55+00:00"
         },
         {
+            "name": "romegadigital/multitenancy",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/romegadigital/Multitenancy.git",
+                "reference": "91b0e9e7122612f8a80812c4ba7ad2c88e3b97ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/romegadigital/Multitenancy/zipball/91b0e9e7122612f8a80812c4ba7ad2c88e3b97ef",
+                "reference": "91b0e9e7122612f8a80812c4ba7ad2c88e3b97ef",
+                "shasum": ""
+            },
+            "require": {
+                "spatie/laravel-permission": "^2.29"
+            },
+            "require-dev": {
+                "codedungeon/phpunit-result-printer": "^0.6.0",
+                "orchestra/testbench": "^3.7",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RomegaDigital\\Multitenancy\\MultitenancyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RomegaDigital\\Multitenancy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Braden Keith",
+                    "email": "bkeith@romegadigital.com"
+                }
+            ],
+            "description": "Adds domain based multitenancy to Laravel applications.",
+            "time": "2019-02-27T15:50:37+00:00"
+        },
+        {
             "name": "spatie/laravel-permission",
             "version": "2.37.0",
             "source": {
@@ -2317,7 +2362,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
