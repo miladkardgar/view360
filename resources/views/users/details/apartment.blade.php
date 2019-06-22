@@ -11,7 +11,7 @@
     @elseif($m3->fileInfo->mime=="swf")
         @php
             $swf = $m3->fileInfo->file;
-                    $con = true;
+            $con = true;
         @endphp
     @endif
 @endforeach
@@ -21,9 +21,7 @@
 
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
     @if($con)
-
-    <script src="{{url('/public/assets/js/dananao/tour.js')}}">
-        </script>
+    <script src="{{url('/public/assets/js/dananao/tour.js')}}"></script>
     <script>
             var vars = {};
             vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";

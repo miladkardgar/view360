@@ -29,7 +29,7 @@ class UsersUIController extends Controller
         });
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $contact = new Option();
         $contact = $contact->find(1);
@@ -215,7 +215,6 @@ class UsersUIController extends Controller
             'message' => 'required|min:5',
         ]);
     }
-
 
     private function uploadFile(Request $request, $userID)
     {

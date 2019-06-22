@@ -86,24 +86,21 @@
     </section>
     <!--end ts-hero-->
 @endsection
-
 @section('meta')
     <meta name="_token" content="{{csrf_token()}}"/>
 @endsection
 @section('script')
     <script>
         $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
             $(document).on("change",'#city_id', function () {
                 var cID = $(this).val();
                 $.ajax({
                     url: "{{url('ajax/cityList')}}",
                     data: {id: cID},
                     method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    },
                     success: function (result) {
                         $("#region_id").html("");
                         $("#region_id").append("<option value=''>منطقه</option>");
@@ -123,6 +120,9 @@
                     url: "{{url('ajax/cityList')}}",
                     data: {id: pID},
                     method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    },
                     success: function (result) {
                         $("#city_id").html("");
                         $("#city_id").append("<option value=''>شهر</option>");

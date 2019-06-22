@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         \Chumper\Zipper\ZipperServiceProvider::class,
         Anetwork\Validation\PersianValidationServiceProvider::class,
-        RomegaDigital\Multitenancy\MultitenancyServiceProvider::class,
+//        RomegaDigital\Multitenancy\MultitenancyServiceProvider::class,
     ],
 
     /*

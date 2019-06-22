@@ -14,7 +14,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasTenants, HasRoles;
     use Notifiable;
 
     /**

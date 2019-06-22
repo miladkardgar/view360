@@ -246,12 +246,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="address">آدرس ملک</label>
                                 <div class="col-12">
                                     <input type="text" name="address" id="address" class="form-control"
                                            value="{{old('address')?? $req->address}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="sub_id">ساب دامین</label>
+                                <div class="col-12">
+                                    <input type="text" value="{{old('sub_domain')?? $req->sub_domain}}" class="form-control" name="sub_domain" id="sub_domain">
                                 </div>
                             </div>
                         </div>

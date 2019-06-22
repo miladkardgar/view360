@@ -13,12 +13,12 @@ class CreateDocTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('doc_type', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string("title")->nullable();
-            $table->string("status")->default("active");
-            $table->timestamps();
-        });
+//        Schema::create('doc_type', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->string("title")->nullable();
+//            $table->string("status")->default("active");
+//            $table->timestamps();
+//        });
     }
 
     /**
@@ -28,6 +28,6 @@ class CreateDocTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('doc_type');
+//        Schema::dropIfExists('doc_type');
     }
 }

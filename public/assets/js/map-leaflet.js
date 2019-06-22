@@ -78,22 +78,22 @@ $(document).ready(function ($) {
         //==================================================================================================================
         // LOAD DATA
         // =================================================================================================================
-
+        // var par =form.serialize();
         loadData();
     }
 
 
     function loadData(parameters) {
+        console.log(parameters);
         $.ajax({
             // url: "/public/assets/db/items.json",
             url: "/estate/list",
-            dataType: "json",
-            method: "GET",
+            method: "get",
             cache: false,
             success: function (results) {
                 console.log(parameters);
                 if (typeof parameters !== "undefined" && parameters["formData"]) {
-                    //loadFormData(parameters);
+                    loadFormData(parameters);
                 }else{
                     allMarkersData = results;
                     loadedMarkersData = allMarkersData;
@@ -122,7 +122,7 @@ $(document).ready(function ($) {
             markerContent.innerHTML =
                 '<div class="ts-marker-wrapper">' +
                 '<a href="#" class="ts-marker" data-ts-id="' + loadedMarkersData[i]["id"] + '" data-ts-ln="' + i + '">' +
-                ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-marker__feature">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
+                // ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-marker__feature">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
                 ((loadedMarkersData[i]["title"] !== undefined) ? '<div class="ts-marker__title">' + loadedMarkersData[i]["title"] + '</div>' : "") +
                 // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-marker__info">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
                 ((loadedMarkersData[i]["marker_image"] !== undefined) ? '<div class="ts-marker__image ts-black-gradient" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' : '<div class="ts-marker__image ts-black-gradient" style="background-image: url(/public/assets/img/marker-default-img.png)"></div>') +
@@ -250,8 +250,8 @@ $(document).ready(function ($) {
             '<div class="ts-infobox" data-ts-id="' + loadedMarkersData[i]["id"] + '">' +
             '<img src="/public/assets/img/infobox-close.svg" class="ts-close">' +
 
-            ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-ribbon">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
-            ((loadedMarkersData[i]["ribbon_corner"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[i]["ribbon_corner"] + '</span></div>' : "") +
+            // ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-ribbon">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
+            // ((loadedMarkersData[i]["ribbon_corner"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[i]["ribbon_corner"] + '</span></div>' : "") +
 
             '<a href="' + loadedMarkersData[i]["url"] + '" class="ts-infobox__wrapper ts-black-gradient">' +
             ((loadedMarkersData[i]["badge"] !== undefined && loadedMarkersData[i]["badge"].length > 0) ? '<div class="badge badge-dark">' + loadedMarkersData[i]["badge"] + '</div>' : "") +

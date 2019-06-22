@@ -13,13 +13,13 @@ class CreateCitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cities', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string("name")->nullable();
-            $table->integer("parent")->default(0);
-            $table->string("status")->default("active");
-            $table->timestamps();
-        });
+//        Schema::create('cities', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->string("name")->nullable();
+//            $table->integer("parent")->default(0);
+//            $table->string("status")->default("active");
+//            $table->timestamps();
+//        });
     }
 
     /**
@@ -29,6 +29,6 @@ class CreateCitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cities');
+//        Schema::dropIfExists('cities');
     }
 }

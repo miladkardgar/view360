@@ -416,12 +416,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="address">آدرس ملک</label>
                                 <div class="col-12">
                                     <input type="text" name="address" id="address" class="form-control"
                                            value="{{Request::old('address')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="sub_domain">ساب دامین</label>
+                                <div class="col-12">
+                                    <input type="text" class="form-control" name="sub_domain" id="sub_domain">
                                 </div>
                             </div>
                         </div>
@@ -433,7 +441,7 @@
                             <div class="form-group">
                                 <label for="file">تصاویر اصلی</label>
                                 <input type="file" class="file-input-ajaxMain" multiple="multiple" name="fileMain[]"
-                                       data-fouc  accept=".jpg,.gif,.png"
+                                       data-fouc accept=".jpg,.gif,.png"
                                        id="fileMain">
                                 <span class="form-text text-muted">حداکثر یک تصویر قابل بارگذاری مباشد.</span>
                             </div>

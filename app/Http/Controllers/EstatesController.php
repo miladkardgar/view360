@@ -6,10 +6,13 @@ use App\City;
 use App\Estate_types;
 use App\Files_atributies;
 use App\Files_medias;
+use App\subdomain;
 use App\upload;
+use App\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -35,17 +38,27 @@ class estatesController extends Controller
     function list(Request $request)
     {
         $filesList = File::all();
-
         return view('admin.estates.list', compact('filesList'));
     }
 
     function subdomains(Request $request)
     {
-        $filesList = File::all();
-
-        return view('admin.estates.subdomains', compact('filesList'));
+        $subs = subdomain::all();
+        $users = User::all();
+        return view('admin.estates.subdomains', compact('subs', 'users'));
     }
 
+    function subdomainsStore(Request $request, subdomain $subdomain)
+    {
+        $data = $request->validate([
+            'title' => 'required|min:2|max:100',
+            'user_id' => 'required',
+        ]);
+        $data['c_id'] = Auth::id();
+        subdomain::create($data);
+        return back()->with(['result' => "success", 'message' => 'ساب دامین اضافه گردید.']);
+
+    }
 
     function setting(Request $request)
     {
@@ -73,7 +86,8 @@ class estatesController extends Controller
         $commercialTypes = Data::where('type', '=', 'commercialType')->get();
         $transactionTypesCommercial = Data::where('type', '=', 'transactionTypeCommercial')->get();
         $parents = File::where('data_id', '=', '4')->get();
-        return view('admin.estates.files.' . $datas->file, compact('datas', 'provinceLists', 'ownerShipDocumentTypes', 'usageTypes', 'cityType', 'transActionTypes', 'transActionTypesVila', 'possibilitiesVila', 'floorsCount', 'possibilities', 'commercialTypes', 'transactionTypesCommercial', 'parents'));
+        $subs = subdomain::all();
+        return view('admin.estates.files.' . $datas->file, compact('datas', 'provinceLists', 'ownerShipDocumentTypes', 'usageTypes', 'cityType', 'transActionTypes', 'transActionTypesVila', 'possibilitiesVila', 'floorsCount', 'possibilities', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'subs'));
     }
 
     function getCityList()
@@ -129,7 +143,7 @@ class estatesController extends Controller
                     'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
                     'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
                     'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
-                    'title', 'city_type_id', 'parent_id', 'province_id']));
+                    'title', 'city_type_id', 'parent_id', 'province_id', 'sub_domain']));
                 if ($file->id != "") {
                     $upload = '';
                     if ($request->hasfile('file')) {
@@ -210,8 +224,12 @@ class estatesController extends Controller
         foreach ($estates as $estate) {
             $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
             $imageInfo = upload::find($img)->first();
-            $dataInfo = Data::where("id",$estate->data_id)->get()->first();
-            $image = $dataInfo->fileInfo->file;
+            $dataInfo = Data::where("id", $estate->data_id)->get()->first();
+            if ($dataInfo['upload_id'] != 0 && $dataInfo['upload_id'] != "") {
+                $image = $dataInfo->fileInfo->file;
+            } else {
+                $image = '/public/assets/img/icon-pin.png';
+            }
             $url = $imageInfo['file'];
             $getTitle = Data::where('id', '=', $estate->data_id)->first();
             $info[] = array(
@@ -420,7 +438,8 @@ class estatesController extends Controller
         $images = Files_medias::where('file_id', '=', $request->id)->where('type', '3d')->get();
         $mains = Files_medias::where('file_id', '=', $request->id)->where('type', 'main')->get();
         $attrs = Files_atributies::where('file_id', '=', $request->id)->get();
-        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums', 'mains', 'images', 'attrs'));
+        $subs = subdomain::all();
+        return view('admin.estates.edit.' . $req->data->file, compact('req', 'transActionTypes', 'ownerShipDocumentTypes', 'usageTypes', 'provinceLists', 'cityType', 'transActionTypesVila', 'possibilitiesVila', 'possibilities', 'floorsCount', 'commercialTypes', 'transactionTypesCommercial', 'parents', 'albums', 'mains', 'images', 'attrs', 'subs'));
     }
 
     public function deleteImage(Request $request, Files_medias $files_medias)
@@ -465,7 +484,7 @@ class estatesController extends Controller
                     'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
                     'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
                     'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
-                    'title', 'city_type_id', 'parent_id', 'province_id']));
+                    'title', 'city_type_id', 'parent_id', 'province_id', 'sub_domain']));
 
                 if ($request->hasfile('file')) {
                     $uploadFilesId = $this->uploadFile(request(), $request->id, $type = 'album');

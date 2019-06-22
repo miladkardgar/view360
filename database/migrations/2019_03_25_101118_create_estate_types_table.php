@@ -13,12 +13,12 @@ class CreateEstateTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('estate_types', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string("title")->nullable();
-            $table->string("status")->default("active");
-            $table->timestamps();
-        });
+//        Schema::create('estate_types', function (Blueprint $table) {
+//            $table->bigIncrements('id');
+//            $table->string("title")->nullable();
+//            $table->string("status")->default("active");
+//            $table->timestamps();
+//        });
     }
 
     /**

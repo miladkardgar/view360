@@ -7,14 +7,14 @@
 @section('css')
     <link href="{{url('/public/assets/admin/js/plugins/datatable/datatables.css')}}" rel="stylesheet">
     <link
-            href="{{url('/public/assets/admin/js/plugins/datatable/DataTables-1.10.18/css/dataTables.bootstrap4.min.css')}}"
-            rel="stylesheet">
+        href="{{url('/public/assets/admin/js/plugins/datatable/DataTables-1.10.18/css/dataTables.bootstrap4.min.css')}}"
+        rel="stylesheet">
 @stop
 @section('js')
     <script src="{{url('/public/assets/admin/js/plugins/datatable/datatables.js')}}" type="text/javascript"></script>
     <script
-            src="{{url('/public/assets/admin/js/plugins/datatable/DataTables-1.10.18/js/dataTables.bootstrap4.min.js')}}"
-            type="text/javascript"></script>
+        src="{{url('/public/assets/admin/js/plugins/datatable/DataTables-1.10.18/js/dataTables.bootstrap4.min.js')}}"
+        type="text/javascript"></script>
     <script src="{{url('/public/assets/admin/js/plugins/datatable/FixedColumns-3.2.5/js/dataTables.fixedColumns.js')}}"
             type="text/javascript"></script>
     <script src="{{url('/public/assets/admin/js/plugins/sweet/sweetalert2.all.min.js')}}"
@@ -125,18 +125,23 @@
                 <tr>
                     <th>عنوان</th>
                     <th>تعداد زیر مجموعه</th>
+                    <th>کاربر</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($subs as $sub)
                 <tr>
+                    <td>{{$sub->title}}</td>
                     <td></td>
-                    <td></td>
+                    <td>{{$sub->user_id}}</td>
                     <td></td>
                 </tr>
+                    @endforeach
                 </tbody>
                 <tfoot>
                 <tr>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -157,17 +162,28 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body text-black-50" id="modal_AddSubDomain_body">
-                    <form action="" method="post">
+                    <form action="/admin/estate/subdomains" method="post">
+                        {{csrf_field()}}
                         <div class="row">
-                            <div class="col-12 col-md-12">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="">عنوان ساب دامین</label>
                                     <input type="text" class="form-control" name="title">
                                 </div>
                             </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="user_id">کاربر</label>
+                                    <select name="user_id" class="form-control" id="user_id">
+                                        @foreach($users as $user)
+                                            <option value="{{$user->id}}">{{$user->name}} {{$user->family}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-12 col-md-12">
                                 <div class="form-group">
-                                    <button class="btn btn-primary float-right" disabled>افزودن</button>
+                                    <button class="btn btn-primary float-right" type="submit">افزودن</button>
                                 </div>
                             </div>
                         </div>
