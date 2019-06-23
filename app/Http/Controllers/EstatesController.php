@@ -115,18 +115,25 @@ class estatesController extends Controller
             $check = false;
             $checkSFW = false;
             $checkXML = false;
+
             if ($request->hasfile('file3d')) {
                 foreach (request()->file3d as $uploadFile) {
                     $mime = $uploadFile->getClientMimeType();
-                    if ($mime == "application/zip") {
+//                    dd($mime);
+                    $zipType = ['application/x-zip-compressed', 'application/zip'];
+                    if (in_array($mime, $zipType)) {
+//                        dd($request->all());
                         $zip = Zip::open($uploadFile);
                         $listFiles = $zip->listFiles();
+
                         foreach ($listFiles as $listFile) {
                             if (strpos($listFile, "tour.swf") !== false) {
                                 $checkSFW = true;
+                                echo 1;
                             }
                             if (strpos($listFile, "tour.xml") !== false) {
                                 $checkXML = true;
+                                echo 2;
                             }
                         }
                     }
@@ -192,7 +199,7 @@ class estatesController extends Controller
     {
 
         return tap(request()->validate([
-            'ownerPhone' => 'iran_mobile',
+//            'ownerPhone' => 'iran_mobile',
             'ownerName' => 'min:0|max:200',
             'address' => 'address|min:0|max:255',
             'lat' => 'required',
@@ -460,7 +467,8 @@ class estatesController extends Controller
             if ($request->hasfile('file3d')) {
                 foreach (request()->file3d as $uploadFile) {
                     $mime = $uploadFile->getClientMimeType();
-                    if ($mime == "application/zip") {
+                    $zipType = ['application/x-zip-compressed', 'application/zip'];
+                    if (in_array($mime, $zipType)) {
                         $zip = Zip::open($uploadFile);
                         $listFiles = $zip->listFiles();
                         foreach ($listFiles as $listFile) {

@@ -19,7 +19,7 @@
 @section('script')
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
     @if($con)
-        <script src="{{url('/public/assets/js/krpano/krpano.js')}}"></script>
+        <script src="{{url('/public/assets/js/krpano.js')}}"></script>
         <script>
             var vars = {};
             vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";
@@ -35,6 +35,16 @@
         </script>
     @endif
 @endsection
+<style>
+    .kr-hei {
+        height: 650px;
+    }
+    @media only screen and (max-width: 600px) {
+        .kr-hei {
+            height: 400px;
+        }
+    }
+</style>
 @section('body')
     <main id="ts-main" class="rtl">
         <section id="breadcrumb">
@@ -50,7 +60,10 @@
         </section>
 
         <section id="page-title">
-            <div class="container">
+            @if($con)
+                <div id="krpanoDIV" class="kr-hei" style="width:100%; direction: ltr!important;"></div>
+            @endif
+            <div class="container pt-2">
                 <div class="d-block d-sm-flex justify-content-between">
                     <!--Title-->
                     <div class="ts-title mb-0">
@@ -61,9 +74,6 @@
                         </h5>
                     </div>
                 </div>
-                @if($con)
-                    <div id="krpanoDIV" style="width:100%;height:500px;"></div>
-                @endif
             </div>
         </section>
 
@@ -146,7 +156,7 @@
                                              data-bg-image="{{url($media->fileInfo->file)}}">
                                             <a href="{{url($media->fileInfo->file)}}"
                                                class="ts-zoom popup-image"><i
-                                                    class="fa fa-search-plus"></i>بزرگنمایی</a>
+                                                        class="fa fa-search-plus"></i>بزرگنمایی</a>
                                         </div>
                                     </div>
                                 @endforeach

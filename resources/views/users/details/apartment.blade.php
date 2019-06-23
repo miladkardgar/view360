@@ -21,7 +21,7 @@
 
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
     @if($con)
-    <script src="{{url('/public/assets/js/dananao/tour.js')}}"></script>
+    <script src="{{url('/public/assets/js/krpano.js')}}"></script>
     <script>
             var vars = {};
             vars["plugin[vtoureditor].url"] = "plugins/vtoureditor.swf";

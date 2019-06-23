@@ -5,7 +5,7 @@
 
 @extends('users.layouts.master')
 @section('script')
-    <script src="{{url('/public/assets/js/krpano/krpano.js')}}"></script>
+    <script src="{{url('/public/assets/js/krpano.js')}}"></script>
     <script src="{{url('/public/assets/js/magnifig.js')}}" type="text/javascript"></script>
     <script>
         embedpano({
