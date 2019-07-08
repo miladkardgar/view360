@@ -82,13 +82,18 @@ class UsersUIController extends Controller
     {
         if (File::where('id', $id)->where('status', 'active')->count() > 0) {
             $data = Data::findOrFail($page);
+            $page = ['vila','apartment'];
+            $pageMain = 'land';
+            if(in_array($data->file,$page)){
+                $pageMain="apartment";
+            }
             $fileInfos = File::findOrFail($id);
             $medias = Files_medias::where('file_id', $id)->where('type', 'album')->get();
             $medias3d = Files_medias::where('file_id', $id)->where('type', '3d')->get();
             $mediasMain = Files_medias::where('file_id', $id)->where('type', 'main')->get();
             $attrs = Files_atributies::where('file_id', $id)->get();
             $parents = File::where('parent_id', $id)->get();
-            return view('users.details.' . $data->file, compact('fileInfos', 'data', 'medias', 'medias3d', 'mediasMain', 'attrs', 'parents'));
+            return view('users.details.'.$pageMain, compact('fileInfos', 'data', 'medias', 'medias3d', 'mediasMain', 'attrs', 'parents'));
         } else {
             return abort(403);
         }
