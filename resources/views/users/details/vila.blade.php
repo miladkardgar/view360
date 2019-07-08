@@ -39,6 +39,7 @@
     .kr-hei {
         height: 650px;
     }
+
     @media only screen and (max-width: 600px) {
         .kr-hei {
             height: 400px;
@@ -86,23 +87,30 @@
                             <div class="ts-box rtl">
 
                                 <dl class="ts-description-list__line mb-0 rtl">
-                                    <dt>شماره فایل:</dt>
-                                    <dd>#{{$fileInfos->id}}</dd>
-
-                                    <dt>دسته بندی:</dt>
-                                    <dd>{{$data->title}}</dd>
-
-                                    <dt>نوع معامله:</dt>
-                                    <dd>{{$fileInfos->transactionType->title}}</dd>
-
-                                    <dt>نوع سند:</dt>
-                                    <dd>{{$fileInfos->ownershipDocumentStatus->title}}</dd>
-
-                                    <dt>کاربری:</dt>
-                                    <dd>{{$fileInfos->usage->title}}</dd>
-
-                                    <dt>متراژ:</dt>
-                                    <dd>{{$fileInfos->area}}<sup>2</sup></dd>
+                                    @if(isset($fileInfos->id))
+                                        <dt>شماره فایل:</dt>
+                                        <dd>#{{$fileInfos->id}}</dd>
+                                    @endif
+                                    @if(isset($data->title))
+                                        <dt>دسته بندی:</dt>
+                                        <dd>{{$data->title}}</dd>
+                                    @endif
+                                    @if(isset($fileInfos->transactionType->title))
+                                        <dt>نوع معامله:</dt>
+                                        <dd>{{$fileInfos->transactionType->title}}</dd>
+                                    @endif
+                                    @if(isset($fileInfos->ownershipDocumentStatus->title))
+                                        <dt>نوع سند:</dt>
+                                        <dd>{{$fileInfos->ownershipDocumentStatus->title}}</dd>
+                                    @endif
+                                    @if(isset($fileInfos->usage->title))
+                                        <dt>کاربری:</dt>
+                                        <dd>{{$fileInfos->usage->title}}</dd>
+                                    @endif
+                                    @if(isset($fileInfos->area))
+                                        <dt>متراژ:</dt>
+                                        <dd>{{$fileInfos->area}}<sup>2</sup></dd>
+                                    @endif
                                 </dl>
 
                             </div>
