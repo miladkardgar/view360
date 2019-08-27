@@ -632,4 +632,16 @@ class estatesController extends Controller
         return back()->with(['result' => "success", 'message' => 'تغییرات فایل ها انجام پذیرفت.']);
 
     }
+
+    public function deleteFore(Request $request)
+    {
+
+
+        $fileInfo = File::findOrFail($request['id'])->delete();
+        if($fileInfo){
+            Files_atributies::where('file_id',$request['id'])->delete();
+            Files_medias::where('file_id',$request['id'])->delete();
+            return back()->with(['result' => "success", 'message' => 'فایل مورد نظر حذف گردید.']);
+        }
+    }
 }

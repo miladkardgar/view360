@@ -131,9 +131,12 @@
                             <div class="form-group">
                                 <label for="bedroom">تعداد خواب</label>
                                 <div class="col-12">
-                                    <input type="number" class="form-control" min="1" max="30" name="bedroom"
-                                           id="bedroom"
-                                           value="{{old('bedroom') ?? $req->bedroom}}">
+                                    <select name="bedroom" id="bedroom" class="form-control">
+                                        @for($i=0;$i<=20;$i++)
+                                            <option value="{{$i}}"
+                                                    {{Request::old('bedroom') ?? 'checked'}}>{{$i}}</option>
+                                        @endfor
+                                    </select>
                                 </div>
                             </div>
                         </div>

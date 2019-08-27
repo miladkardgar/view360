@@ -80,8 +80,9 @@
 
                                 <dl class="ts-description-list__line mb-0 p-4">
 
-                                    <dt><i class="fa fa-map-marker ts-opacity__30 mr-2"></i>آدرس:</dt>
-                                    <dd class="border-bottom pb-2">{{$fileInfos->address}}</dd>
+{{--                                    <dt><i class="fa fa-map-marker ts-opacity__30 mr-2"></i>آدرس:</dt>--}}
+{{--                                    <dd class="border-bottom pb-2">--}}
+{{--                                        {{$fileInfos->address}}</dd>--}}
 
                                     {{--                                    <dt><i class="fa fa-phone-square ts-opacity__30 mr-2"></i>تلفن:</dt>--}}
                                     {{--                                    <dd class="border-bottom pb-2">+1 602-862-1673</dd>--}}

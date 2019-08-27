@@ -83,11 +83,11 @@
 <script type="text/javascript" src="{{url('/public/assets/js/owl.carousel.min.js')}}"></script>
 <script type="text/javascript" src="{{url('/public/assets/js/dragscroll.js')}}"></script>
 <script type="text/javascript" src="{{url('/public/assets/js/jquery.scrollbar.min.js')}}"></script>
-<script type="text/javascript" src="{{url('/public/assets/js/leaflet.js')}}"></script>
-<script type="text/javascript" src="{{url('/public/assets/js/leaflet.markercluster.js')}}"></script>
-<script type="text/javascript" src="{{url('/public/assets/js/custom.js')}}"></script>
-<script type="text/javascript" src="{{url('/public/assets/js/map-leaflet.js')}}"></script>
-<script type="text/javascript" src="{{url('/public/assets/js/sweet.min.js')}}"></script>
+<script type="text/javascript" src="{{url('/public/assets/js/leaflet.js?v=1200')}}"></script>
+<script type="text/javascript" src="{{url('/public/assets/js/leaflet.markercluster.js?v=1200')}}"></script>
+<script type="text/javascript" src="{{url('/public/assets/js/custom.js?v=1200')}}"></script>
+<script type="text/javascript" src="{{url('/public/assets/js/map-leaflet.js?v=1200')}}"></script>
+<script type="text/javascript" src="{{url('/public/assets/js/sweet.min.js?v=1200')}}"></script>
 @yield('script')
 
 </body>

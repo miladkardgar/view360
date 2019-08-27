@@ -83,17 +83,16 @@ Route::group(['middleware' => ['auth', 'role']], function () {
     Route::post('/admin/users/list/changeInfo', 'UsersController@changeInfo');
     Route::post('/admin/users/list/changeInfo/update/{id}', 'UsersController@changeInfoUpdate');
 
-
     Route::get('/admin/users/permissions', 'UsersController@usersPermissions');
     Route::get('/admin/users/setting', 'UsersController@usersSetting');
     Route::post('/admin/users/store', ['as' => 'panel', 'uses' => 'UsersUIController@store']);
-
     Route::get('/admin/estate/list', 'EstatesController@list');
-    Route::get('/admin/estate/list/changeStatus/{id}/{val}', 'EstatesController@changeStatus');
 
+    Route::post('/admin/estate/list/deleteFore', 'EstatesController@deleteFore')->name('removeEstate');
+
+    Route::get('/admin/estate/list/changeStatus/{id}/{val}', 'EstatesController@changeStatus');
     Route::get('/admin/estate/subdomains', 'EstatesController@subdomains');
     Route::post('/admin/estate/subdomains', 'EstatesController@subdomainsStore');
-
 
     Route::get('/admin/estate/setting', 'EstatesController@setting');
     Route::get('/admin/estate/setting/city/changeStatus/{id}/{val}', 'EstatesController@changeStatusCites');

@@ -294,7 +294,7 @@
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="form-group">
-                                <label for="area">متراژ زمین</label>
+                                <label for="area">مساحت عرصه</label>
                                 <div class="col-12">
                                     <input type="number" class="form-control" min="1" max="10000000" name="area"
                                            id="area"
@@ -304,7 +304,7 @@
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="form-group">
-                                <label for="oldArea">متراژ بنا</label>
+                                <label for="oldArea">مساحت بنا</label>
                                 <div class="col-12">
                                     <input type="number" class="form-control" min="1" max="10000000" name="oldArea"
                                            id="oldArea"
@@ -316,9 +316,11 @@
                             <div class="form-group">
                                 <label for="bedroom">تعداد خواب</label>
                                 <div class="col-12">
-                                    <input type="number" class="form-control" min="1" max="30" name="bedroom"
-                                           id="bedroom"
-                                           value="{{Request::old('bedroom')}}">
+                                    <select name="bedroom" id="bedroom" class="form-control">
+                                        @for($i=0;$i<=20;$i++)
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    </select>
                                 </div>
                             </div>
                         </div>

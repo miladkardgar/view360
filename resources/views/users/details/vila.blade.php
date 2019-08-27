@@ -71,7 +71,7 @@
                         <h1>{{$data->title}}</h1>
                         <h5 class="ts-opacity__90">
                             <i class="fa fa-map-marker text-primary"></i>
-                            {{$fileInfos->address}}
+{{--                            {{$fileInfos->address}}--}}
                         </h5>
                     </div>
                 </div>
@@ -82,7 +82,10 @@
             <div class="container rtl">
                 <div class="row flex-wrap rtl">
                     <div class="col-md-5 col-lg-4">
-                        <section>
+                        <section style="background-color: #0b87b6;
+    text-align: center;
+    padding-top: 20px;
+color: #fff;">
                             <h3>مشخصات</h3>
                             <div class="ts-box rtl">
 
@@ -108,7 +111,7 @@
                                         <dd>{{$fileInfos->usage->title}}</dd>
                                     @endif
                                     @if(isset($fileInfos->area))
-                                        <dt>متراژ:</dt>
+                                        <dt>مساحت:</dt>
                                         <dd>{{$fileInfos->area}}<sup>2</sup></dd>
                                     @endif
                                 </dl>

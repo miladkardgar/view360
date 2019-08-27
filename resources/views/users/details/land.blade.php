@@ -71,7 +71,7 @@
                         <h1>{{$data->title}}</h1>
                         <h5 class="ts-opacity__90">
                             <i class="fa fa-map-marker text-primary"></i>
-                            {{$fileInfos->address}}
+{{--                            {{$fileInfos->address}}--}}
                         </h5>
                     </div>
                 </div>
@@ -82,9 +82,13 @@
             <div class="container rtl">
                 <div class="row flex-wrap rtl">
                     <div class="col-md-5 col-lg-4">
-                        <section>
-                            <h3>مشخصات</h3>
-                            <div class="ts-box rtl">
+                        <section style="background-color: #0bb630;
+    text-align: center;
+    padding-top: 20px;
+    border-radius: .25rem;
+">
+                            <h3 style="color: #fff;">مشخصات</h3>
+                            <div class="ts-box rtl m-2">
 
                                 <dl class="ts-description-list__line mb-0 rtl">
                                     @if(isset($fileInfos->id))
@@ -113,7 +117,7 @@
                                     @endif
 
                                     @if(isset($fileInfos->area))
-                                        <dt>متراژ:</dt>
+                                        <dt>مساحت:</dt>
                                         <dd>{{$fileInfos->area}}<sup>2</sup></dd>
                                     @endif
 
@@ -121,10 +125,14 @@
 
                             </div>
                         </section>
-                        <section id="location">
-                            <h3>موقعیت</h3>
+                        <section id="location" style="background-color: #0b87b6;
+    text-align: center;
+    padding-top: 20px;
+    border-radius: .25rem;
+">
+                            <h3 style="color: #fff;">موقعیت</h3>
 
-                            <div class="ts-box p-0">
+                            <div class="ts-box p-0 m-2">
 
                                 <div class="ts-map ts-map__detail" id="ts-map-simple"
                                      data-ts-map-leaflet-provider="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png"
@@ -134,10 +142,10 @@
                                      data-ts-map-scroll-wheel="1"
                                      data-ts-map-controls="0"></div>
 
-                                <dl class="ts-description-list__line mb-0 p-4">
+                                <dl class="ts-description-list__line mb-0">
 
-                                    <dt><i class="fa fa-map-marker ts-opacity__30 mr-2"></i>آدرس:</dt>
-                                    <dd class="border-bottom pb-2">{{$fileInfos->address}}</dd>
+{{--                                    <dt><i class="fa fa-map-marker ts-opacity__30 mr-2"></i>آدرس:</dt>--}}
+{{--                                    <dd class="border-bottom pb-2">{{$fileInfos->address}}</dd>--}}
 
                                     {{--                                    <dt><i class="fa fa-phone-square ts-opacity__30 mr-2"></i>تلفن:</dt>--}}
                                     {{--                                    <dd class="border-bottom pb-2">+1 602-862-1673</dd>--}}

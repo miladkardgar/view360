@@ -51,7 +51,8 @@
                     <div class="ts-title mb-0">
                         <h1>{{$data->title}}</h1>
                         <h5 class="ts-opacity__90">
-                            <i class="fa fa-map-marker text-primary"></i>{{$fileInfos->address}}
+                            <i class="fa fa-map-marker text-primary"></i>
+{{--                            {{$fileInfos->address}}--}}
                         </h5>
                     </div>
                 </div>
@@ -64,9 +65,13 @@
             <div class="container">
                 <div class="row flex-wrap-reverse">
                     <div class="col-md-5 col-lg-4">
-                        <section>
-                            <h3>مشخصات</h3>
-                            <div class="ts-box">
+                        <section style="background-color: #0bb630;
+    text-align: center;
+    padding-top: 20px;
+    border-radius: .25rem;
+">
+                            <h3 style="color: #fff">مشخصات</h3>
+                            <div class="ts-box m-2">
 
                                 <dl class="ts-description-list__line mb-0">
 
@@ -82,17 +87,21 @@
                                     <dt>تعداد خواب:</dt>
                                     <dd>{{$fileInfos->bedroom}}</dd>
 
-                                    <dt>متراژ آپارتمان:</dt>
+                                    <dt>مساحت آپارتمان:</dt>
                                     <dd>{{$fileInfos->area}}<sup>2</sup></dd>
 
                                 </dl>
 
                             </div>
                         </section>
-                        <section class="contact-the-agent">
-                            <h3>ارتباط با ما</h3>
+                        <section class="contact-the-agent" style="background-color: #0b87b6;
+    text-align: center;
+    padding-top: 20px;
+    border-radius: .25rem;
+">
+                            <h3 style="color: #fff">ارتباط با ما</h3>
 
-                            <div class="ts-box">
+                            <div class="ts-box m-2" >
                                 <!--Agent Image & Phone-->
                                 <div class="ts-center__vertical mb-4">
                                     <!--Image-->

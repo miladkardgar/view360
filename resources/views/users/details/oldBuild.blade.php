@@ -62,7 +62,9 @@
                     <!--Title-->
                     <div class="ts-title mb-0">
                         <h1>{{$data->title}}</h1>
-                        <h5 class="ts-opacity__90"><i class="fa fa-map-marker text-primary"></i>{{$fileInfos->address}}</h5>
+                        <h5 class="ts-opacity__90"><i class="fa fa-map-marker text-primary"></i>
+{{--                            {{$fileInfos->address}}--}}
+                        </h5>
                     </div>
 
                 </div>
@@ -173,9 +175,9 @@
                                 <dt>کاربری:</dt>
                                 <dd class="border-bottom pb-2">{{$fileInfos->usage->title}}</dd>
 
-                                <dt>متراژ:</dt>
+                                <dt>مساحت:</dt>
                                 <dd class="border-bottom pb-2">{{$fileInfos->area}}<sup>2</sup></dd>
-                                <dt>متراژ بنای کلنگی:</dt>
+                                <dt>مساحت بنای کلنگی:</dt>
                                 <dd class="border-bottom pb-2">{{$fileInfos->oldArea}}<sup>2</sup></dd>
                             </dl>
 
