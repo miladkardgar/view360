@@ -1,5 +1,5 @@
 @extends('admin.layouts.admin_content_layout')
-@section('title',$req->data->title ." | ". $req->id ." | ". $req->getRegion->name)
+@section('title',$req->data->title ." | ". $req->id ." | ")
 @section('meta')
     <meta name="_token" content="{{csrf_token()}}"/>
 @stop

@@ -49,7 +49,6 @@
                 <div class="row pt-2">
                     <div class="col-6">
                         <h3>تصویر اصلی</h3>
-
                         @foreach($mains as $main)
                             <div class="slide">
                                 <div class="ts-image" style="height: 300px;background-size: cover;"
@@ -165,7 +164,9 @@
                                                        name="possibilities_{{$possibilities->id}}"
                                                     {{$possibilities->id === old('possibilities_'.$possibilities->id)?'checked':''}}
                                                 @foreach($attrs as $attr)
+                                                    @if(isset($possibilities2))
                                                     {{$attr->data_id === $possibilities2->id?'checked':''}}
+                                                    @endif
                                                 @endforeach>
                                                 <label class="custom-control-label"
                                                        for="possibilities_{{$possibilities->id}}">{{$possibilities->title}}</label>

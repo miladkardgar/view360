@@ -24,7 +24,7 @@
     <script>
 
         $(document).ready(function () {
-            var mymap = L.map('mapid').setView([36.5122, 51.8585], 10);
+            var mymap = L.map('mapid').setView([36.6800, 51.2323], 12);
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWlsYWRrYXJkZ2FyIiwiYSI6ImNqdG9haWp4NTB2dHY0OXBkNmExc3UyZGsifQ.Ys_SvYFAN9ska6SCG7j8gg', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                 maxZoom: 18,
@@ -47,6 +47,16 @@
                 }
             });
 
+            $(document).on('click', '.btnShow', function () {
+                var lat = $("#latShow").val();
+                var lon = $("#lonShow").val();
+                $(".leaflet-marker-pane").html("");
+                $(".leaflet-shadow-pane").html("");
+                var marker = L.marker([lat, lon]).addTo(mymap);
+                marker.bindPopup("<span>موقعیت فایل: </span>" + lat + " | " + lon + "<br>").openPopup();
+                $("#lat").val(lat);
+                $("#lon").val(lng);
+            });
             var FileUpload = function () {
                 var _componentFileUpload = function () {
                     if (!$().fileinput) {
@@ -353,6 +363,26 @@
                                        accept=".jpg,.gif,.png"
                                        id="file">
                                 <span class="form-text text-muted">حداکثر ده عکس قابل بارگذاری میباشد.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-5">
+                                    <input type="text" class="form-control" id="latShow" name="latShow"
+                                           placeholder="lat">
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" class="form-control" id="lonShow" name="lonShow"
+                                           placeholder="log">
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-sm btnShow"><i class="icon-search4"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

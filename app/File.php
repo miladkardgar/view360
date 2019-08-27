@@ -18,6 +18,10 @@ class File extends Model
     {
         return $this->belongsTo(Data::class, 'transaction_type');
     }
+    public function transactionTypeShow()
+    {
+        return $this->belongsTo(Data::class, 'transaction_type');
+    }
 
     public function ownershipDocumentStatus()
     {

@@ -51,7 +51,7 @@
 {{--    </section>--}}
     <section id="ts-footer-secondary">
         <div class="container">
-            <div class="ts-copyright">تمامی حقوق سایت محفوظ است.</div>
+            <div class="ts-copyright">تمامی حقوق سایت view360.ir محفوظ می باشد.</div>
             <div class="ts-footer-nav">
                 <nav class="nav">
                     @if(isset($site_settings->site_facebook))

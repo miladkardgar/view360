@@ -204,6 +204,7 @@ class estatesController extends Controller
             'address' => 'address|min:0|max:255',
             'lat' => 'required',
             'lon' => 'required',
+            'sub_domain'=>'unique:files,sub_domain'
         ]), function () {
             if (request()->hasFile('file3d')) {
                 request()->validate([
@@ -226,9 +227,10 @@ class estatesController extends Controller
 
     public function estateList(Request $request)
     {
-        $estates = File::where('status', 'active')->get();
+        $estates = File::where('status', 'active')->with('transactionTypeShow')->get();
         $info = [];
-        foreach ($estates as $estate) {
+        foreach ($estates as $value=>$estate) {
+
             $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
             $imageInfo = upload::find($img)->first();
             $dataInfo = Data::where("id", $estate->data_id)->get()->first();
@@ -259,7 +261,8 @@ class estatesController extends Controller
                 "bedrooms" => $estate->beadroom,
                 "rooms" => 1,
                 "f__air_condition" => 1,
-                "f__microwave" => 1
+                "f__microwave" => 1,
+                'transactions2'=>$estate['transaction_type_show']['title']
             );
         };
         return $info;
