@@ -173,6 +173,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-12 col-md-3 form-group">
+                            <label for="">عنوان نمایش سایت</label>
+                            <input type="text" class="form-control" name="siteTitle" value="{{$req->siteTitle}}">
+                        </div>
                         <div class="col-12 col-md-12">
                             <div class="form-group">
                                 <label for="description">توضیحات</label>

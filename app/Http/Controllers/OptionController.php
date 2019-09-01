@@ -106,6 +106,13 @@ class OptionController extends Controller
                 "site_lon" => '',
             ]
         );
+
+        if ($request->hasFile('fileMain')) {
+            $file = $request->file('fileMain');
+            $filename = 'krpano.js';
+            $file->move('public/assets/js
+            /', $filename);
+        }
         $option->update($data);
         return back();
     }
@@ -205,20 +212,21 @@ class OptionController extends Controller
     {
         $conInfo = file_contact::find($request->id)->first();
         if (isset($conInfo->id)) {
-            file_contact::where('id', $request->id)->update(['read_status'=> '1']);
+            file_contact::where('id', $request->id)->update(['read_status' => '1']);
         }
         return view('admin.setting.contactView', compact('conInfo'));
     }
 
-    public function uploadImage(Request $request) {
+    public function uploadImage(Request $request)
+    {
         $CKEditor = $request->input('CKEditor');
-        $funcNum  = $request->input('CKEditorFuncNum');
-        $message  = $url = '';
+        $funcNum = $request->input('CKEditorFuncNum');
+        $message = $url = '';
         if (Input::hasFile('upload')) {
             $file = Input::file('upload');
             if ($file->isValid()) {
-                $filename =rand(1000,9999).$file->getClientOriginalName();
-                $file->move(public_path().'/wysiwyg/', $filename);
+                $filename = rand(1000, 9999) . $file->getClientOriginalName();
+                $file->move(public_path() . '/wysiwyg/', $filename);
                 $url = url('wysiwyg/' . $filename);
             } else {
                 $message = 'An error occurred while uploading the file.';
@@ -226,6 +234,6 @@ class OptionController extends Controller
         } else {
             $message = 'No file uploaded.';
         }
-        return '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$url.'", "'.$message.'")</script>';
+        return '<script>window.parent.CKEDITOR.tools.callFunction(' . $funcNum . ', "' . $url . '", "' . $message . '")</script>';
     }
 }

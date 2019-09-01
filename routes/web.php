@@ -43,7 +43,10 @@ Route::post('contact/submit', 'UsersUIController@contactSubmit');
 Route::get('{page}/{id}', ['as' => "detail", 'uses' => 'UsersUIController@detail']);
 Route::group(array('domain' => '{subdomain}.view360.ir'), function () {
     Route::get('{page}/{id}', function ($subdomain, $page, $id) {
-        $name = \Illuminate\Support\Facades\DB::table('files')->where('sub_domain', $subdomain)->get();
+        $name = \Illuminate\Support\Facades\DB::table('files')
+            ->where('sub_domain', $subdomain)
+            ->orWhere('id',$subdomain)
+            ->get();
         if (isset($name[0]->id) && $page == $name[0]->data_id && $id == $name[0]->id && $name[0]->sub_domain == $subdomain) {
             return redirect()->route('detail', ['page' => $name[0]->data_id, 'id' => $name[0]->id]);
         } else {
@@ -51,7 +54,10 @@ Route::group(array('domain' => '{subdomain}.view360.ir'), function () {
         }
     });
     Route::get('/', function ($subdomain) {
-        $name = \Illuminate\Support\Facades\DB::table('files')->where('sub_domain', $subdomain)->get();
+        $name = \Illuminate\Support\Facades\DB::table('files')
+            ->where('sub_domain', $subdomain)
+            ->orWhere('id',$subdomain)
+            ->get();
         if (isset($name[0]->id)) {
             return redirect()->route('detail', ['page' => $name[0]->data_id, 'id' => $name[0]->id]);
         } else {
@@ -124,6 +130,7 @@ Route::group(['middleware' => ['auth', 'role']], function () {
     Route::get('/admin/setting/setting', 'OptionController@setting');
     Route::patch('/setting/setting/update/{option}', 'OptionController@update');
     Route::post('/upload_image', 'OptionController@uploadImage');
+
 
 });
 

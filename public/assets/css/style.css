@@ -2746,10 +2746,11 @@ ul.ts-list-icons i {
 }
 
 .ts-marker .ts-marker__image {
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     background-position: 50% 50%;
     border-radius: 50%;
-    box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .3);
+    /*box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .3);*/
     height: 2.625rem;
     width: 2.625rem;
     position: relative;
@@ -3493,6 +3494,7 @@ body.ts-full-screen-page {
 
 #ts-main section:not(.ts-block) {
     margin-bottom: 2rem;
+    padding-bottom: 0.1rem;
 }
 
 /* -- Pagination */

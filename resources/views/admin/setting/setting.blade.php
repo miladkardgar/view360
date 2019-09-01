@@ -17,6 +17,12 @@
     <script type="text/javascript"
             integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
             crossorigin="" src="{{url('public/assets/admin/js/leaflet.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/purify.min.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/sortable.min.js')}}"></script>
+    <script type="text/javascript"
+            src="{{url('public/assets/admin/js/plugins/uploaders/fileinput/fileinput.min.js')}}"></script>
     <script>
         $(document).ready(function () {
 
@@ -40,13 +46,124 @@
                 $("#site_lat").val(e.latlng.lat);
                 $("#site_lon").val(e.latlng.lng);
             });
+
+
+
+
+            var FileUpload = function () {
+                var _componentFileUpload = function () {
+                    if (!$().fileinput) {
+                        console.warn('Warning - fileinput.min.js is not loaded.');
+                        return;
+                    }
+                    var modalTemplate = '<div class="modal-dialog modal-lg" role="document">\n' +
+                        '  <div class="modal-content">\n' +
+                        '    <div class="modal-header align-items-center">\n' +
+                        '      <h6 class="modal-title">{heading} <small><span class="kv-zoom-title"></span></small></h6>\n' +
+                        '      <div class="kv-zoom-actions btn-group">{toggleheader}{fullscreen}{borderless}{close}</div>\n' +
+                        '    </div>\n' +
+                        '    <div class="modal-body">\n' +
+                        '      <div class="floating-buttons btn-group"></div>\n' +
+                        '      <div class="kv-zoom-body file-zoom-content"></div>\n' + '{prev} {next}\n' +
+                        '    </div>\n' +
+                        '  </div>\n' +
+                        '</div>\n';
+
+                    // Buttons inside zoom modal
+                    var previewZoomButtonClasses = {
+                        toggleheader: 'btn btn-light btn-icon btn-header-toggle btn-sm',
+                        fullscreen: 'btn btn-light btn-icon btn-sm',
+                        borderless: 'btn btn-light btn-icon btn-sm',
+                        close: 'btn btn-light btn-icon btn-sm'
+                    };
+
+                    // Icons inside zoom modal classes
+                    var previewZoomButtonIcons = {
+                        prev: '<i class="icon-arrow-left32"></i>',
+                        next: '<i class="icon-arrow-right32"></i>',
+                        toggleheader: '<i class="icon-menu-open"></i>',
+                        fullscreen: '<i class="icon-screen-full"></i>',
+                        borderless: '<i class="icon-alignment-unalign"></i>',
+                        close: '<i class="icon-cross2 font-size-base"></i>'
+                    };
+
+                    // File actions
+                    var fileActionSettings = {
+                        zoomClass: '',
+                        zoomIcon: '<i class="icon-zoomin3"></i>',
+                        dragClass: 'p-2',
+                        dragIcon: '<i class="icon-three-bars"></i>',
+                        removeClass: '',
+                        removeErrorClass: 'text-danger',
+                        removeIcon: '<i class="icon-bin"></i>',
+                        indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                        indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                        indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                        indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>'
+                    };
+                    //
+                    // AJAX upload
+                    //
+
+
+                    $('.file-input-ajaxMain').fileinput({
+                        browseLabel: 'انتخاب فایل',
+                        uploadUrl: "",
+                        uploadAsync: false,
+                        maxFileCount: 1,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
+                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                        browseOnZoneClick: true,
+                        fileActionSettings: {
+                            removeIcon: '<i class="icon-bin"></i>',
+                            uploadClass: '',
+                            zoomIcon: '<i class="icon-zoomin3"></i>',
+                            zoomClass: '',
+                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
+                        },
+                        layoutTemplates: {
+                            icon: '<i class="icon-file-check"></i>',
+                            modal: modalTemplate
+                        },
+                        initialCaption: 'فایلی انتخاب نشده است',
+                        previewZoomButtonClasses: previewZoomButtonClasses,
+                        previewZoomButtonIcons: previewZoomButtonIcons
+                    });
+
+                    $('#btn-modify').on('click', function () {
+                        $btn = $(this);
+                        if ($btn.text() == 'Disable file input') {
+                            $('#file-input-methods').fileinput('disable');
+                            $btn.html('Enable file input');
+                            alert('Hurray! I have disabled the input and hidden the upload button.');
+                        } else {
+                            $('#file-input-methods').fileinput('enable');
+                            $btn.html('Disable file input');
+                            alert('Hurray! I have reverted back the input to enabled with the upload button.');
+                        }
+                    });
+                };
+
+                return {
+                    init: function () {
+                        _componentFileUpload();
+                    }
+                }
+            }();
+            FileUpload.init();
         });
     </script>
 @stop
 @section('content')
     <div class="card">
         <div class="card-body text-black-50">
-            <form action="/setting/setting/update/{{$info->id}}" method="post">
+            <form action="/setting/setting/update/{{$info->id}}" method="post" enctype="multipart/form-data">
                 @method('PATCH')
                 {{csrf_field()}}
 
@@ -176,6 +293,16 @@
                             <label for="site_address2">آدرس</label>
                             <input type="text" name="site_address2" id="site_address2" class="form-control"
                                    value="{{old('site_address2')??$info->site_address2}}">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="file">فایل krpano.js</label>
+                            <input type="file" class="file-input-ajaxMain" multiple="multiple" name="fileMain"
+                                   data-fouc accept=".js"
+                                   id="fileMain">
+                            <span class="form-text text-muted">حداکثر یک تصویر قابل بارگذاری مباشد.</span>
                         </div>
                     </div>
 

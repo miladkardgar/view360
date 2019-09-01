@@ -39,11 +39,11 @@
                 <div class="d-block d-sm-flex justify-content-between">
                     <!--Title-->
                     <div class="ts-title mb-0">
-                        <h1>{{$fileInfos->data->title}} {{$fileInfos->title}}</h1>
-                        <h5 class="ts-opacity__90">
-                            <i class="fa fa-map-marker text-primary"></i>
-                            {{$fileInfos->address}}
-                        </h5>
+                        <h1>{{$fileInfos->siteTitle?$fileInfos->siteTitle:$data->title}}</h1>
+{{--                        <h5 class="ts-opacity__90">--}}
+{{--                            <i class="fa fa-map-marker text-primary"></i>--}}
+{{--                            {{$fileInfos->address}}--}}
+{{--                        </h5>--}}
                     </div>
                 </div>
                 <div id="krpanoDIV" style="width:100%;height:500px;"></div>

@@ -35,11 +35,11 @@
 
                     <!--Title-->
                     <div class="ts-title mb-0">
-                        <h1>{{$data->title}}</h1>
-                        <h5 class="ts-opacity__90">
-                            <i class="fa fa-map-marker text-primary"></i>
-                            {{$fileInfos->address}}
-                        </h5>
+                        <h1>{{$fileInfos->siteTitle?$fileInfos->siteTitle:$data->title}}</h1>
+{{--                        <h5 class="ts-opacity__90">--}}
+{{--                            <i class="fa fa-map-marker text-primary"></i>--}}
+{{--                            {{$fileInfos->address}}--}}
+{{--                        </h5>--}}
                     </div>
 
                     <!--Price-->

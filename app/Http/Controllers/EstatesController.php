@@ -68,7 +68,8 @@ class estatesController extends Controller
         $json = json_decode(file_get_contents($path), true);
         $provinces = City::all();
         $fileTypes = Data::where("type", "fileType")->get();
-        return view('admin.estates.setting', compact('json', 'Attrs', 'provinces', 'fileTypes'));
+        $transactionType = Data::where("type", "transactionTypeVila")->get();
+        return view('admin.estates.setting', compact('json', 'Attrs', 'provinces', 'fileTypes', 'transactionType'));
     }
 
     function add(Request $request)
@@ -150,7 +151,7 @@ class estatesController extends Controller
                     'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
                     'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
                     'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
-                    'title', 'city_type_id', 'parent_id', 'province_id', 'sub_domain']));
+                    'title', 'city_type_id', 'parent_id', 'province_id', 'sub_domain', 'siteTitle']));
                 if ($file->id != "") {
                     $upload = '';
                     if ($request->hasfile('file')) {
@@ -204,7 +205,38 @@ class estatesController extends Controller
             'address' => 'address|min:0|max:255',
             'lat' => 'required',
             'lon' => 'required',
-            'sub_domain'=>'unique:files,sub_domain'
+            'sub_domain' => 'unique:files,sub_domain',
+            'siteTitle' => 'required'
+        ]), function () {
+            if (request()->hasFile('file3d')) {
+                request()->validate([
+                    'file3d.*' => 'file|mimes:zip',
+                ]);
+            }
+            if (request()->hasFile('fileMain')) {
+                request()->validate([
+                    'fileMain.*' => 'file|image',
+                ]);
+            }
+            if (request()->hasFile('file')) {
+                request()->validate([
+                    'file.*' => 'file|image',
+                ]);
+            }
+        });
+
+    }
+
+    private function validateRequestUpdate(Request $request)
+    {
+
+        return tap(request()->validate([
+//            'ownerPhone' => 'iran_mobile',
+            'ownerName' => 'min:0|max:200',
+            'address' => 'address|min:0|max:255',
+            'lat' => 'required',
+            'lon' => 'required',
+            'siteTitle' => 'required'
         ]), function () {
             if (request()->hasFile('file3d')) {
                 request()->validate([
@@ -229,21 +261,31 @@ class estatesController extends Controller
     {
         $estates = File::where('status', 'active')->with('transactionTypeShow')->get();
         $info = [];
-        foreach ($estates as $value=>$estate) {
+        foreach ($estates as $value => $estate) {
 
             $img = Files_medias::where('File_id', $estate->id)->where('type', 'main')->get();
             $imageInfo = upload::find($img)->first();
             $dataInfo = Data::where("id", $estate->data_id)->get()->first();
+            $traInfo = Data::where("id", $estate->transaction_type)->get()->first();
             if ($dataInfo['upload_id'] != 0 && $dataInfo['upload_id'] != "") {
-                $image = $dataInfo->fileInfo->file;
+                if ($estate->data_id == 14) {
+                    $image = $traInfo->fileInfo->file;
+                } else {
+                    $image = $dataInfo->fileInfo->file;
+                }
             } else {
                 $image = '/public/assets/img/icon-pin.png';
             }
             $url = $imageInfo['file'];
-            $getTitle = Data::where('id', '=', $estate->data_id)->first();
+            if(isset($estate['siteTitle'])){
+                $title = $estate['siteTitle'];
+            }else {
+                $getTitle = Data::where('id', '=', $estate->data_id)->first();
+                $title = $getTitle->title;
+            }
             $info[] = array(
                 "id" => $estate->id,
-                "title" => $getTitle->title,
+                "title" => $title,
                 "fileType" => $estate->data_id,
                 "province_id" => $estate->province_id,
                 "city_id" => $estate->city_id,
@@ -258,11 +300,12 @@ class estatesController extends Controller
                 "longitude" => $estate->lon,
                 "ribbon" => "<i class='fa fa-thumbs-up'></i>",
                 "area" => $estate->area,
+                "oldArea" => $estate->oldArea,
                 "bedrooms" => $estate->beadroom,
                 "rooms" => 1,
                 "f__air_condition" => 1,
                 "f__microwave" => 1,
-                'transactions2'=>$estate['transaction_type_show']['title']
+                'transactions2' => $estate['transaction_type_show']['title']
             );
         };
         return $info;
@@ -463,7 +506,7 @@ class estatesController extends Controller
 
     public function update(Request $request, File $file)
     {
-        if ($this->validateRequest($request)) {
+        if ($this->validateRequestUpdate($request)) {
             $check = false;
             $checkSFW = false;
             $checkXML = false;
@@ -495,7 +538,7 @@ class estatesController extends Controller
                     'region_id', 'usage_id', 'arena', 'building', 'price', 'areaPrice', 'direction', 'unit', 'ownership_document_status', 'floor',
                     'countFloor', 'mortgage', 'rent', 'buildingYear', 'description', 'oldArea', 'yearMortgage', 'dayMortgage', 'floorType',
                     'commercialType', 'ownerName', 'ownerPhone', 'address', 'user_id', 'status', 'deleted_at', 'created_at', 'updated_at',
-                    'title', 'city_type_id', 'parent_id', 'province_id', 'sub_domain']));
+                    'title', 'city_type_id', 'parent_id', 'province_id', 'sub_domain', 'siteTitle']));
 
                 if ($request->hasfile('file')) {
                     $uploadFilesId = $this->uploadFile(request(), $request->id, $type = 'album');
@@ -638,9 +681,9 @@ class estatesController extends Controller
 
 
         $fileInfo = File::findOrFail($request['id'])->delete();
-        if($fileInfo){
-            Files_atributies::where('file_id',$request['id'])->delete();
-            Files_medias::where('file_id',$request['id'])->delete();
+        if ($fileInfo) {
+            Files_atributies::where('file_id', $request['id'])->delete();
+            Files_medias::where('file_id', $request['id'])->delete();
             return back()->with(['result' => "success", 'message' => 'فایل مورد نظر حذف گردید.']);
         }
     }

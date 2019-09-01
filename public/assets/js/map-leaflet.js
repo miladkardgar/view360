@@ -54,7 +54,7 @@ $(document).ready(function ($) {
         map = L.map(mapId, {
             zoomControl: false,
             // scrollWheelZoom: scrollWheel
-            scrollWheelZoom:true
+            scrollWheelZoom: true
         });
         map.setView([centerLatitude, centerLongitude], mapDefaultZoom);
 
@@ -94,7 +94,7 @@ $(document).ready(function ($) {
                 console.log(parameters);
                 if (typeof parameters !== "undefined" && parameters["formData"]) {
                     loadFormData(parameters);
-                }else{
+                } else {
                     allMarkersData = results;
                     loadedMarkersData = allMarkersData;
                 }
@@ -122,7 +122,7 @@ $(document).ready(function ($) {
             markerContent.innerHTML =
                 '<div class="ts-marker-wrapper">' +
                 '<a href="#" class="ts-marker" data-ts-id="' + loadedMarkersData[i]["id"] + '" data-ts-ln="' + i + '">' +
-                ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-marker__feature">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
+                // ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-marker__feature">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
                 ((loadedMarkersData[i]["title"] !== undefined) ? '<div class="ts-marker__title">' + loadedMarkersData[i]["title"] + '</div>' : "") +
                 // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-marker__info">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
                 ((loadedMarkersData[i]["marker_image"] !== undefined) ? '<div class="ts-marker__image ts-black-gradient" style="background-image: url(' + loadedMarkersData[i]["marker_image"] + ')"></div>' : '<div class="ts-marker__image ts-black-gradient" style="background-image: url(/public/assets/img/marker-default-img.png)"></div>') +
@@ -250,7 +250,7 @@ $(document).ready(function ($) {
             '<div class="ts-infobox" data-ts-id="' + loadedMarkersData[i]["id"] + '">' +
             '<img src="/public/assets/img/infobox-close.svg" class="ts-close">' +
             // ((loadedMarkersData[i]["ribbon"] !== undefined) ? '<div class="ts-ribbon">' + loadedMarkersData[i]["ribbon"] + '</div>' : "") +
-            ((loadedMarkersData[i]["id"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[i]["id"] + '</span></div>' : "") +
+            // ((loadedMarkersData[i]["id"] !== undefined) ? '<div class="ts-ribbon-corner"><span>' + loadedMarkersData[i]["id"] + '</span></div>' : "") +
 
             '<a href="' + loadedMarkersData[i]["url"] + '" class="ts-infobox__wrapper ts-black-gradient">' +
             // ((loadedMarkersData[i]["badge"] !== undefined && loadedMarkersData[i]["badge"].length > 0) ? '<div class="badge badge-dark">' + loadedMarkersData[i]["badge"] + '</div>' : "") +
@@ -258,8 +258,12 @@ $(document).ready(function ($) {
             '<figure class="ts-item__info" style="margin: 8px">' +
             // ( ( loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"] > 0 ) ? '<div class="ts-item__info-badge">' + formatPrice(loadedMarkersData[i]["price"]) + '</div>' : "" ) +
             ((loadedMarkersData[i]["title"] !== undefined && loadedMarkersData[i]["title"].length > 0) ? '<h4>' + loadedMarkersData[i]["title"] + '</h4>' : "") +
-            ((loadedMarkersData[i]["area"] !== undefined && loadedMarkersData[i]["area"].length > 0) ? '<aside>مساحت: ' + loadedMarkersData[i]["area"] + '</aside>' : "") +
-            ((loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"].length > 0) ? '<aside>قیمت: ' + loadedMarkersData[i]["price"] + '</aside>' : "") +
+            ((loadedMarkersData[i]["id"] !== undefined && loadedMarkersData[i]["id"] > 0) ? '<aside>شناسه: ' + loadedMarkersData[i]["id"] + '</aside>' : "") +
+
+            ((loadedMarkersData[i]["fileType"] === 14 || loadedMarkersData[i]["fileType"] === 2 || loadedMarkersData[i]["fileType"] === 49)? '<aside>مساحت بنا: ' + loadedMarkersData[i]["area"] + '</aside>' : '<aside>مساحت زمین: ' + loadedMarkersData[i]["oldArea"] + '</aside>') +
+
+            // ((loadedMarkersData[i]["price"] !== undefined && loadedMarkersData[i]["price"].length > 0) ? '<aside>قیمت: ' + loadedMarkersData[i]["price"] + '</aside>' : "") +
+
             '</figure>' +
             // additionalInfoHTML({display: displayAdditionalInfo, i: i}) +
             '</div>' +
@@ -345,13 +349,13 @@ $(document).ready(function ($) {
                 '<figure class="ts-item__info">' +
                 '<h4>' + loadedMarkersData[id]["title"] + '</h4>' +
                 '<aside class="pt-3">' +
-                'شماره فایل: ' +'<span class="float-left">'+ loadedMarkersData[id]["id"] + '</span></aside>' +
+                'شماره فایل: ' + '<span class="float-left">' + loadedMarkersData[id]["id"] + '</span></aside>' +
                 ((loadedMarkersData[id]["area"] !== undefined && loadedMarkersData[id]["area"] > 0) ?
                     '<aside class="pt-1">' +
-                'مساحت: ' +'<span class="float-left">'+ loadedMarkersData[id]["area"] + '</span></aside>':'') +
+                    'مساحت: ' + '<span class="float-left">' + loadedMarkersData[id]["area"] + '</span></aside>' : '') +
                 ((loadedMarkersData[id]["price"] !== undefined && loadedMarkersData[id]["price"] > 0) ?
                     '<aside class="pt-1">' +
-                'قیمت: ' +'<span class="float-left">'+ loadedMarkersData[id]["price"] + '</span></aside>':'') +
+                    'قیمت: ' + '<span class="float-left">' + loadedMarkersData[id]["price"] + '</span></aside>' : '') +
                 '</figure>' +
                 // additionalInfoHTML({display: displayAdditionalInfo, i: id}) +
                 '</div>' +

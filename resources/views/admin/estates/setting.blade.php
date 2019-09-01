@@ -223,6 +223,37 @@
                         previewZoomButtonIcons: previewZoomButtonIcons
                     });
                     @endforeach
+                    @foreach($transactionType as $fileType)
+                    $('#file_{{$fileType->id}}').fileinput({
+                        browseLabel: 'انتخاب فایل',
+                        uploadUrl: "{{url('/admin/estates/upload')}}",
+                        uploadAsync: false,
+                        maxFileCount: 1,
+                        showUpload: false,
+                        removeLabel: "حذف همه",
+                        initialPreview: [],
+                        browseIcon: '<i class="icon-file-plus mr-2"></i>',
+                        removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+                        browseOnZoneClick: true,
+                        fileActionSettings: {
+                            removeIcon: '<i class="icon-bin"></i>',
+                            uploadClass: '',
+                            zoomIcon: '<i class="icon-zoomin3"></i>',
+                            zoomClass: '',
+                            indicatorNew: '<i class="icon-file-plus text-success"></i>',
+                            indicatorSuccess: '<i class="icon-checkmark3 file-icon-large text-success"></i>',
+                            indicatorError: '<i class="icon-cross2 text-danger"></i>',
+                            indicatorLoading: '<i class="icon-spinner2 spinner text-muted"></i>',
+                        },
+                        layoutTemplates: {
+                            icon: '<i class="icon-file-check"></i>',
+                            modal: modalTemplate
+                        },
+                        initialCaption: 'فایلی انتخاب نشده است',
+                        previewZoomButtonClasses: previewZoomButtonClasses,
+                        previewZoomButtonIcons: previewZoomButtonIcons
+                    });
+                    @endforeach
                     $('#btn-modify').on('click', function () {
                         $btn = $(this);
                         if ($btn.text() == 'Disable file input') {
@@ -451,20 +482,41 @@
                                 @foreach($fileTypes as $fileType)
                                     <div class="col-12 col-md-4">
                                         <div class="card">
-                                            @if($fileType->upload_id !="")
-                                                <img class="card-img-top" width="100" src="{{url($fileType->fileInfo->file)}}"
-                                                     alt="Card image cap">
-                                            @endif
+                                            <div class="card-header text-center">
+                                                @if($fileType->upload_id !="")
+                                                    <img class="" width="20" src="{{url($fileType->fileInfo->file)}}"
+                                                         alt="Card">
+                                                @endif
+                                            </div>
                                             <div class="card-body">
                                                 <input type="hidden" name="fileID_{{$fileType->id}}"
                                                        value="{{$fileType->id}}">
                                                 <h5 class="text-center">{{$fileType->title}}</h5>
-                                                <div class="card-header">
-                                                    <input type="file" class="file-input-ajax"
-                                                           name="file_{{$fileType->id}}[]" data-fouc
-                                                           accept=".jpg,.gif,.png"
-                                                           id="file_{{$fileType->id}}">
-                                                </div>
+                                                <input type="file" class="file-input-ajax"
+                                                       name="file_{{$fileType->id}}[]" data-fouc
+                                                       accept=".jpg,.gif,.png"
+                                                       id="file_{{$fileType->id}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                @foreach($transactionType as $fileType)
+                                    <div class="col-12 col-md-4">
+                                        <div class="card">
+                                            <div class="card-header text-center">
+                                                @if($fileType->upload_id !="")
+                                                    <img class="" width="20" src="{{url($fileType->fileInfo->file)}}"
+                                                         alt="Card">
+                                                @endif
+                                            </div>
+                                            <div class="card-body">
+                                                <input type="hidden" name="fileID_{{$fileType->id}}"
+                                                       value="{{$fileType->id}}">
+                                                <h5 class="text-center">{{$fileType->title}}</h5>
+                                                <input type="file" class="file-input-ajax"
+                                                       name="file_{{$fileType->id}}[]" data-fouc
+                                                       accept=".jpg,.gif,.png"
+                                                       id="file_{{$fileType->id}}">
                                             </div>
                                         </div>
                                     </div>
